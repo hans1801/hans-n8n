@@ -1,0 +1,73 @@
+x-chatwoot-env: &chatwoot-env
+  RAILS_ENV: production
+  NODE_ENV: production
+  FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+  POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
+  POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+  POSTGRES_DATABASE: ${POSTGRES_DATABASE:-chatwoot_production}
+  POSTGRES_USERNAME: ${POSTGRES_USERNAME:-chatwoot}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+  REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+  SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg14
+    container_name: chatwoot_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DATABASE:-chatwoot_production}
+      POSTGRES_USER: ${POSTGRES_USERNAME:-chatwoot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USERNAME:-chatwoot} -d ${POSTGRES_DATABASE:-chatwoot_production}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: chatwoot_redis
+    restart: unless-stopped
+    command: >
+      sh -c "redis-server --appendonly yes
+      ${REDIS_PASSWORD:+ --requirepass ${REDIS_PASSWORD}}"
+    volumes:
+      - ./data/redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  rails:
+    image: chatwoot/chatwoot:v4.4.0-ce
+    container_name: chatwoot_rails
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      <<: *chatwoot-env
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "${APP_HTTP_PORT:-3000}:3000"
+    entrypoint: ["docker/entrypoints/rails.sh"]
+    command: bundle exec rails s -b 0.0.0.0 -p 3000
+
+  sidekiq:
+    image: chatwoot/chatwoot:v4.4.0-ce
+    container_name: chatwoot_sidekiq
+    restart: unless-stopped
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    env_file:
+      - .env
+    environment:
+      <<: *chatwoot-env
+    depends_on:
+      - postgres
+      - redis

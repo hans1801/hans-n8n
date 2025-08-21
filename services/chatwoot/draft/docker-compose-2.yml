@@ -1,0 +1,85 @@
+x-chatwoot-env: &chatwoot-env
+  RAILS_ENV: production
+  NODE_ENV: production
+  FRONTEND_URL: https://TU_DOMINIO
+  POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
+  POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+  POSTGRES_DATABASE: ${POSTGRES_DATABASE:-chatwoot_production}
+  POSTGRES_USERNAME: ${POSTGRES_USERNAME:-chatwoot}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+  REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+  SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg14
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DATABASE:-chatwoot_production}
+      POSTGRES_USER: ${POSTGRES_USERNAME:-chatwoot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: >
+      sh -c "redis-server --appendonly yes
+      ${REDIS_PASSWORD:+ --requirepass ${REDIS_PASSWORD}}"
+    volumes:
+      - ./data/redis:/data
+  rails:
+    image: chatwoot/chatwoot:v4.4.0-ce
+    restart: unless-stopped
+    env_file: [.env]
+    environment:
+      <<: *chatwoot-env
+    depends_on: [postgres, redis]
+    entrypoint: ["docker/entrypoints/rails.sh"]
+    command: bundle exec rails s -b 0.0.0.0 -p 3000
+
+    # ⚠️ SIN ports: Traefik hará el proxy en 80/443
+    # ports:
+    #   - "3000:3000"
+
+    labels:
+      - "traefik.enable=true"
+
+      # Indica explícitamente la red de docker que verá Traefik
+      - "traefik.docker.network=n8n_n8napi"
+
+      # Router HTTPS
+      - "traefik.http.routers.chatwoot.rule=Host(`TU_DOMINIO`)"
+      - "traefik.http.routers.chatwoot.entrypoints=websecure"
+      - "traefik.http.routers.chatwoot.tls=true"
+      - "traefik.http.routers.chatwoot.tls.certresolver=mytlschallenge"
+
+      # Servicio interno (puerto del contenedor rails)
+      - "traefik.http.services.chatwoot.loadbalancer.server.port=3000"
+
+      # Router HTTP → redirect a HTTPS
+      - "traefik.http.routers.chatwoot-http.rule=Host(`TU_DOMINIO`)"
+      - "traefik.http.routers.chatwoot-http.entrypoints=web"
+      - "traefik.http.routers.chatwoot-http.middlewares=chatwoot-https-redirect"
+      - "traefik.http.middlewares.chatwoot-https-redirect.redirectscheme.scheme=https"
+
+    networks:
+      - default
+      - n8n_n8napi
+
+  sidekiq:
+    image: chatwoot/chatwoot:v4.4.0-ce
+    restart: unless-stopped
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    env_file: [.env]
+    environment:
+      <<: *chatwoot-env
+    depends_on: [postgres, redis]
+    networks:
+      - default
+
+networks:
+  n8n_n8napi:
+    external: true
