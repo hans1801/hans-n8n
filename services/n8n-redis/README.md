@@ -1,1 +1,1 @@
-# n8n-setup
+# n8n-redis-setup

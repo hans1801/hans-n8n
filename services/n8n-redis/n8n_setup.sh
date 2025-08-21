@@ -29,8 +29,23 @@ services:
       - N8N_HOST=${N8N_DOMAIN}
       - WEBHOOK_URL=https://${N8N_DOMAIN}/
       - WEBHOOK_TUNNEL_URL=https://${N8N_DOMAIN}/
+      # Configuración de Redis
+      - QUEUE_BULL_REDIS_HOST=redis
+      - QUEUE_BULL_REDIS_PORT=6379
+      - QUEUE_BULL_REDIS_DB=0
     volumes:
       - ./data:/home/node/.n8n
+    depends_on:
+      - redis
+
+  redis:
+    container_name: redis
+    image: redis:7
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis-data:/data
 EOF
   echo "Archivo docker-compose.yml creado."
 else
