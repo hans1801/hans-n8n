@@ -32,8 +32,10 @@ RAILS_ENV=production
 NODE_ENV=production
 SECRET_KEY_BASE=${SECRET_KEY_BASE}
 
-# URL pública del frontend
+# URL pública del frontend (actualizar luego de certificar el dominio)
 FRONTEND_URL=${FRONTEND_URL_DEFAULT}
+FORCE_SSL=true
+RAILS_FORCE_SSL=true
 
 # === Base de datos ===
 POSTGRES_DATABASE=chatwoot_production
