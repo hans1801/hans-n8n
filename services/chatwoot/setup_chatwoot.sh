@@ -57,6 +57,10 @@ APP_HTTP_PORT=${APP_HTTP_PORT}
 # SMTP_PASSWORD=changeme
 # SMTP_AUTHENTICATION=plain
 # SMTP_ENABLE_STARTTLS_AUTO=true
+
+# === DISABLE Rack Attack (opcional, solo para probar) ===
+# ENABLE_RACK_ATTACK=true
+# ENABLE_RACK_ATTACK_WIDGET_API=false
 EOF
 
 # === Estructura de datos persistentes ===
