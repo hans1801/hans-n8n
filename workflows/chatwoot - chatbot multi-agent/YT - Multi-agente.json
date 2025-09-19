@@ -1,0 +1,1313 @@
+{
+  "name": "YT - Multi-agente",
+  "nodes": [
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Actualizar Label').item.json.label }}",
+                    "rightValue": "bot-conversacion-inicio",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f57d7479-653b-40d8-8773-3f96c672f3d7"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "inicio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "afcdb7fc-d25b-42fd-b7ee-33b814ad3fd8",
+                    "leftValue": "={{ $('Actualizar Label').item.json.label }}",
+                    "rightValue": "bot-conversacion-faq",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "faq"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2516086d-9114-4b6d-addd-6227193786df",
+                    "leftValue": "={{ $('Actualizar Label').item.json.label }}",
+                    "rightValue": "bot-conversacion-catalago",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "catalago"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d69a1acc-2586-4f62-8369-cf0dd48e173f",
+                    "leftValue": "={{ $('Actualizar Label').item.json.label }}",
+                    "rightValue": "bot-conversacion-agente",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "agente"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        192,
+        336
+      ],
+      "id": "6cddb69c-c86d-4845-9006-5500a9e18957",
+      "name": "Label Selector"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Conversacion datos').item.json.chatwoot_url }}/api/v1/accounts/{{ $('Conversacion datos').item.json.account_id }}/conversations/{{ $('Conversacion datos').item.json.conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "={{ $('Inicio Agent').item.json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        768,
+        80
+      ],
+      "id": "7efb0988-d7ca-40e8-9ccf-6edd02642024",
+      "name": "Enviar mensaje para Inicio",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9fwaWcktiMKQaHox",
+          "name": "Chatwoot access key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        880
+      ],
+      "id": "ab33ce46-569e-4b17-9009-32a2cbf0d18a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "XifEwxpfufUK3ARh",
+          "name": "OpenAi account - GPT5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Conversacion datos').item.json.message }}",
+        "options": {
+          "systemMessage": "=Eres un **Agente de Bienvenida** en *\"Mi Tienda\"*.\nTu objetivo es generar una excelente primera impresión, saludar cordialmente y guiar al usuario para identificar su intención principal.\n\n## Reglas\n\n* Mantén un tono **amable, breve y proactivo**.\n* Haz que el usuario sienta que puede **elegir libremente** qué hacer.\n* **No inventes información** fuera de estas opciones.\n* Tu rol es únicamente **inducir y orientar** hacia ellas.\n\n## Opciones disponibles\n\n{{ JSON.stringify($('Nuevos Siguientes Labels').item.json.opciones) }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        80
+      ],
+      "id": "dafdba77-eb7e-4918-b6c3-34bfaf96a153",
+      "name": "Inicio Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Conversacion datos').item.json.message }}",
+        "options": {
+          "systemMessage": "=Eres un **Agente de Catálogo** en *\"Mi Tienda\"*.\nTu objetivo es responder de manera clara y útil a las **consultas relacionadas con el catálogo**.\n\n## Reglas\n\n* Mantén un tono **amable, claro y proactivo**.\n* Responde únicamente sobre el **catálogo de productos y servicios**.\n* **No inventes información** fuera de lo relacionado con el catálogo.\n* Tu rol es **resolver consultas de catálogo** y orientar al usuario dentro de estas opciones.\n\n## Opciones disponibles\n\n{{ JSON.stringify($('Nuevos Siguientes Labels').item.json.opciones) }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        464
+      ],
+      "id": "017bd21b-64b3-4182-9e58-bfca01a84e21",
+      "name": "Catalogo Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Conversacion datos').item.json.message }}",
+        "options": {
+          "systemMessage": "=Eres un **Agente de Preguntas Frecuentes (FAQ)** en *\"Mi Tienda\"*.\nTu misión es responder con claridad y precisión a las **consultas frecuentes de los clientes**.\n\n## Reglas\n\n* Mantén un tono **amable, claro y proactivo**.\n* Responde únicamente sobre las **preguntas frecuentes definidas**.\n* **No inventes información** fuera de estas FAQ.\n* Tu rol es **resolver dudas frecuentes** y orientar al usuario dentro de estas opciones.\n\n## Opciones disponibles\n\n{{ JSON.stringify($('Nuevos Siguientes Labels').item.json.opciones) }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        272
+      ],
+      "id": "7fd5c049-a369-42db-9edc-3f4099c2d1a6",
+      "name": "Faq Agent"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Conversacion datos').item.json.chatwoot_url }}/api/v1/accounts/{{ $('Conversacion datos').item.json.account_id }}/conversations/{{ $('Conversacion datos').item.json.conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "={{ $('Catalogo Agent').item.json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        768,
+        464
+      ],
+      "id": "d37d8d4c-6f49-4665-ace0-7048ad222325",
+      "name": "Enviar mensaje para Catalogo",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9fwaWcktiMKQaHox",
+          "name": "Chatwoot access key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Conversacion datos').item.json.chatwoot_url }}/api/v1/accounts/{{ $('Conversacion datos').item.json.account_id }}/conversations/{{ $('Conversacion datos').item.json.conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "={{ $('Faq Agent').item.json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        768,
+        272
+      ],
+      "id": "093b62c8-bc1e-40d8-9195-b17eac2736ec",
+      "name": "Enviar mensaje para Faq",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9fwaWcktiMKQaHox",
+          "name": "Chatwoot access key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Conversacion datos').item.json.message }}",
+        "options": {
+          "systemMessage": "=Eres un **Agente de Contacto Humano** en *\"Mi Tienda\"*.\nTu objetivo es asignar la conversación a una **persona del equipo** y comunicarlo al usuario de manera cordial.\n\n## Reglas\n\n* Mantén un tono **amable, breve y claro**.\n* Informa al usuario que será atendido por un **asesor humano**.\n* Usa un mensaje similar a: *\"Perfecto, te estaremos contactando con alguien de nuestro personal\"*.\n* Tu rol es únicamente **derivar la conversación** hacia el contacto humano.\n\n## Opciones disponibles\n\n{{ JSON.stringify($('Nuevos Siguientes Labels').item.json.opciones) }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        656
+      ],
+      "id": "c745171f-02f0-4db8-ae09-f28e729d1f7d",
+      "name": "Agente Agent"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Conversacion datos').item.json.chatwoot_url }}/api/v1/accounts/{{ $('Conversacion datos').item.json.account_id }}/conversations/{{ $('Conversacion datos').item.json.conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "={{ $('Agente Agent').item.json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        768,
+        656
+      ],
+      "id": "8ab15ce2-4d4e-4468-9596-b97c2d5c3ba0",
+      "name": "Enviar mensaje para Agente",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9fwaWcktiMKQaHox",
+          "name": "Chatwoot access key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -640,
+        800
+      ],
+      "id": "2b9c5edd-fad8-4de6-af6d-509179b836ed",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "XifEwxpfufUK3ARh",
+          "name": "OpenAi account - GPT5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "=n8n_chat_histories_{{ $('Conversacion datos').item.json.account_id }}",
+          "mode": "name"
+        },
+        "limit": 10,
+        "where": {
+          "values": [
+            {
+              "column": "session_id",
+              "value": "={{ $('Conversacion datos').item.json.conversation_id.toString() }}"
+            }
+          ]
+        },
+        "sort": {
+          "values": [
+            {
+              "column": "id"
+            }
+          ]
+        },
+        "options": {
+          "outputColumns": "={{ [\"message\"] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1376,
+        176
+      ],
+      "id": "f609152e-cf4c-4299-8e73-4103f4ebbc0b",
+      "name": "Get historial chat",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "s5B6xuVOHH0pHUzG",
+          "name": "Supabase - Postgres account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all items\nconst items = $input.all();\n\n// Map only type and content, checking message exists\nconst chat_history = items\n  .map(item => {\n    const msg = item.json?.message;\n    if (!msg) return null; // ignora si no hay message\n    return {\n      type: msg.type || \"\",\n      content: msg.content || \"\"\n    };\n  })\n  .filter(Boolean); // elimina los null\n\nreturn { chat_history };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1152,
+        176
+      ],
+      "id": "d1fefe32-7282-42e5-af94-d692aaefc655",
+      "name": "Merge History"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -928,
+        352
+      ],
+      "id": "b6fd70f7-4238-421e-8525-3374984a701f",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "[{\"next_state\": \"bot-conversacion-inicio\"}]",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -640,
+        592
+      ],
+      "id": "b01467ef-b5db-4c12-941d-162c06a9e4df",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "LDQPMqcrRtGgtsuP",
+          "mode": "list",
+          "cachedResultName": "YT - Handle Label"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chatwoot_url": "={{ $('Conversacion datos').item.json.chatwoot_url }}",
+            "account_id": "={{ $('Conversacion datos').item.json.account_id }}",
+            "conversation_id": "={{ $('Conversacion datos').item.json.conversation_id }}",
+            "type": "get"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chatwoot_url",
+              "displayName": "chatwoot_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "account_id",
+              "displayName": "account_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "label",
+              "displayName": "label",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        368
+      ],
+      "id": "6c999863-921e-46c4-b5f0-8093c68ef651",
+      "name": "Obtener label actual"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "LDQPMqcrRtGgtsuP",
+          "mode": "list",
+          "cachedResultName": "YT - Handle Label"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chatwoot_url": "={{ $('Conversacion datos').item.json.chatwoot_url }}",
+            "account_id": "={{ $('Conversacion datos').item.json.account_id }}",
+            "conversation_id": "={{ $('Conversacion datos').item.json.conversation_id }}",
+            "label": "={{ $('Obtener label actual').item.json.label }}",
+            "type": "next_labels"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chatwoot_url",
+              "displayName": "chatwoot_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "account_id",
+              "displayName": "account_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "label",
+              "displayName": "label",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -1152,
+        560
+      ],
+      "id": "c87d870f-e485-4beb-be40-32ba2729feba",
+      "name": "Siguientes Labels"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Input\n{{ JSON.stringify($json) }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# Prompt del Agente Clasificador de Estado\n\n**Rol:** Eres un clasificador de intención que determina el **siguiente estado (label)** de la conversación dentro del flujo de Quercus.\n\n---\n\n## Entradas\n\n* `chat_history`: historial de turnos (solo contexto auxiliar).\n* `new_message`: último mensaje del usuario (fuente principal de la intención).\n* `current_label`: estado actual.\n* `criterios_cambio`: lista de objetos con `{ label, criterio }`, donde cada `criterio` describe la intención necesaria para activar ese `label`.\n\n---\n\n## Instrucciones\n\n1. **Clasifica únicamente a partir de `new_message`.** Usa `chat_history` solo como apoyo, nunca como reemplazo.  \n2. **Evalúa semánticamente** si `new_message` cumple alguno de los `criterio` en `criterios_cambio`.  \n   * Reconoce sinónimos, variaciones, errores ortográficos menores y diferencias de mayúsculas/minúsculas.  \n   * Preguntas de información general (ej. “¿quiénes son?”, “qué hacen”, “dónde están”, “horarios”, “precios”, etc.) se deben clasificar como **FAQ**, nunca como agente humano.  \n   * No inventes labels: solo puedes elegir entre los incluidos en `criterios_cambio`.  \n3. **Desempate y umbral:**  \n   * Si un único `criterio` encaja de forma clara → selecciona su `label`.  \n   * Si varios encajan, elige el que represente mejor la intención principal explícita en `new_message`.  \n   * Si ninguno encaja con suficiente evidencia → mantén `current_label`.  \n4. **Escalamiento a agente humano:** Solo deriva a `bot-quercus-agente` si el mensaje **expresamente pide hablar con una persona** (ej.: “quiero hablar con alguien”, “me atiende un asesor”, “quiero un humano”) o si la intención es demasiado ambigua y no encaja en ningún otro criterio.  \n5. **Salida estricta:** Responde **únicamente** con un **string** en el formato exacto:  \n   `next_state: <label>`  \n   Sin comillas, sin texto adicional, sin JSON.\n\n---\n\n## Datos\n\n* `chat_history`\n* `new_message`\n* `current_label`\n* `criterios_cambio`\n\n---\n\n## Ejemplos\n\n* Si `new_message` = \"ver catálogo\" y existe un criterio como *\"El usuario tiene la intención de ver el catálogo\"* →  \n  `next_state: bot-quercus-diseno`  \n\n* Si `new_message` = \"¿Quiénes son?\" y hay un criterio como *\"El usuario busca información general de la empresa\"* →  \n  `next_state: bot-quercus-faq`  \n\n* Si `new_message` = \"quiero hablar con una persona\" →  \n  `next_state: bot-quercus-agente`  \n\n* Si `new_message` es ambiguo y no coincide claramente con ningún `criterio` →  \n  `next_state: current_label`\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -704,
+        368
+      ],
+      "id": "537b28d2-5ba4-4796-9d07-62b48689c49b",
+      "name": "Selector de estado siguiente"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "LDQPMqcrRtGgtsuP",
+          "mode": "list",
+          "cachedResultName": "YT - Handle Label"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chatwoot_url": "={{ $('Conversacion datos').item.json.chatwoot_url }}",
+            "account_id": "={{ $('Conversacion datos').item.json.account_id }}",
+            "conversation_id": "={{ $('Conversacion datos').item.json.conversation_id }}",
+            "type": "update",
+            "label": "={{ $('Selector de estado siguiente').item.json.output[0].next_state }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chatwoot_url",
+              "displayName": "chatwoot_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "account_id",
+              "displayName": "account_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "label",
+              "displayName": "label",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -160,
+        368
+      ],
+      "id": "a3d17c1a-f683-4a0d-baaf-b4394f4344e8",
+      "name": "Actualizar Label"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "LDQPMqcrRtGgtsuP",
+          "mode": "list",
+          "cachedResultName": "YT - Handle Label"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chatwoot_url": "={{ $('Conversacion datos').item.json.chatwoot_url }}",
+            "account_id": "={{ $('Conversacion datos').item.json.account_id }}",
+            "conversation_id": "={{ $('Conversacion datos').item.json.conversation_id }}",
+            "label": "={{ $('Actualizar Label').item.json.label }}",
+            "type": "next_options"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chatwoot_url",
+              "displayName": "chatwoot_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "account_id",
+              "displayName": "account_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "label",
+              "displayName": "label",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        32,
+        368
+      ],
+      "id": "a57330f6-451b-480c-89ae-871b0905e0ea",
+      "name": "Nuevos Siguientes Labels"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0eddc9a2-2402-4165-b267-134cea5dfca5",
+              "leftValue": "={{ $('Selector de estado siguiente').item.json.output[0].next_state }}",
+              "rightValue": "bot-conversacion-agente",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "dec5eabc-9ca7-4b66-a7bf-9c463572f81b",
+              "leftValue": "={{ $('Obtener label actual').item.json.label }}",
+              "rightValue": "bot-conversacion-agente",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -384,
+        368
+      ],
+      "id": "71d63f43-7337-4411-9b8a-c9525f29fc40",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "75dd0d21-3bba-4e2b-ab21-08633f305229",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2048,
+        368
+      ],
+      "id": "d85c0f2d-8aa9-400e-9ddf-f69483ab1480",
+      "name": "Chatwoot Trigger",
+      "webhookId": "75dd0d21-3bba-4e2b-ab21-08633f305229"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3a524507-299e-48c5-b791-e899a45d68f3",
+              "name": "chatwoot_url",
+              "value": "https://chatwoot.hansacha.com",
+              "type": "string"
+            },
+            {
+              "id": "5ec470ff-2c9c-443e-9d27-6b646e098f76",
+              "name": "account_id",
+              "value": "={{ $('Chatwoot Trigger').item.json.body.messages[0].account_id }}",
+              "type": "number"
+            },
+            {
+              "id": "0bae2966-e99a-4b41-acdd-186c1931eca9",
+              "name": "conversation_id",
+              "value": "={{ $('Chatwoot Trigger').item.json.body.id }}",
+              "type": "number"
+            },
+            {
+              "id": "34baf0be-c365-44f7-8a9e-fbc8d9007a7c",
+              "name": "message",
+              "value": "={{ $('Chatwoot Trigger').item.json.body.messages[0].content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1824,
+        368
+      ],
+      "id": "bce44b78-91ea-4cc6-9bbb-424a89a8fc07",
+      "name": "Conversacion datos"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c8fe1a30-789e-4771-bc0b-8a54d442a086",
+              "name": "new_message",
+              "value": "={{ $('Conversacion datos').item.json.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1152,
+        368
+      ],
+      "id": "15a29d1c-2fef-44d1-9b05-9626273dceee",
+      "name": "Message"
+    },
+    {
+      "parameters": {
+        "content": "## Captura nuevo mensaje",
+        "height": 336,
+        "width": 448,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2128,
+        240
+      ],
+      "typeVersion": 1,
+      "id": "0191d440-81c1-46bd-97f7-82f3deebcc83",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Enrutador - Clasificador",
+        "height": 880,
+        "width": 1616
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1648,
+        48
+      ],
+      "typeVersion": 1,
+      "id": "83427cdf-00cf-4f09-8df2-9e32f325d0a4",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Agentes especializados\n",
+        "height": 1040,
+        "width": 1056,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "6ca4ff5c-dec0-4414-b330-10a8894a8342",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Conversacion datos').item.json.conversation_id }}",
+        "tableName": "=n8n_chat_histories_{{ $('Conversacion datos').item.json.account_id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        512,
+        880
+      ],
+      "id": "d1717bae-0402-4318-a500-10d921543e84",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "s5B6xuVOHH0pHUzG",
+          "name": "Supabase - Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuración\n\n1. **Crea los estados en Chatwoot**  \n2. **Actualiza los nodos con la herramienta Gestor de Estados**:  \n   - `Obtener label actual`  \n   - `Siguientes Labels`  \n   - `Actualizar Label`  \n   - `Nuevos Siguientes Labels`  \n3. **Actualiza tu `api_access_token` de Chatwoot** en los nodos **HTTP Requests**  \n4. **Configura el Switch** con los estados que hayas definido  \n5. **Actualiza tus credenciales de PostgreSQL**  \n6. **Configura el Webhook URL en Chatwoot**\n\n---\n\n📺 Puedes guiarte con este video:  \n👉 [Cómo configurar paso a paso](https://youtu.be/VgoYYQpTryo)  \n\n🔔 Además, tienes más **video-guías completas** en mi canal de YouTube:  \n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 576,
+        "width": 864,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3040,
+        48
+      ],
+      "typeVersion": 1,
+      "id": "53c7df12-75a0-4e76-9bd0-4509fe77a603",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Label Selector": {
+      "main": [
+        [
+          {
+            "node": "Inicio Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Faq Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Catalogo Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Agente Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Inicio Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Catalogo Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Faq Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Agente Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inicio Agent": {
+      "main": [
+        [
+          {
+            "node": "Enviar mensaje para Inicio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Catalogo Agent": {
+      "main": [
+        [
+          {
+            "node": "Enviar mensaje para Catalogo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Faq Agent": {
+      "main": [
+        [
+          {
+            "node": "Enviar mensaje para Faq",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente Agent": {
+      "main": [
+        [
+          {
+            "node": "Enviar mensaje para Agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Selector de estado siguiente",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get historial chat": {
+      "main": [
+        [
+          {
+            "node": "Merge History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge History": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Selector de estado siguiente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Selector de estado siguiente",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener label actual": {
+      "main": [
+        [
+          {
+            "node": "Get historial chat",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Siguientes Labels",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Siguientes Labels": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Selector de estado siguiente": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar Label": {
+      "main": [
+        [
+          {
+            "node": "Nuevos Siguientes Labels",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nuevos Siguientes Labels": {
+      "main": [
+        [
+          {
+            "node": "Label Selector",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Actualizar Label",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chatwoot Trigger": {
+      "main": [
+        [
+          {
+            "node": "Conversacion datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conversacion datos": {
+      "main": [
+        [
+          {
+            "node": "Obtener label actual",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agente Agent",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Faq Agent",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Catalogo Agent",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Inicio Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2f34eee2-de21-4b50-af56-eacb1fbf7ec1",
+  "meta": {
+    "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
+  },
+  "id": "WyuQlLPERm1Rz6gW",
+  "tags": []
+}

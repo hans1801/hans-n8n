@@ -1,0 +1,784 @@
+{
+  "name": "YT - Handle Label",
+  "nodes": [
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "570ca53e-1664-4270-be2a-c17bba87a485",
+                    "leftValue": "={{ $('Trigger Label').item.json.type }}",
+                    "rightValue": "start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "iniciar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5b51a021-59a9-4ace-9f86-42de5d4b70dc",
+                    "leftValue": "={{ $('Trigger Label').item.json.type }}",
+                    "rightValue": "update",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "actualizar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "eb2beb59-9690-473b-bd5f-4877e72d8f34",
+                    "leftValue": "={{ $('Trigger Label').item.json.type }}",
+                    "rightValue": "get",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "obtener label actual"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        672,
+        400
+      ],
+      "id": "b220fdba-07ca-47d7-9258-8aef3aead335",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "jsCode": "const current_labels = $('List Labels').first().json.payload;\nconst state_labels = $('Labels').first().json.label_list;\nconst state_label_to_update = $('Trigger Label').first().json.label;\n\n// 1) Filtrar: quitar los labels que estén dentro de state_labels\nlet new_labels = current_labels.filter(lbl => !state_labels.includes(lbl));\n\n// 2) Agregar el nuevo label de estado solo si es válido\nif (state_labels.includes(state_label_to_update)) {\n  new_labels.push(state_label_to_update);\n}\n\n// 3) Eliminar duplicados preservando el orden\nnew_labels = [...new Set(new_labels)];\n\nreturn { labels: new_labels };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        320
+      ],
+      "id": "414c3652-9472-4e2e-94c3-9f178c8fc980",
+      "name": "Update labels"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Trigger Label').item.json.chatwoot_url }}/api/v1/accounts/{{ $('Trigger Label').item.json.account_id }}/conversations/{{ $('Trigger Label').item.json.conversation_id }}/labels",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "labels",
+              "value": "={{ $json.labels }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        320
+      ],
+      "id": "cb0908b7-eec8-48ca-b55c-195933dc19a4",
+      "name": "Chatwoot - Update labels",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9fwaWcktiMKQaHox",
+          "name": "Chatwoot access key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const current_labels = $('List Labels').first().json.payload;\nconst state_labels = $('Labels').first().json.label_list;\nconst state_label_to_update = $(\"Label Settings\").first().json.label_settings.inicio;\n\n\n\n// 1. Filtrar: quitar los labels que estén dentro de state_labels\nlet new_labels = current_labels.filter(label => !state_labels.includes(label));\n\n// 2. Agregar el nuevo label de estado (siempre, o solo si existe)\nif (state_labels.includes(state_label_to_update)) {\n  new_labels.push(state_label_to_update);\n}\n\nreturn { labels: new_labels };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        128
+      ],
+      "id": "aa9c19c4-6874-442d-9597-9ccd23761f9f",
+      "name": "Add start label"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Trigger Label').item.json.chatwoot_url }}/api/v1/accounts/{{ $('Trigger Label').item.json.account_id }}/conversations/{{ $('Trigger Label').item.json.conversation_id }}/labels",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "labels",
+              "value": "={{ $json.labels }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        128
+      ],
+      "id": "eca63096-eed2-47cd-8ffe-7406bc7c332c",
+      "name": "Chatwoot - Start Label",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9fwaWcktiMKQaHox",
+          "name": "Chatwoot access key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f44a44b7-2c56-4955-ba35-e83757b03d1a",
+              "name": "label",
+              "value": "={{ $('Label Settings').item.json.label_settings.inicio }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1344,
+        128
+      ],
+      "id": "070b2ca9-18a3-4dbc-9525-8a726d161021",
+      "name": "Start Label"
+    },
+    {
+      "parameters": {
+        "jsCode": "const current_labels = $('List Labels').first().json.payload;\nconst state_labels = $('Labels').first().json.label_list;\n\n// Buscar el primer estado válido\nconst label = current_labels.find(label => state_labels.includes(label)) || \"\";\n\nreturn { label };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        592
+      ],
+      "id": "4a6cc4b1-b5ed-4e96-b3a8-b0c16a41a932",
+      "name": "Get current label"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Trigger Label').item.json.type }}",
+                    "rightValue": "next_labels",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b8a4c3be-1e80-4bbc-8dd7-b849301fc96c"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "labels siguientes"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4ac00e57-9ba6-470e-bc5d-5bc2d61b4500",
+                    "leftValue": "={{ $('Trigger Label').item.json.type }}",
+                    "rightValue": "next_options",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "opciones siguientes"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        224,
+        112
+      ],
+      "id": "7404e9cc-3124-45dc-8da9-fbe5065ff759",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "chatwoot_url"
+            },
+            {
+              "name": "account_id",
+              "type": "number"
+            },
+            {
+              "name": "conversation_id",
+              "type": "number"
+            },
+            {
+              "name": "type"
+            },
+            {
+              "name": "label"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -448,
+        128
+      ],
+      "id": "1f980524-dcef-4dcc-8e31-313c676b8d28",
+      "name": "Trigger Label"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f83222c8-d568-4e87-bda0-381f827d7d62",
+              "name": "label_settings",
+              "value": "={\n  \"inicio\": \"bot-conversacion-inicio\",\n  \"labels\": [\n    {\n      \"label\": \"bot-conversacion-inicio\",\n      \"criterio\": \"El usuario no decide que realizar\",\n      \"opcion\": \"Volver al inicio – mostrar opciones iniciales.\",\n      \"siguientes\": [\n        \"bot-conversacion-catalago\",\n        \"bot-conversacion-faq\",\n        \"bot-conversacion-agente\"\n      ]\n    },\n    {\n      \"label\": \"bot-conversacion-catalago\",\n      \"criterio\": \"El usuario tiene la intencion de ver el catalogo\",\n      \"opcion\": \"Ver catálogo – mostrar productos y servicios disponibles.\",\n      \"siguientes\": [\n\"bot-conversacion-agente\",\n        \"bot-conversacion-faq\"\n      ]\n    },\n    {\n      \"label\": \"bot-conversacion-faq\",\n      \"criterio\": \"El usuario tiene la intencion de resolver sus dudas\",\n      \"opcion\": \"Responder consultas frecuentes (FAQ) – resolver dudas rápidas con respuestas predefinidas.\",\n      \"siguientes\": [\n        \"bot-conversacion-catalago\",\n        \"bot-conversacion-agente\"\n      ]\n    },\n    {\n      \"label\": \"bot-conversacion-agente\",\n      \"criterio\": \"El usuario tiene la intencion de conversar con un humano\",\n      \"opcion\": \"Hablar con un agente – derivar la conversación a un asesor humano.\",\n      \"siguientes\": []\n    }\n  ]\n}\n",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -224,
+        128
+      ],
+      "id": "75dfc05b-e133-41f9-b2bf-ceb4dd2b1c2d",
+      "name": "Label Settings"
+    },
+    {
+      "parameters": {
+        "jsCode": "const label_settings = $(\"Label Settings\").first().json.label_settings;\n\n// Extraer solo los labels principales como strings\nconst label_list = (label_settings.labels || []).map(l => l.label);\n\nreturn { label_list };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        128
+      ],
+      "id": "2c9412a2-e6d3-4775-a7e0-08e13fbbec30",
+      "name": "Labels"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Trigger Label').item.json.chatwoot_url }}/api/v1/accounts/{{ $('Trigger Label').item.json.account_id }}/conversations/{{ $('Trigger Label').item.json.conversation_id }}/labels",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        448,
+        416
+      ],
+      "id": "e3ff5579-0665-48da-9ae4-db4510ce8509",
+      "name": "List Labels",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9fwaWcktiMKQaHox",
+          "name": "Chatwoot access key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cf2d53f0-4077-4bb4-a8d1-ed7e61a3988d",
+              "leftValue": "={{ $json.label }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        592
+      ],
+      "id": "b016363b-24ba-4c66-b7c4-84a832cf42e6",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "LDQPMqcrRtGgtsuP",
+          "mode": "list",
+          "cachedResultName": "YT - Handle Label"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chatwoot_url": "={{ $('Trigger Label').item.json.chatwoot_url }}",
+            "account_id": "={{ $('Trigger Label').item.json.account_id }}",
+            "conversation_id": "={{ $('Trigger Label').item.json.conversation_id }}",
+            "type": "start"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chatwoot_url",
+              "displayName": "chatwoot_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "account_id",
+              "displayName": "account_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "label",
+              "displayName": "label",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        512
+      ],
+      "id": "76199958-d36e-4bb2-bdd8-ce613e325498",
+      "name": "Set Start Label"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "70416137-e5c7-4a09-a95a-fdea73c0d815",
+              "name": "label",
+              "value": "={{ $json.label }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        592
+      ],
+      "id": "be2adf67-a607-422a-bac0-19b3a3e011e0",
+      "name": "Current_label"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "70416137-e5c7-4a09-a95a-fdea73c0d815",
+              "name": "label",
+              "value": "={{ $('Trigger Label').item.json.label }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1344,
+        320
+      ],
+      "id": "0b464cff-6aa5-4483-86bc-8fadd5a807cc",
+      "name": "Updated Label"
+    },
+    {
+      "parameters": {
+        "jsCode": "const current_label = $('Trigger Label').first().json.label;\nconst label_settings = $('Label Settings').first().json.label_settings;\n\n// 1) Buscar el objeto del current_label\nconst current = label_settings.labels.find(l => l.label === current_label);\n\nif (!current) {\n  return { opciones: [] };\n}\n\n// 2) Para cada siguiente, buscar su objeto y opcion\nconst opciones = current.siguientes\n  .map(lbl => {\n    const target = label_settings.labels.find(l => l.label === lbl);\n    return target ? { opcion: target.opcion } : null;\n  })\n  .filter(Boolean);\n\n// 3) Respuesta solo con opciones\nreturn { opciones };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        224
+      ],
+      "id": "84450400-2637-40be-a42b-53c529d0435f",
+      "name": "Next Labels Options"
+    },
+    {
+      "parameters": {
+        "jsCode": "const current_label = $('Trigger Label').first().json.label;\nconst label_settings = $('Label Settings').first().json.label_settings;\n\n// 1) Buscar el objeto del current_label\nconst current = label_settings.labels.find(l => l.label === current_label);\n\nif (!current) {\n  return { current_label, criterios_cambio: []};\n}\n\n// 2) Para cada siguiente, buscar su objeto y criterio\nconst criterios_cambio = current.siguientes\n  .map(lbl => {\n    const target = label_settings.labels.find(l => l.label === lbl);\n    return target ? { label: target.label, criterio: target.criterio } : null;\n  })\n  .filter(Boolean);\n\n// 3) Respuesta\nreturn {\n  current_label,\n  criterios_cambio,\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        32
+      ],
+      "id": "27e8dcd0-5366-445f-a745-7f02c88224ae",
+      "name": "Next Labels Criteria"
+    },
+    {
+      "parameters": {
+        "content": "## 🛠️ Herramienta Gestor de Estados\n\n1. **Actualiza los nodos principales**:  \n   - `Label Settings`  \n   - `Set Start Label`  \n2. **Configura `Label Settings`** como la representación de una **máquina finita de estados en formato JSON**  \n3. **Actualiza tu `api_access_token` de Chatwoot** en los nodos **HTTP Requests**\n\n---\n\n📺 Puedes guiarte con este video:  \n👉 [Cómo configurar paso a paso](https://youtu.be/VgoYYQpTryo)  \n\n🔔 Además, tienes más **video-guías completas** en mi canal de YouTube:  \n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 1120,
+        "width": 2288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -496,
+        -288
+      ],
+      "typeVersion": 1,
+      "id": "eb9ca3b9-4aba-4760-8271-e4b3c30fb752",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {
+    "Trigger Label": [
+      {
+        "json": {
+          "chatwoot_url": "https://chatwoot.hansacha.com",
+          "account_id": 1,
+          "conversation_id": 93,
+          "type": "start",
+          "label": null
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Add start label",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update labels",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get current label",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update labels": {
+      "main": [
+        [
+          {
+            "node": "Chatwoot - Update labels",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add start label": {
+      "main": [
+        [
+          {
+            "node": "Chatwoot - Start Label",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chatwoot - Start Label": {
+      "main": [
+        [
+          {
+            "node": "Start Label",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Next Labels Criteria",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Next Labels Options",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "List Labels",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger Label": {
+      "main": [
+        [
+          {
+            "node": "Label Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Label Settings": {
+      "main": [
+        [
+          {
+            "node": "Labels",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Labels": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Labels": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get current label": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Set Start Label",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Current_label",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Start Label": {
+      "main": [
+        [
+          {
+            "node": "Current_label",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chatwoot - Update labels": {
+      "main": [
+        [
+          {
+            "node": "Updated Label",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e412f0d9-03ae-4d3a-8d0a-36dca7d03d33",
+  "meta": {
+    "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
+  },
+  "id": "LDQPMqcrRtGgtsuP",
+  "tags": []
+}
