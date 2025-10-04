@@ -1,0 +1,293 @@
+{
+  "name": "YT - Gestor datos",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "chatwoot_url"
+            },
+            {
+              "name": "account_id",
+              "type": "number"
+            },
+            {
+              "name": "conversation_id",
+              "type": "number"
+            },
+            {
+              "name": "type"
+            },
+            {
+              "name": "attributes",
+              "type": "object"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -768,
+        -80
+      ],
+      "id": "9597a4bd-d21d-4992-a97f-6be7c568a84b",
+      "name": "Trigger Attributes"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  attributes: [\n    \"ciudad\",\n    \"tipo_de_servicio\",\n    \"nivel_de_intervencion\", \n    \"tamano\",\n    \"fecha_reunion\",\n    \"nombre_contacto\",\n    \"tipo_de_espacio\"\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -544,
+        -80
+      ],
+      "id": "502c2996-4299-48da-aaca-bd795066f1ba",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Trigger Attributes').item.json.type }}",
+                    "rightValue": "=get",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "e25a8c4f-bc99-4de2-8a4b-06b77a0a2ab7"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "get"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b89bb001-4998-4e93-9395-ae8a058acf4c",
+                    "leftValue": "={{ $('Trigger Attributes').item.json.type }}",
+                    "rightValue": "=update",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "update"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -96,
+        -80
+      ],
+      "id": "407183e1-b4b6-453e-8ed8-53a002843775",
+      "name": "Operation"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Trigger Attributes').item.json.chatwoot_url }}/api/v1/accounts/{{ $('Trigger Attributes').item.json.account_id }}/conversations/{{ $('Trigger Attributes').item.json.conversation_id }}/custom_attributes",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "custom_attributes",
+              "value": "={{ $('update key info').item.json }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        352,
+        16
+      ],
+      "id": "44541c36-b5ce-41ef-9a4f-ff13e3ddc790",
+      "name": "Chatwoot - Update Attributes",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9fwaWcktiMKQaHox",
+          "name": "Chatwoot access key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Trigger Attributes').item.json.chatwoot_url }}/api/v1/accounts/{{ $('Trigger Attributes').item.json.account_id }}/conversations/{{ $('Trigger Attributes').item.json.conversation_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -320,
+        -80
+      ],
+      "id": "b3fae79b-7e27-4485-9430-9a185da053d3",
+      "name": "Get custom attributes",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9fwaWcktiMKQaHox",
+          "name": "Chatwoot access key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let custom_attributes = $('Get custom attributes').first().json.custom_attributes || {};\nconst attributes = $('Edit Fields').first().json.attributes || [];\n\n// Ensure all attributes are included, default \"\" if not found\nconst found = attributes.map(attr => [attr, custom_attributes[attr] ?? \"\"]);\n\n// Return object with all attributes\nreturn {\n  key_info: Object.fromEntries(found)\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        128,
+        -176
+      ],
+      "id": "a5218da2-d3c5-428d-8a26-668ade3b027f",
+      "name": "key info"
+    },
+    {
+      "parameters": {
+        "jsCode": "let custom_attributes = $('Get custom attributes').first().json.custom_attributes || {};\nconst attributes = $('Edit Fields').first().json.attributes || [];\nconst new_attributes = $('Trigger Attributes').first().json.attributes || {};\n\n\n// Ensure all attributes are included, default \"\" if not found\nconst found = attributes.map(attr => [attr, custom_attributes[attr] ?? \"\"]);\n\n// Build consolidated base object\nlet consolidated = Object.fromEntries(found);\n\n// Update ONLY fields defined in new_attributes (and existing in consolidated)\nfor (const [key, value] of Object.entries(new_attributes)) {\n  if (consolidated.hasOwnProperty(key)) {\n    consolidated[key] = value;\n  }\n}\n\nreturn {\n  json: consolidated\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        128,
+        16
+      ],
+      "id": "3fa0cc59-cd1d-4b18-902a-9eeec06b568c",
+      "name": "update key info"
+    }
+  ],
+  "pinData": {
+    "Trigger Attributes": [
+      {
+        "json": {
+          "chatwoot_url": "https://chatwoot.hansacha.com",
+          "account_id": 3,
+          "conversation_id": 13,
+          "type": "update",
+          "attributes": {
+            "ciudad": "lima",
+            "tipo_de_servicio": "",
+            "tamano": "38m2",
+            "disponibilidad_reunion": "",
+            "nombre_contacto": "",
+            "nivel_de_intervencion": ""
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Trigger Attributes": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Get custom attributes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Operation": {
+      "main": [
+        [
+          {
+            "node": "key info",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "update key info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get custom attributes": {
+      "main": [
+        [
+          {
+            "node": "Operation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update key info": {
+      "main": [
+        [
+          {
+            "node": "Chatwoot - Update Attributes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ab7a40a2-d4ca-4fb1-b3c8-3332c1e00f5f",
+  "meta": {
+    "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
+  },
+  "id": "Fmk3aeIdDD2trnAy",
+  "tags": []
+}

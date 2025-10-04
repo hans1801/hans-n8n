@@ -1,0 +1,751 @@
+{
+  "name": "YT - Datos clave + chatbot",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        528,
+        208
+      ],
+      "id": "5768c1a8-52d5-4ac1-a6e9-056c38b8ed03",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        768,
+        656
+      ],
+      "id": "f27658e1-fc02-4e7f-9999-e86c3f9ab2c3",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "ejwCdPuYPox1iNMH",
+          "name": "PROD - Quercus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1440,
+        448
+      ],
+      "id": "b7268ed5-b976-40db-8f82-7d15b6a0c3cf",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "ejwCdPuYPox1iNMH",
+          "name": "PROD - Quercus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Datos actuales:\n{{ JSON.stringify($('Actualizar datos').item.json.custom_attributes) }}\n\nMensaje a responder:\n{{ $('Start').item.json.message }}\n",
+        "options": {
+          "systemMessage": "=# Agente de Proyecto – Hans (Consultor)\n\n**Contexto:** Este agente busca **capturar a un cliente potencial**. Primero realiza algunas preguntas filtro para reunir los datos esenciales del proyecto y, una vez completados, invita al cliente a una **asesoría virtual gratuita de 30 minutos**.\n\n**Rol:** Eres **Hans**, consultor especializado en diseño y remodelación. Tu misión es recopilar de manera **clara, breve y natural** la información clave del proyecto del cliente, **sin sonar como cuestionario forzado**.\n\n---\n\n## Estilo y Tono\n\n* Conversación natural, cercana y sin tono de formulario.\n* Usa expresiones casuales cuando encajen: “super”, “genial”, “perfecto”, “listo”, “claro que sí”, etc.\n* Respuestas siempre breves, claras y amables, sin tecnicismos.\n* Máx. 2 preguntas puntuales por turno.\n\n## Reglas\n\n1. **Saludo inicial (obligatorio):** siempre presentarse como Hans, consultor en diseño y remodelación. Si el usuario saluda, añade también un **agradecimiento** en el primer turno antes de preguntar.\n2. **Enfoque en datos clave:** preguntar solo lo necesario para esta etapa.\n3. **No repetir ni inventar:** si un dato ya fue entregado por el usuario, no lo vuelvas a pedir ni lo inventes. Pregunta siempre solo por lo que aún falte, manteniendo un tono natural y fluido.\n4. **Filtro obligatorio:** no avanzar sin **ciudad**. Si no hay ciudad, usar la plantilla **“Faltan datos clave”** y no avanzar.\n5. **Cobertura esencial:** guía la conversación para que, a lo largo de los turnos, queden cubiertos todos los **campos clave** mediante preguntas puntuales (máx. 2 por turno).\n6. **Concordancia natural:** adapta la redacción según el **tipo_de_espacio** mencionado por el cliente (ej. sala, cocina, oficina, etc.).\n7. **Actualización por turnos:** formula preguntas basadas en los **datos faltantes** que reciba este agente como contexto (no repitas lo ya dado por el usuario).\n8. **Cierre:** cuando estén cubiertos los datos esenciales, ofrece **asesoría gratuita de 30 min** (plantilla de **Cierre**).\n9. **Salida del agente:** **solo un mensaje textual natural** (no incluir JSON).\n\n## Campos clave\n\n* **ciudad** (texto)\n* **tipo_de_servicio**: `diseño de interiores` | `remodelación`\n* **tipo_de_espacio** (texto libre: sala, cocina, oficina, etc.)\n* **nivel_de_intervencion**: `completa` | `parcial`\n* **tamano** (numérico en m²)\n* **fecha_reunion** (formato: `YYYY-MM-DD HH:mm:ss+00`)\n* **nombre_contacto** (nombre del cliente)\n\n---\n\n## Estructura de mensaje\n\n* **{wrappers_positivo_opcional}:** expresiones breves positivas (ej. “Genial” · “Perfecto” · “Súper” · “Listo”).\n* **{wrappers_negativo_opcional}:** expresiones breves suaves cuando faltan datos (ej. “No te preocupes” · “Tranquilo”).\n* **{saludo_breve}:** saludo inicial corto (ej. \"¡Hola! Soy Hans, consultor en diseño y remodelación. ¡Un gusto saludarte! 👋\").\n* **{agradecimiento}:** gratitud breve tras el saludo (ej. “Gracias por escribirme”).\n* **{texto_faltantes}:** dinámico según el dato faltante. Ej. “la ciudad donde sería el proyecto” o “el tipo de servicio que necesitas”.\n* **{invitación_asesoría}:** mensaje cálido que invite a agendar asesoría gratuita de 30 min (ej. “¿Quieres agendar una asesoría gratuita de 30 minutos?”).\n\n---\n\n## Plantillas de salida\n\n**1) Base con saludo**\n\n{saludo_breve} {agradecimiento} {preguntas_clave}\n\n**2) Base sin saludo**\n\n{wrappers_positivo_opcional} {preguntas_clave}\n\n**3) Faltan datos clave**\n\n{wrappers_negativo_opcional}, cuando tengas {texto_faltantes} me comentas para seguir con el proyecto, es un detalle clave para poder ayudarte bien.\n\n**4) Cierre**\n\n{wrappers_positivo_opcional} Perfecto, te hemos agendado a ese horario. ¡Nos vemos! 👋\n\n**5) Ciudad fuera de cobertura**\n\nLo siento mucho, por ahora solo atendemos proyectos en Lima. Si en algún momento decides realizar tu proyecto aquí, será un gusto ayudarte. 😊\n\n---\n\n## Flujo orientativo\n\n* **Inicio con saludo:** si el usuario saluda, responder con saludo breve y agradecimiento. Luego preguntar solo por los **datos que falten** (ej. ciudad si no se indicó).\n* **Inicio sin saludo:** preguntar directamente por los **datos faltantes**.\n* **Obligatorio:** la **ciudad** es siempre obligatoria. Si el cliente indica una ciudad distinta a Lima, responder cordialmente que por ahora solo se atienden proyectos en Lima y no avanzar. Si no da ciudad, usar Escenario 3 (no avanzar).\n* **Si ya hay ciudad (y es Lima):** no volver a pedirla. Continúa preguntando solo por los **datos faltantes** (tipo_de_servicio solo si no fue indicado previamente, tipo_de_espacio, nivel_de_intervencion, tamano, fecha_reunion, nombre_contacto). Máx. 2 preguntas por turno.\n* **Cierre:** ofrecer asesoría gratuita (Escenario 4).\n* **No repetir información previa.** Formular siempre las preguntas basadas en los datos faltantes.\n* Basarse siempre en los datos actuales.\n\n---\n\n## Input\n\n* **Datos actuales:** `{ \"ciudad\":\"lima\", \"tipo_de_servicio\":\"remodelación\", ... }`\n* **Mensaje a responder:** *\"Hola Hans, me interesa remodelar mi cocina en Lima, ¿me podrías orientar con el proceso?\"*\n\n\nfecha de hoy es: {{ $now.setZone('UTC-5' )}}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1424,
+        224
+      ],
+      "id": "fa7a847a-99d6-4615-bf00-3d723c3b6c3a",
+      "name": "Proyecto Agent"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Fmk3aeIdDD2trnAy",
+          "mode": "list",
+          "cachedResultName": "YT - Gestor datos"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chatwoot_url": "={{ $('Start').item.json.chatwoot_url }}",
+            "account_id": "={{ $('Start').item.json.account_id }}",
+            "conversation_id": "={{ $('Start').item.json.conversation_id }}",
+            "type": "update",
+            "attributes": "={{ $json.output.key_info }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chatwoot_url",
+              "displayName": "chatwoot_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "account_id",
+              "displayName": "account_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "attributes",
+              "displayName": "attributes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        224
+      ],
+      "id": "d58e4eec-b3e6-49c7-9fcb-ea2dc0e20296",
+      "name": "Actualizar datos"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Start').item.json.conversation_id }}",
+        "tableName": "={{ $('Start').item.json.chat_table }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        1568,
+        448
+      ],
+      "id": "d1e93c0f-2789-4c81-80a7-b102c33806c1",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "iQjXrY7yVr42goOH",
+          "name": "PROD - Supabase prod"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Start').item.json.chatwoot_url }}/api/v1/accounts/{{ $('Start').item.json.account_id }}/conversations/{{ $('Start').item.json.conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "={{ $('Proyecto Agent').item.json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1776,
+        224
+      ],
+      "id": "5861f7ce-222e-406d-9c71-fdff2854cde8",
+      "name": "Enviar mensaje",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9fwaWcktiMKQaHox",
+          "name": "Chatwoot access key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "hans-yt",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -368,
+        224
+      ],
+      "id": "5584f0a3-1beb-457d-9ef7-f59af0205824",
+      "name": "Chatwoot Trigger",
+      "webhookId": "c680b893-77b0-4f3d-ac28-3016bd238ab8"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all items\nconst items = $input.all();\n\n// Map only type and content, checking message exists\nconst chat_history = items\n  .map(item => {\n    const msg = item.json?.message;\n    if (!msg) return null; // ignora si no hay message\n    return {\n      type: msg.type || \"\",\n      content: msg.content || \"\"\n    };\n  })\n  .filter(Boolean); // elimina los null\n\nreturn { chat_history };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        304,
+        32
+      ],
+      "id": "64694d2a-7f83-4dea-a3d7-5c03c53930b1",
+      "name": "Merge History"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "042782a6-cb0e-413a-9a7b-2269913940b4",
+              "name": "chatwoot_url",
+              "value": "https://chatwoot.hansacha.com",
+              "type": "string"
+            },
+            {
+              "id": "438db667-6e87-4136-8052-94fdf64ee792",
+              "name": "account_id",
+              "value": "={{ $json.body.messages[0].account_id }}",
+              "type": "number"
+            },
+            {
+              "id": "664978df-da9c-4dfd-aafa-0086bd4babe0",
+              "name": "conversation_id",
+              "value": "={{ $json.body.messages[0].conversation_id }}",
+              "type": "number"
+            },
+            {
+              "id": "7dcb28c8-ae9e-42bb-a7ea-3f33b960b4aa",
+              "name": "message",
+              "value": "={{ $json.body.messages[0].content }}",
+              "type": "string"
+            },
+            {
+              "id": "737d0e9f-ea4e-4abd-814d-138bbd909b48",
+              "name": "chat_table",
+              "value": "=quercus_n8n_chat_histories_{{ $json.body.messages[0].account_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -144,
+        224
+      ],
+      "id": "cbb1bca1-9473-47a7-8f52-a4b391b32a12",
+      "name": "Start"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "={{ $('Start').item.json.chat_table }}",
+          "mode": "name"
+        },
+        "limit": 16,
+        "where": {
+          "values": [
+            {
+              "column": "session_id",
+              "value": "={{ $('Start').item.json.conversation_id.toString() }}"
+            }
+          ]
+        },
+        "sort": {
+          "values": [
+            {
+              "column": "id",
+              "direction": "DESC"
+            }
+          ]
+        },
+        "options": {
+          "outputColumns": "={{ [\"message\"] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        80,
+        32
+      ],
+      "id": "c052ca77-5eda-4f42-a289-799bbb7dc119",
+      "name": "Historial",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "iQjXrY7yVr42goOH",
+          "name": "PROD - Supabase prod"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c8fe1a30-789e-4771-bc0b-8a54d442a086",
+              "name": "new_message",
+              "value": "={{ $('Start').item.json.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        304,
+        224
+      ],
+      "id": "4b9bd5f4-1aa4-4e11-af0b-ddca589d9fcf",
+      "name": "Mensaje"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Merge').item.json }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=## Agente – Extracción de datos (NLU)\n\n**Rol:** Identificar y actualizar los **datos clave** del proyecto a partir del último mensaje y el histórico (como contexto).\n\n**Input:** mensaje del usuario + histórico.\n\n**Output:** JSON con los campos actualizados.\n\n### Campos clave\n\n* **ciudad** (texto; p. ej., Lima, Arequipa, Trujillo, Miraflores, San Isidro)\n* **tipo_de_servicio** (enum): `diseño de interiores` | `remodelación`\n* **tipo_de_espacio** (texto libre; relacionado a un espacio como sala, cocina, baño, dormitorio, oficina, local comercial, terraza, fachada, etc.)\n* **nivel_de_intervencion** (enum): `completa` | `parcial`\n* **tamano** (numérico en m²; aceptar \"m2\", \"mts2\", \"metros\")\n* **fecha_reunion** (formato fijo: `YYYY-MM-DD HH:mm:ss+00`)\n* **nombre_contacto** (texto; corresponde al nombre del cliente, inferible por firma, saludo o cuando se presenta en la conversación)\n\n### Reglas de extracción\n\n* **Normalizar**: guardar valores en minúsculas y sin tildes/puntuación, salvo **nombre_contacto** (conservar mayúsculas propias).\n* **tipo_de_servicio** (enum):\n\n  * `interiores|diseno interior|interiorismo|decoracion` → `diseño de interiores`\n  * `remodelacion integral|integral|llave en mano|todo|completa|reconstruccion|reconstruir|volver a hacer` → `remodelación`\n* **tipo_de_espacio**: extraer cualquier mención a un espacio específico (ej. sala, cocina, baño, dormitorio, oficina, local, terraza, fachada). Mantenerlo como texto abierto, normalizado.\n* **nivel_de_intervencion**:\n\n  * `completa|total|full|de cero|a todo` → `completa`\n  * `parcial|pequenos cambios|solo algunos cambios|por partes` → `parcial`\n* **ciudad**: detectar topónimos y distritos frecuentes (p. ej., `lima`, `miraflores`, `san isidro`, `arequipa`, `trujillo`). Mapear alias comunes si aplica.\n* **tamano**: extraer el número más relevante:\n\n  * Patrones: `(\\d{1,4})\\s?(m2|m²|mts2|metros)` y rangos `X-Y`.\n  * Guardar como número (m²). Si es **rango**, producir `{ \"min\": X, \"max\": Y }`.\n* **fecha_reunion**: convertir expresiones naturales (\"hoy\", \"mañana\", \"próximo lunes\", \"esta semana\"), horas (`HH:MM`, `4pm`), o rangos (\"3–5pm\") al formato `YYYY-MM-DD HH:mm:ss+00`. Si no es posible, dejar vacío.\n* **nombre_contacto**: detectar en frases como \"soy …\", \"me llamo …\", \"mi nombre es …\" o por firma al final. Limpiar emojis/comillas.\n* **Persistencia incremental**: si un campo ya existe y llega información más precisa, **sobrescribir**; si es contradictoria, conservar **la más reciente** y marcar `source=\"last_message\"` (opcional).\n\n### Output esperado\n\n```json\n{\n  \"key_info\": {\n    \"ciudad\": \"{detectada_o_vacia}\",\n    \"tipo_de_servicio\": \"{diseno de interiores|remodelacion|vacio}\",\n    \"tipo_de_espacio\": \"{texto_relacionado_o_vacio}\",\n    \"nivel_de_intervencion\": \"{completa|parcial|vacio}\",\n    \"tamano\": \"{numero_en_m2_o_rango}\",\n    \"fecha_reunion\": \"{YYYY-MM-DD HH:mm:ss+00}\",\n    \"nombre_contacto\": \"{detectado_o_vacio}\"\n  }\n}\n```\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        752,
+        224
+      ],
+      "id": "4cc14aad-6ec3-4c3b-97f7-5c59342d2638",
+      "name": "Datos Agent"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"key_info\": {\n    \"ciudad\": \"Lima\",\n    \"tipo_de_servicio\": \"remodelación\",\n    \"tipo_de_espacio\": \"cocina\",\n    \"nivel_de_intervencion\": \"completa\",\n    \"tamano\": \"25 m2\",\n    \"fecha_reunion\": \"2025-10-10 15:00:00+00\",\n    \"nombre_contacto\": \"Carlos\"\n  }\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        944,
+        656
+      ],
+      "id": "02abfb11-3171-4c6b-b863-55108f9654fa",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        832,
+        448
+      ],
+      "id": "02bbbb65-3afc-4dfe-bd37-63c5870be8fd",
+      "name": "Auto-fixing Output Parser"
+    },
+    {
+      "parameters": {
+        "content": "## Captura de datos clave",
+        "height": 976,
+        "width": 1328,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        16,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "dea37242-2f26-48f6-915e-293d47cb9668",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Chatbot con informacion actualizada",
+        "height": 976,
+        "width": 608,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1360,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "01af464e-4006-4db0-9a2c-f1ca3db338fd",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Datos base",
+        "height": 976,
+        "width": 416
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -416,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "2cac33fa-a573-495f-81bf-e38c9d298610",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Fmk3aeIdDD2trnAy",
+          "mode": "list",
+          "cachedResultName": "YT - Gestor datos"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chatwoot_url": "={{ $('Start').item.json.chatwoot_url }}",
+            "account_id": "={{ $('Start').item.json.account_id }}",
+            "conversation_id": "={{ $('Start').item.json.conversation_id }}",
+            "type": "get"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chatwoot_url",
+              "displayName": "chatwoot_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "account_id",
+              "displayName": "account_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "attributes",
+              "displayName": "attributes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        304,
+        416
+      ],
+      "id": "ec718778-5dad-43f8-a677-1120aba05e5d",
+      "name": "Datos calve actuales1"
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuración\n\n1. **Crea los attributes en Chatwoot**  \n2. **Actualiza el subworkflow: herramienta Gestor de Datos**:  \n3. **Actualiza tu `api_access_token` de Chatwoot** en los nodos **HTTP Requests**  \n4. **Configura el nodo Start** con la url de Chatwoot que uses  \n5. **Actualiza tus credenciales de PostgreSQL**  \n6. **Configura el Webhook URL en Chatwoot**\n\n---\n\n📺 Puedes guiarte con este video:  \n👉 [Cómo configurar paso a paso](https://youtu.be/5PnZZ9h8kgg)  \n\n🔔 Además, tienes más **video-guías completas** en mi canal de YouTube:  \n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 960,
+        "width": 864,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1296,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "fd0f3790-ecf8-4836-a6bd-73fcf929ee22",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Datos Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Datos Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Proyecto Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Proyecto Agent": {
+      "main": [
+        [
+          {
+            "node": "Enviar mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar datos": {
+      "main": [
+        [
+          {
+            "node": "Proyecto Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Proyecto Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chatwoot Trigger": {
+      "main": [
+        [
+          {
+            "node": "Start",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge History": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Mensaje",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Datos calve actuales1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Historial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Historial": {
+      "main": [
+        [
+          {
+            "node": "Merge History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensaje": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Datos Agent": {
+      "main": [
+        [
+          {
+            "node": "Actualizar datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Datos Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Datos calve actuales1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "914141bd-d1ab-4c99-ab5d-e3d645936436",
+  "meta": {
+    "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
+  },
+  "id": "fxumebbYqQGJMkxD",
+  "tags": []
+}
