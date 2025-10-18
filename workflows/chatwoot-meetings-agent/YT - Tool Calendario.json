@@ -1,0 +1,866 @@
+{
+  "name": "YT - Tool Calendario",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "65de14ee-a026-4200-b260-ff257624466a",
+              "name": "current_time",
+              "value": "={{ $now.setZone(`UTC${$json.utc}`) }}",
+              "type": "string"
+            },
+            {
+              "id": "f3b53e8a-ae4d-43f9-a5b1-15395fb54895",
+              "name": "available_days",
+              "value": "[\"monday\", \"tuesday\", \"wednesday\", \"thursday\", \"friday\", \"saturday\"]",
+              "type": "array"
+            },
+            {
+              "id": "65f8bec4-073f-41d6-b10e-53e08b243cb6",
+              "name": "available_start_time",
+              "value": "9:00",
+              "type": "string"
+            },
+            {
+              "id": "831b6f73-0ac3-4311-bb0f-f4abc8bf1797",
+              "name": "available_end_time",
+              "value": "18:00",
+              "type": "string"
+            },
+            {
+              "id": "19d82b17-e18e-430c-a937-30519d54c1fa",
+              "name": "min_meet_duration",
+              "value": 60,
+              "type": "number"
+            },
+            {
+              "id": "1c70b26c-b3f5-4590-ba5b-d840833b7250",
+              "name": "min_meet_threshold",
+              "value": 15,
+              "type": "number"
+            },
+            {
+              "id": "947b0c5e-36f0-45e7-95e9-43bc7803c758",
+              "name": "min_gap",
+              "value": 30,
+              "type": "number"
+            },
+            {
+              "id": "2f963f73-0cb1-4d57-b2f2-8ca7fd6d3ba9",
+              "name": "days_range",
+              "value": 14,
+              "type": "number"
+            },
+            {
+              "id": "1dca7d59-fd52-418e-be4d-401dbd46cf06",
+              "name": "recomendations_number",
+              "value": 3,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1232,
+        400
+      ],
+      "id": "424a0563-516b-4a59-8207-b210ff91ef2b",
+      "name": "Base data"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "type"
+            },
+            {
+              "name": "start_date_time"
+            },
+            {
+              "name": "end_date_time"
+            },
+            {
+              "name": "meet_date_time"
+            },
+            {
+              "name": "title"
+            },
+            {
+              "name": "email"
+            },
+            {
+              "name": "delete_id"
+            }
+          ]
+        }
+      },
+      "id": "870438e1-d932-4b99-9c85-2838d8b5d930",
+      "typeVersion": 1.1,
+      "name": "Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -1680,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Trigger').item.json.type }}",
+                    "rightValue": "=get_available",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "48d75d49-51e8-4d4b-b6ae-4e54292e70f7"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "get_available"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8d43ccfa-cd14-41e1-9767-4725601d4b02",
+                    "leftValue": "={{ $('Trigger').item.json.type }}",
+                    "rightValue": "set_meet",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "set_meet"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f1dd0c8d-9f1f-4813-a9a6-c8b717cd61fe",
+                    "leftValue": "={{ $('Trigger').item.json.type }}",
+                    "rightValue": "=delete_meet",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "delete_meet"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1008,
+        384
+      ],
+      "id": "33c7cc08-1900-40bf-acd4-50fafad6073f",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "hans.acha.brand@gmail.com",
+          "mode": "list",
+          "cachedResultName": "hans.acha.brand@gmail.com"
+        },
+        "start": "={{ $('Generate Dates').item.json.output.start_time }}",
+        "end": "={{ $('Generate Dates').item.json.output.end_time }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ $('Trigger').item.json.email }}"
+          ],
+          "description": "={{ $('Trigger').item.json.title }}",
+          "guestsCanSeeOtherGuests": true,
+          "summary": "={{ $('Trigger').item.json.title }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        112,
+        304
+      ],
+      "id": "d5f0aa13-836c-4456-8826-e539351c8bf2",
+      "name": "Create an event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "HadCTrx4birGpO7x",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const start_time = new Date($('Trigger').first().json.meet_date_time);\nconst min_meet_duration = $('Base data').first().json.min_meet_duration;\n\n// end_time = start_time + duración\nconst end_time = new Date(start_time.getTime() + min_meet_duration * 60000);\n\nreturn {\n  output: {\n    start_time: start_time,\n    end_time: end_time,\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -112,
+        304
+      ],
+      "id": "163a88cb-9b2a-4e55-8620-d5428dfa0727",
+      "name": "Generate Dates"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "hans.acha.brand@gmail.com",
+          "mode": "list",
+          "cachedResultName": "hans.acha.brand@gmail.com"
+        },
+        "returnAll": true,
+        "timeMin": "={{ $('Base data').item.json.current_time.toDateTime() }}",
+        "timeMax": "={{ $('Base data').item.json.current_time.toDateTime().plus({ days: $json.days_range }) }}",
+        "options": {
+          "orderBy": "startTime"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        -784,
+        16
+      ],
+      "id": "873aab67-afd1-407b-962f-7124b14d53ea",
+      "name": "Get many events",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "HadCTrx4birGpO7x",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const date_time = new Date($('Trigger').first().json.meet_date_time);\nconst groups = $input.first().json.available_slots || [];\n\nlet match = false;\n\n// Buscar dentro de cada fecha y sus slots\nfor (const group of groups) {\n  for (const slot of group.slots || []) {\n    const start = new Date(slot.start_date_time);\n    \n    // Verifica si coincide exactamente con el inicio del slot\n    if (date_time.getTime() === start.getTime()) {\n      match = true;\n      break;\n    }\n  }\n  if (match) break;\n}\n\nreturn [\n  {\n    json: {\n      exists_in_slots: match,\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -560,
+        400
+      ],
+      "id": "9077c4b3-364c-4be3-844b-c98956a1599a",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "81f91a46-c4a1-4a2b-b64d-67510d7accb0",
+              "leftValue": "={{ $json.exists_in_slots }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -336,
+        400
+      ],
+      "id": "db07361e-a8e5-4df6-98b3-7cbf6bfca564",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "hans.acha.brand@gmail.com",
+          "mode": "list",
+          "cachedResultName": "hans.acha.brand@gmail.com"
+        },
+        "eventId": "={{ $('Trigger').item.json.delete_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        -784,
+        592
+      ],
+      "id": "57d16f60-e5b6-415c-bd36-3a6ab9c5ff6f",
+      "name": "Delete an event",
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "HadCTrx4birGpO7x",
+          "name": "Google Calendar account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "78a9058d-8fba-4e7e-a217-adaed06e33d6",
+              "name": "utc",
+              "value": "-5",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1456,
+        400
+      ],
+      "id": "df752f1b-c560-47de-9d70-9d89d20d811c",
+      "name": "UTC"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Input:\nconst meets = $('List to object').first().json.meets\nconst base = $('Base data').first().json;\nconst min_meet_threshold = base.min_meet_threshold;\n\n// ======================\n// PARTE 1: Normalizar meets, sumando min_meet_threshold en UTC-0\n// ======================\n\nconst MS_PER_MIN = 60 * 1000;\n\nconst meets_normalized = meets.flatMap(meet => {\n  if(!meet.start || !meet.end) return [];\n  \n  const start = new Date(meet.start.dateTime);\n  const end   = new Date(meet.end.dateTime);\n  const endAdj = new Date(end.getTime() + min_meet_threshold * MS_PER_MIN);\n\n  return [{\n    start_date_time: start,\n    end_date_time:   endAdj,\n  }];\n});\n\n// ======================\n// PARTE 2: Fusionar meets\n// ======================\n\nfunction merge_meets(meets_normalized) {\n  if (meets_normalized.length == 0) return meets_normalized;\n  \n  const merged_meets = [meets_normalized[0]];\n  \n  for (let i = 1; i < meets_normalized.length; i++) {\n    const current_meet = meets_normalized[i];\n    const last_merged_meet = merged_meets[merged_meets.length - 1];\n\n    if(last_merged_meet.start_date_time <= current_meet.start_date_time && current_meet.start_date_time <= last_merged_meet.end_date_time) {\n      last_merged_meet.end_date_time = new Date(Math.max(last_merged_meet.end_date_time, current_meet.end_date_time));\n      \n    } else {\n      merged_meets.push(current_meet);\n      \n    }\n  }\n\n  return merged_meets;\n}\n\nconst merged_meets = merge_meets(meets_normalized)\n  \n\nreturn [{ json: { merged_meets } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -336,
+        112
+      ],
+      "id": "3c862623-2840-4295-9868-d08326ff998f",
+      "name": "Unavailable slots - Merge meets (UTC+0)"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "meets",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        16
+      ],
+      "id": "64825c4e-3060-4dff-8f4d-fcfe3eebdfcb",
+      "name": "List to object"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -112,
+        16
+      ],
+      "id": "c9749d62-a670-4231-afc6-6a4396c73523",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ========= Const =========\nconst MS_PER_MIN = 60 * 1000;\nconst MS_PER_HOUR = 60 * 60 * 1000;\nconst MS_PER_DAY = 24 * 60 * 60 * 1000;\n\n// ========= Inputs =========\nconst base = $('Base data').first().json || {};\nconst utcStr = String($('UTC').first().json.utc || \"+0\"); // solo para interpretar el horario laboral\nconst startHMStr = String(base.available_start_time || \"09:00\"); // \"HH:mm\"\nconst endHMStr   = String(base.available_end_time   || \"18:00\"); // \"HH:mm\"\n\n// Rango global (UTC)\nconst days_range = $('Base data').first().json.days_range\nconst start_time = new Date($('Base data').first().json.current_time); // ISO/RFC3339\nconst end_time   = new Date(start_time.getTime() + days_range * MS_PER_DAY);\n\n// ==== Utils ====\nfunction parseHHmm(hm) {\n  const m = String(hm).trim().match(/^(\\d{1,2}):(\\d{2})$/);\n  if (!m) return null;\n  const H = +m[1], M = +m[2];\n  return (H>=0 && H<=23 && M>=0 && M<=59) ? H*60 + M : null;\n}\nfunction floorToUtcMidnight(d) {\n  return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));\n}\nfunction toISO(d) { return new Date(d).toISOString(); }\nfunction intersect(aStart, aEnd, bStart, bEnd) {\n  const s = new Date(Math.max(aStart.getTime(), bStart.getTime()));\n  const e = new Date(Math.min(aEnd.getTime(),   bEnd.getTime()));\n  return e > s ? { start: s, end: e } : null;\n}\n\n// ==== Parse horario laboral (UTC) ====\nconst startHM = parseHHmm(startHMStr);\nconst endHM   = parseHHmm(endHMStr);\nif (startHM == null || endHM == null) {\n  return [{ json: { error: \"available_start_time / available_end_time inválidos. Usa HH:mm\" } }];\n}\n\n// Si start > end => cruce de medianoche: fin al día siguiente\nconst endHMPlus = (endHM <= startHM) ? endHM + 24*60 : endHM;\n\n// ==== PASO 1: Generar rangos diarios en UTC ====\n// Ventana extendida: [start_time - 2 día, end_time + 2 día]\nconst genStartUTC = new Date(start_time.getTime() - 2 * MS_PER_DAY);\nconst genEndUTC   = new Date(end_time.getTime()   + 2 * MS_PER_DAY);\n\n// Iterar por días en UTC (medianoche UTC)\nconst firstDayUTC = floorToUtcMidnight(genStartUTC);\nconst lastDayUTC  = floorToUtcMidnight(genEndUTC);\n\nconst generated_ranges = [];\nfor (let dayUTC = new Date(firstDayUTC); dayUTC <= lastDayUTC; dayUTC = new Date(dayUTC.getTime() + MS_PER_DAY)) {\n  const startUTC = new Date(dayUTC.getTime() + startHM   * MS_PER_MIN);\n  const endUTC   = new Date(dayUTC.getTime() + endHMPlus * MS_PER_MIN);\n  generated_ranges.push({ start_utc: toISO(startUTC), end_utc: toISO(endUTC) });\n}\n\n// ==== PASO 2: Intersectar con [start_time, end_time] ====\nconst available_work_ranges = [];\nfor (const r of generated_ranges) {\n  const start_utc = new Date(r.start_utc)\n  const end_utc = new Date(r.end_utc)\n  const start_offset = new Date(start_utc.getTime() - Number(utcStr) * MS_PER_HOUR)\n  const end_offset = new Date(end_utc.getTime() - Number(utcStr) * MS_PER_HOUR)\n  \n  const i = intersect(start_offset, end_offset, start_time, end_time);\n  if (i) {\n    available_work_ranges.push({\n      start_date_time: toISO(i.start),\n      end_date_time:   toISO(i.end),\n    });\n  }\n}\n\n// ==== Output ====\nreturn [{\n  json: {\n    available_work_ranges   // recortado dentro de [start_time, end_time]\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -336,
+        -80
+      ],
+      "id": "34d02b29-86a7-45c0-b3a6-4aca40cc069f",
+      "name": "Available work slots ranges (UTC+0)"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ===== Inputs (as given) =====\nconst available_work_ranges = $('Merge1').first().json.available_work_ranges\nconst merged_meets = $('Merge1').first().json.merged_meets\n\nconst MS_PER_MIN = 60 * 1000;\n\n// Conversión mínima a objetos Date\nconst W = available_work_ranges.map(r => ({ start: new Date(r.start_date_time), end: new Date(r.end_date_time) }));\nconst B = merged_meets.map(r => ({ start: new Date(r.start_date_time), end: new Date(r.end_date_time) }));\n\nconst free_ranges = [];\nlet j = 0; // puntero en ocupados\n\nfor (let i = 0; i < W.length; i++) {\n  const w = W[i];\n  let curStart = w.start;\n\n  // Avanzar ocupados que terminan antes de que empiece el bloque de trabajo\n  while (j < B.length && B[j].end <= w.start) j++;\n\n  // Restar solapes dentro de [w.start, w.end)\n  while (j < B.length && B[j].start < w.end) {\n    const b = B[j];\n\n    // Si hay hueco libre antes del inicio del ocupado, añádelo\n    if (b.start > curStart) {\n      const s = curStart;\n      const e = new Date(Math.min(b.start.getTime(), w.end.getTime()));\n      if (e > s) {\n        free_ranges.push({\n          start_date_time: s.toISOString(),\n          end_date_time:   e.toISOString(),\n          duration_minutes: Math.round((e - s) / MS_PER_MIN)\n        });\n      }\n    }\n\n    // Mover el inicio actual al final del ocupado (recortando el bloque de trabajo)\n    if (b.end > curStart) curStart = new Date(Math.max(b.end.getTime(), curStart.getTime()));\n\n    // Si el ocupado ya sobrepasó el fin del bloque de trabajo, salimos\n    if (curStart >= w.end) break;\n\n    j++;\n  }\n\n  // Si queda cola libre después del último ocupado que solapó\n  if (curStart < w.end) {\n    free_ranges.push({\n      start_date_time: curStart.toISOString(),\n      end_date_time:   w.end.toISOString(),\n      duration_minutes: Math.round((w.end - curStart) / MS_PER_MIN)\n    });\n  }\n}\n\nreturn [{ json: { free_ranges } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        112,
+        16
+      ],
+      "id": "c47e9d6a-db95-4203-9dfa-fa33f77da4ea",
+      "name": "Get available slots (UTC+0)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const slots = $('Get available slots (UTC+0)').first().json.free_ranges || [];\nconst meet_duration = Number($('Base data').first().json.min_meet_duration || 30);\nconst local_utc = Number($('UTC').first().json.utc)\nconst allowed_days = ($('Base data').first().json.available_days || []).map(d => String(d).toLowerCase());\nconst gap_minutes = $('Base data').first().json.min_gap\n\nconst start_query = new Date($('Trigger').first().json.start_date_time);\nconst end_query   = new Date($('Trigger').first().json.end_date_time);\nconst recomendation_number = Number($('Base data').first().json.recomendations_number)\n\n// Helpers\nconst MIN = 60 * 1000;\nconst HOUR = 60 * 60 * 1000;\n\nconst roundUpGap = (d) => {\n  const date = new Date(d);\n  const mins = date.getUTCMinutes();\n  const remainder = mins % gap_minutes;\n  if (remainder !== 0) {\n    date.setUTCMinutes(mins + (gap_minutes - remainder), 0, 0);\n  } else {\n    date.setUTCSeconds(0, 0);\n  }\n  return date;\n};\nconst addMinutes = (d, m) => new Date(new Date(d).getTime() + m * MIN);\nconst addHours = (d, h) => new Date(new Date(d).getTime() + h * HOUR);\n\n// Build grouped map\nconst byDate = {};\n\nfor (const w of slots) {\n  const rawStart = new Date(w.start_date_time);\n  const rawEnd   = new Date(w.end_date_time);\n\n  let start = roundUpGap(rawStart);\n  const end = rawEnd;\n\n  while (addMinutes(start, meet_duration) <= end) {\n    const slotStart = start;\n    const slotEnd = addMinutes(start, meet_duration);\n\n    const slotStartLocal = addHours(slotStart, local_utc);\n\n    const dateKey = slotStartLocal.toISOString().slice(0, 10); // YYYY-MM-DD UTC\n\n    byDate[dateKey] ||= [];\n    byDate[dateKey].push({\n      start_date_time: slotStart.toISOString(),\n      end_date_time: slotEnd.toISOString(),\n    });\n\n    start = addMinutes(start, gap_minutes); // next slot every gap_minutes min\n  }\n}\n\n\n// Filtrar días no permitidos\nconst groups = Object.entries(byDate)\n  .filter(([date]) => {\n    const weekday = new Date(date).toLocaleString(\"en-US\", { weekday: \"long\", timeZone: \"UTC\" }).toLowerCase();\n    return allowed_days.some(day => day === weekday);\n  })\n  .map(([date, slots]) => ({ date, slots }));\n\n\n// ------------------------------------------------------------------------\n\n\n\n// Convertir fechas del Trigger con UTC aplicado\nconst validRange = start_query && end_query && !isNaN(start_query) && !isNaN(end_query) && start_query < end_query;\n\nlet available_slots = [];\nif (validRange) {\n  // 🧩 Filtrar slots dentro del rango (sin aplicar UTC)\n  const filtered = groups\n    .map(g => {\n      const slots = (g.slots || []).filter(s => {\n        const sStart = new Date(s.start_date_time);\n        const sEnd   = new Date(s.end_date_time);\n        return (\n          sStart && sEnd &&\n          !isNaN(sStart) && !isNaN(sEnd) &&\n          sStart >= start_query && sEnd <= end_query\n        );\n      });\n      return { ...g, slots };\n    })\n    .filter(g => (g.slots && g.slots.length > 0));\n\n  // Si no hay coincidencias, devuelve el primer grupo\n  available_slots = filtered;\n\n} else {\n  // Si el rango no es válido, devolver el primer grupo\n  available_slots = groups[0] ? [groups[0]] : [];\n}\n\nlet recommended_slots = []\nif (available_slots.length === 0) {\n\n  const left = [];\n  const right = [];\n\n  outer:\n  for (const g of groups) {\n    for (const s of (g.slots || [])) {\n      const sStart = new Date(s.start_date_time);\n      const sEnd   = new Date(s.end_date_time);\n\n      if (sEnd <= start_query) {\n        left.push({ date: g.date, slot: s });\n        if (left.length > recomendation_number) left.shift();\n      } else if (sStart >= end_query && right.length < recomendation_number) {\n        right.push({ date: g.date, slot: s });\n        if (right.length >= recomendation_number) break outer;\n      }\n    }\n  }\n\n  // 2) Unir en orden: left + right\n  const combined = [...left, ...right];\n\n  // 3) Agrupar (simple) por fecha → [{ date, slots }]\n  const map = new Map();\n  for (const { date, slot } of combined) {\n    if (!map.has(date)) map.set(date, []);\n    map.get(date).push({\n      start_date_time: slot.start_date_time,\n      end_date_time: slot.end_date_time,\n    });\n  }\n\n  // Respeta el orden de `recommended_slots`\n  for (const g of groups) {\n    if (map.has(g.date)) {\n      recommended_slots.push({ date: g.date, slots: map.get(g.date) });\n    }\n  }\n}\n\n// Convertir tu UTC local\n\n// Helper para aplicar offset y devolver ISO con sufijo -06:00\nconst formatWithOffset = (isoStr, offsetHours) => {\n  const d = new Date(isoStr);\n\n  const yyyy = d.getFullYear();\n  const mm = String(d.getMonth() + 1).padStart(2, '0');\n  const dd = String(d.getDate()).padStart(2, '0');\n  const hh = String(d.getHours()).padStart(2, '0');\n  const min = String(d.getMinutes()).padStart(2, '0');\n  const ss = String(d.getSeconds()).padStart(2, '0');\n\n  const sign = offsetHours >= 0 ? '+' : '-';\n  const absOffset = Math.abs(offsetHours);\n  const offsetStr = `${sign}${String(absOffset).padStart(2, '0')}:00`;\n\n  return `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}${offsetStr}`;\n};\n\n// ✅ Procesar available_slots\nconst adjustedAvailable = available_slots.map(group => ({\n  date: group.date,\n  slots: (group.slots || []).map(slot => ({\n    start_date_time: formatWithOffset(addHours(slot.start_date_time, local_utc), local_utc),\n    end_date_time: formatWithOffset(addHours(slot.end_date_time, local_utc), local_utc),\n  }))\n}));\n\n// ✅ Procesar recommended_slots\nconst adjustedRecommended = recommended_slots.map(group => ({\n  date: group.date,\n  slots: (group.slots || []).map(slot => ({\n    start_date_time: formatWithOffset(addHours(slot.start_date_time, local_utc), local_utc),\n    end_date_time: formatWithOffset(addHours(slot.end_date_time, local_utc), local_utc),\n  }))\n}));\n\n\n// 🔁 Salida final\nreturn [\n  {\n    json: {\n      available_slots: adjustedAvailable,\n      recommended_slots: adjustedRecommended\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        336,
+        16
+      ],
+      "id": "5a01a156-b28f-4196-8ef9-8deaa1c2cdd5",
+      "name": "Group by Days (Local UTC)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "45e8e817-19c3-4ad2-8f4f-699d365555bf",
+              "name": "calendar_id",
+              "value": "={{ $('Create an event').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "b9c26b21-5740-4278-81bc-0c091c7d55e8",
+              "name": "title",
+              "value": "={{ $('Create an event').item.json.summary }}",
+              "type": "string"
+            },
+            {
+              "id": "168bace4-842b-4b5a-a9c1-607b62840668",
+              "name": "description",
+              "value": "={{ $('Create an event').item.json.description }}",
+              "type": "string"
+            },
+            {
+              "id": "967eea3f-ac4c-405e-928e-95b33111a278",
+              "name": "=start_date_time",
+              "value": "={{ $('Create an event').item.json.start.dateTime }}",
+              "type": "string"
+            },
+            {
+              "id": "9799af23-c6d3-4a79-aaac-c7cdcfdc896a",
+              "name": "end_date_time",
+              "value": "={{ $('Create an event').item.json.end.dateTime }}",
+              "type": "string"
+            },
+            {
+              "id": "548a8035-3ad5-4c66-949d-eef5512c48ba",
+              "name": "calendar_url",
+              "value": "={{ $('Create an event').item.json.htmlLink }}",
+              "type": "string"
+            },
+            {
+              "id": "017ff513-ed18-4baa-b20c-d3c9728e936d",
+              "name": "result",
+              "value": "agendado",
+              "type": "string"
+            },
+            {
+              "id": "e6d8d3fb-30fa-48ed-81c6-98c684f80ccc",
+              "name": "recommended_slots",
+              "value": "={{ $('Get Available').item.json.recommended_slots }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        336,
+        304
+      ],
+      "id": "d8a333e9-baae-4b06-9252-ae64b900e0eb",
+      "name": "Agenda Exitosa"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "569d69c6-47ae-4ed6-b169-c3aa824f7be3",
+              "name": "result",
+              "value": "Este horario no esta disponible para agendar, posiblemente acaba de ser ocupado. Por favor agendar en un nuevo horario",
+              "type": "string"
+            },
+            {
+              "id": "909fb343-9c11-4927-8e23-d0a462391c0a",
+              "name": "recommended_slots",
+              "value": "={{ $('Get Available').item.json.recommended_slots }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -112,
+        496
+      ],
+      "id": "154eaf81-3998-404f-8823-0671f63a3f92",
+      "name": "Agenda Fallida"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "rxwFZhg6ZGR17uqS",
+          "mode": "list",
+          "cachedResultName": "YT - Tool Calendario"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "type": "get_available",
+            "start_date_time": "={{ $('Trigger').item.json.meet_date_time.toDateTime() }}",
+            "end_date_time": "={{ $('Trigger').item.json.meet_date_time.toDateTime().plus($('Base data').item.json.min_meet_duration, 'minutes')}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "start_date_time",
+              "displayName": "start_date_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "end_date_time",
+              "displayName": "end_date_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "meet_date_time",
+              "displayName": "meet_date_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "delete_id",
+              "displayName": "delete_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -768,
+        400
+      ],
+      "id": "61575f24-8d5b-497b-8541-c2c7c31f757a",
+      "name": "Get Available"
+    }
+  ],
+  "pinData": {
+    "Trigger": [
+      {
+        "json": {
+          "type": "get_available",
+          "start_date_time": "2025-10-20T17:00:00.000-05:00",
+          "end_date_time": "2025-10-20T18:00:00.000-05:00",
+          "meet_date_time": null,
+          "title": null,
+          "email": null,
+          "delete_id": null
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Base data": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger": {
+      "main": [
+        [
+          {
+            "node": "UTC",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Get many events",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Available",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete an event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event": {
+      "main": [
+        [
+          {
+            "node": "Agenda Exitosa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Dates": {
+      "main": [
+        [
+          {
+            "node": "Create an event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many events": {
+      "main": [
+        [
+          {
+            "node": "List to object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Generate Dates",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Agenda Fallida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "UTC": {
+      "main": [
+        [
+          {
+            "node": "Base data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unavailable slots - Merge meets (UTC+0)": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "List to object": {
+      "main": [
+        [
+          {
+            "node": "Unavailable slots - Merge meets (UTC+0)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Available work slots ranges (UTC+0)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Available work slots ranges (UTC+0)": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Get available slots (UTC+0)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get available slots (UTC+0)": {
+      "main": [
+        [
+          {
+            "node": "Group by Days (Local UTC)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Available": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "98f2e73f-b496-4dc2-bf6d-d5a351d1f0af",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
+  },
+  "id": "rxwFZhg6ZGR17uqS",
+  "tags": []
+}

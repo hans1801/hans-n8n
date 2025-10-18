@@ -1,0 +1,2043 @@
+{
+  "name": "YT - Agente Citas",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -2992,
+        1264
+      ],
+      "id": "68238921-7736-4e47-b203-45ff33973859",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "XifEwxpfufUK3ARh",
+          "name": "OpenAi account - GPT5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "prompt": "Instructions:\n--------------\n{instructions}\n--------------\nCompletion:\n--------------\n{completion}\n--------------\n\nAbove, the Completion did not satisfy the constraints given in the Instructions.\nError:\n--------------\n{error}\n--------------\n\nPlease try again. Please only respond with an answer that satisfies the constraints laid out in the Instructions:"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        -2912,
+        1056
+      ],
+      "id": "f34b5b03-3077-4a88-952c-84cb94bb84d9",
+      "name": "Auto-fixing Output Parser"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"state\": \"consulta|confirmacion|ninguno\",\n  \"start_date_time\": \"\",\n  \"end_date_time\": \"\",\n  \"confirmated_date_time\": \"\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -2816,
+        1264
+      ],
+      "id": "7ff5ae20-a772-438e-a6a7-86db6660c227",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "rxwFZhg6ZGR17uqS",
+          "mode": "list",
+          "cachedResultName": "YT - Tool Calendario"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "type": "set_meet",
+            "meet_date_time": "={{ $('Detector de consultas').item.json.output.confirmated_date_time }}",
+            "title": "={{ $json.titulo }}",
+            "email": "={{ $json.correo }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "start_date_time",
+              "displayName": "start_date_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "end_date_time",
+              "displayName": "end_date_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "meet_date_time",
+              "displayName": "meet_date_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "delete_id",
+              "displayName": "delete_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -2096,
+        736
+      ],
+      "id": "cea9aa5b-36c0-41d7-9a87-38228abe72a5",
+      "name": "Assing meet"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "23c24c81-e642-4d9a-9be6-ca398868b1aa",
+              "leftValue": "={{ $('Assing meet').item.json.result }}",
+              "rightValue": "agendado",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1872,
+        736
+      ],
+      "id": "19c14a55-6d6e-4911-838b-983251d8e0bf",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ed2372ef-25e4-4d71-9881-6ae7344e7ef5",
+              "name": "objetivo",
+              "value": "={{ $json.objetivo }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -528,
+        640
+      ],
+      "id": "4d1bf87c-5c25-401a-91c8-2301f712b69a",
+      "name": "Data result"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nreturn [\n  {\n    source_of_truth: {\n      state: \"ninguno\",\n      available_slots: [],\n      recommended_slots: [],\n      confirmated_date_time: \"\",\n      meet_data: \"\",\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -976,
+        1264
+      ],
+      "id": "c1a57268-458f-4405-a6a9-4175d44d1f90",
+      "name": "source_of_truth fail ninguno"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -304,
+        864
+      ],
+      "id": "45590292-2ab9-4f6e-8e58-2c66ef29ee97",
+      "name": "OpenAI Chat Model5",
+      "credentials": {
+        "openAiApi": {
+          "id": "XifEwxpfufUK3ARh",
+          "name": "OpenAi account - GPT5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "46627f5c-0503-435a-8d0b-c6703b44aca3",
+              "name": "objetivo",
+              "value": "=---\n\n## Objetivo\n\nOfrecer 1 o 2 horarios sugeridos, distanciados entre si, manteniendo un tono empático y natural, utilizando la siguiente lista agrupada por fecha:\n\n{{ JSON.stringify($('Available slots').item.json.available_slots) }}\n\n**Ejemplo de respuesta:**\n\n> Puedo agendarte el lunes a las 10:45 o si prefieres más tarde, a las 12:15. ¿Cuál te viene mejor?",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -752,
+        64
+      ],
+      "id": "f838368b-506f-4723-a009-5eb85b15ff85",
+      "name": "Con disponibilidad"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "46627f5c-0503-435a-8d0b-c6703b44aca3",
+              "name": "objetivo",
+              "value": "=---\n\n## Objetivo\n\nIndicar con empatía que no hay espacios disponibles y pedir al cliente que proponga un horario alternativo.\n\n**Ejemplo de respuesta:**\n\n> Por ahora no tengo espacios disponibles 😅. ¿Podrías proponerme otro horario que te acomode?\n\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -752,
+        448
+      ],
+      "id": "e1fa42d0-c35e-46b2-9ad9-f6e366dd4fe9",
+      "name": "Sin recomendaciones"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "46627f5c-0503-435a-8d0b-c6703b44aca3",
+              "name": "objetivo",
+              "value": "=---\n\n## Objetivo\n\nNo encontraste un horario disponible, pero debes ofrecer 1 o 2 horarios sugeridos, distanciados entre si, manteniendo un tono empático y natural, utilizando la siguiente lista agrupada por fecha:\n\n{{ JSON.stringify($('Available slots').item.json.recommended_slots) }}\n\n**Ejemplo de respuesta:**\n\n> No tengo horarios libres en ese rango, pero puedo ofrecerte el **martes a las 9:15** o el **miércoles a las 10:30**. ¿Te funciona alguno?",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -752,
+        256
+      ],
+      "id": "a48d8f2b-7ed1-4e3f-b0c2-72714ed6f6a2",
+      "name": "Con recomendaciones"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "46627f5c-0503-435a-8d0b-c6703b44aca3",
+              "name": "objetivo",
+              "value": "=## Objetivo\n\nConfirmar la cita con naturalidad, sin pedir validación adicional. La fecha y hora confirmada fue la siguiente:\n\n{{ $('Detector de consultas').item.json.output.confirmated_date_time }}\n\nLink Calendar: [Abrir en Calendar]({{ $('Assing meet').item.json.calendar_url }})\n\n**Ejemplo de respuesta:**\n\n> Perfecto ✅. Ya agendé tu reunión para el **martes a las 10:00**.\n> Aquí te comparto el [link del calendar]({{ $('Assing meet').item.json.calendar_url }})\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -752,
+        640
+      ],
+      "id": "736b6802-8ead-41e9-95ab-6ff16c6979c5",
+      "name": "Confirmacion Exitosa"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "46627f5c-0503-435a-8d0b-c6703b44aca3",
+              "name": "objetivo",
+              "value": "=---\n\n## Objetivo\n\nAvisar con empatía que el horario ya no está disponible y ofrecer nuevas opciones reales desde la fuente de verdad. \n\nLa fecha y hora no confirmada fue: {{ $('Detector de consultas').item.json.output.confirmated_date_time }}\n\nOfrecer 1 o 2 horarios sugeridos, distanciados entre si, manteniendo un tono empático y natural, utilizando la siguiente lista agrupada por fecha:\n\n{{ JSON.stringify($json.recommended_slots) }}\n\nRecuerda añadir la disculpa.\n \n**Ejemplo de respuesta:**\n\n> Disculpa, no tengo disponibilidad a esa hora. Pero puedo ofrecerte el **miércoles a las 11:15** o el **jueves a las 9:30**. ¿Cuál prefieres?\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -752,
+        880
+      ],
+      "id": "ba8b7422-4635-4f44-b194-91e498384bb4",
+      "name": "Confirmacion Fallida"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "46627f5c-0503-435a-8d0b-c6703b44aca3",
+              "name": "objetivo",
+              "value": "=---\n\n## Objetivo\n\nTu objetivo es mantener el flujo conversacional, mostrando disposición y empatía, con la intención de guiar al cliente hacia una cita o aclarar sus dudas, sin ofrecer horarios de forma directa.\n\n**Ejemplo de respuesta:**\n\n> De acuerdo, cuando tengas un momento podemos coordinar la asesoría. Estoy pendiente para cuando te acomode.\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -752,
+        1264
+      ],
+      "id": "752652f0-4033-4d2a-bc95-4676413423ea",
+      "name": "Ninguno"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "46627f5c-0503-435a-8d0b-c6703b44aca3",
+              "name": "objetivo",
+              "value": "=---\n\n## Objetivo\n\nInformar la **cancelación de una cita** de forma natural, sin pedir validación adicional.\n\n**Ejemplo de respuesta:**\n\n> Listo ✅, acabo de cancelar la reunión programada.\n> Si tienes otro horario disponible, coméntame y la reprogramamos sin problema.\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -752,
+        1072
+      ],
+      "id": "c2946de4-1d78-4733-959e-3c805f0bf2e4",
+      "name": "Cancelado"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "rxwFZhg6ZGR17uqS",
+          "mode": "list",
+          "cachedResultName": "YT - Tool Calendario"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "type": "delete_meet",
+            "delete_id": "={{ $json.calendar_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "start_date_time",
+              "displayName": "start_date_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "end_date_time",
+              "displayName": "end_date_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "meet_date_time",
+              "displayName": "meet_date_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "delete_id",
+              "displayName": "delete_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -1200,
+        1072
+      ],
+      "id": "91229c03-470e-4dbe-85a7-0102c14d4d11",
+      "name": "Delete meet1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all items\nconst items = $input.all();\n\n// Map only type and content, checking message exists\nconst chat_history = items\n  .map(item => {\n    const msg = item.json?.message;\n    if (!msg) return null; // ignora si no hay message\n    return {\n      type: msg.type || \"\",\n      content: msg.content || \"\"\n    };\n  })\n  .filter(Boolean); // elimina los null\n\nreturn { chat_history };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3440,
+        736
+      ],
+      "id": "d72a1167-d9a1-4f62-8c91-98537aeaaf9d",
+      "name": "Merge History"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "={{ $('Start').item.json.chat_table }}",
+          "mode": "name"
+        },
+        "limit": 2,
+        "where": {
+          "values": [
+            {
+              "column": "session_id",
+              "value": "={{ $('Start').item.json.conversation_id.toString() }}"
+            }
+          ]
+        },
+        "sort": {
+          "values": [
+            {
+              "column": "id",
+              "direction": "DESC"
+            }
+          ]
+        },
+        "options": {
+          "outputColumns": "={{ [\"message\"] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -3664,
+        736
+      ],
+      "id": "2fc80dd3-a4e3-45c9-8c0a-d1e2f230db1f",
+      "name": "Historial",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "iQjXrY7yVr42goOH",
+          "name": "PROD - Supabase prod"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c8fe1a30-789e-4771-bc0b-8a54d442a086",
+              "name": "new_message",
+              "value": "={{ $('Start').item.json.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3440,
+        928
+      ],
+      "id": "133c4768-fcbf-4624-bfdb-9a23cc1c3257",
+      "name": "Message"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "hans-yt",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -4112,
+        832
+      ],
+      "id": "d4b5d6dc-68df-448c-93e8-a89308e095e7",
+      "name": "Chatwoot Trigger",
+      "webhookId": "c680b893-77b0-4f3d-ac28-3016bd238ab8"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "042782a6-cb0e-413a-9a7b-2269913940b4",
+              "name": "chatwoot_url",
+              "value": "https://chatwoot.hansacha.com",
+              "type": "string"
+            },
+            {
+              "id": "438db667-6e87-4136-8052-94fdf64ee792",
+              "name": "account_id",
+              "value": "={{ $json.body.messages[0].account_id }}",
+              "type": "number"
+            },
+            {
+              "id": "664978df-da9c-4dfd-aafa-0086bd4babe0",
+              "name": "conversation_id",
+              "value": "={{ $json.body.messages[0].conversation_id }}",
+              "type": "number"
+            },
+            {
+              "id": "7dcb28c8-ae9e-42bb-a7ea-3f33b960b4aa",
+              "name": "message",
+              "value": "={{ $json.body.messages[0].content }}",
+              "type": "string"
+            },
+            {
+              "id": "737d0e9f-ea4e-4abd-814d-138bbd909b48",
+              "name": "chat_table",
+              "value": "=n8n_chat_histories_{{ $json.body.messages[0].account_id }}",
+              "type": "string"
+            },
+            {
+              "id": "eb606651-196f-4de0-b287-cfa6b686d64b",
+              "name": "utc",
+              "value": "-05",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3888,
+        832
+      ],
+      "id": "1ba3ae6b-3206-4f48-8612-ef3ff485f724",
+      "name": "Start"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=new_message:\n{{ JSON.stringify($('Merge').item.json.new_message) }}\n\nlast_response:\n{{ $('Merge').item.json.chat_history[0].content }}\n\nCurrent time (UTC-5):\n{{ $now.setZone(`UTC${$('Start').item.json.utc}`).weekdayLong }} {{ $now.setZone(`UTC${$('Start').item.json.utc}`) }}\n\nSolo para contexto:\n{{ JSON.stringify($json.chat_history) }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# Agente: Detector de Intención y Rango (simple)\n\n## Rol\n\nDetectar la **intención** del usuario y derivar, cuando aplique, una **ventana temporal** en **UTC{{ $('Start').item.json.utc }}**. No conversa: **devuelve solo JSON**.\n\n---\n\n## Input\n\n* `now` (UTC{{ $('Start').item.json.utc }}): fecha/hora actual\n* `new_message`: último mensaje del usuario (fuente principal)\n* `last_response`: última respuesta que envió el bot.\n\nEsta última respuesta sirve para inferir contexto, especialmente si el usuario solo menciona una hora o responde con afirmaciones breves.\n\n---\n\n## Estados\n\n* `consulta` → el usuario pregunta o propone horarios o fechas.\n* `confirmacion` → el usuario acepta, fija **o actualiza** un horario concreto (incluye casos de **reagendar, mover o cambiar** la cita).\n* `cancelacion` → el usuario **expresamente** solicita **eliminar/anular/cancelar** su reunión.\n* `ninguno` → sin intención de coordinar ni cancelar.\n\n---\n\n## Reglas\n\n### 1. Uso del `last_response`\n\nAntes de interpretar `new_message`, **revisa `last_response`** para detectar si ya se mencionó una **fecha o día**. Si existe, úsalo como referencia principal al procesar rangos como “por la tarde”, “mañana” o “al final del día”. Solo usa `now` si no hay contexto previo. Esto evita asumir la “tarde de hoy” cuando el usuario habla de un día anterior.\n\n### 2. Clasificación de estados\n\n* **Consulta:** Pregunta o solicita horarios. Si es genérica (“¿qué horarios tienes?”), deja tiempos vacíos.\n* **Confirmación:** Acepta un horario, o bien **propone un nuevo horario para actualizar o mover** la cita. Llena solo `confirmated_date_time`. Se activa ante expresiones como “mejor a las 4pm”, “cambiemos para mañana a las 11”, “podemos moverlo al jueves”.\n* **Cancelación:** Actívate **solo** si el usuario usa términos explícitos como: *cancelar*, *eliminar*, *anular*, *borrar* la reunión/cita; o frases inequívocas como “quiero cancelar la reunión” / “anula mi cita”.\n* **Ninguno:** Sin intención de coordinar, actualizar ni cancelar. Todos los tiempos vacíos.\n\n### 3. Derivación de rangos (`state = consulta`)\n\n* **Solo hora:** (“a las 10:00”, “10am”)\n  Usa el día ancla (fecha previa del chat o actual).\n  `start = ancla + hora`, `end = start + 1h`\n* **Rango de horas:** (“entre 9 y 12”) → `start = 09:00`, `end = 12:00` del día ancla.\n* **Día relativo:** (“mañana”, “pasado mañana”) → `start = 00:00`, `end = 24:00` del día relativo.\n* **Día por nombre:** (“jueves”) → `start = 00:00`, `end = 24:00` del próximo día indicado.\n* **Fecha explícita:** (“14 de oct”, `2025-10-14`) → usa el año de `now` si falta.\n* **Fecha + rango semántico:** (“mañana en la tarde”, “jueves entre 12 y 14”, “al final del día”)\n  Mapear rangos:\n\n  * temprano: 07:00–09:00\n  * mañana: 06:00–12:00\n  * mediodía: 12:00–14:00\n  * tarde: 14:00–18:00\n  * **final del día:** 18:00–20:00 (cuando `last_response` ofreció un rango anterior como la mañana)\n  * noche: 18:00–22:00\n\n> 💡 Si el usuario dice “al final del día” y el `last_response` incluía una opción en la **mañana o mediodía**, debe interpretarse como una nueva preferencia dentro del **mismo día**, con rango 18:00–20:00.\n\n### 4. Confirmación (`state = confirmacion`)\n\nExtraer hora o fecha confirmada **o actualizada**. Llenar solo `confirmated_date_time`.\n\n### 5. Cancelación (`state = cancelacion`)\n\nNo derivar rangos ni horas. Mantener:\n\n```\n\"start_date_time\": \"\",\n\"end_date_time\": \"\",\n\"confirmated_date_time\": \"\"\n```\n\n### 6. Sin intención (`state = ninguno`)\n\nTodos los campos de tiempo vacíos.\n\n---\n\n## Output (JSON)\n\n```json\n{\n  \"state\": \"consulta|confirmacion|cancelacion|ninguno\",\n  \"start_date_time\": \"\",\n  \"end_date_time\": \"\",\n  \"confirmated_date_time\": \"\"\n}\n```\n\n---\n\n## Ejemplos\n\n**Consulta sin rango:**\n“¿Qué horarios tienes disponible?”\n\n```json\n{\n  \"state\": \"consulta\",\n  \"start_date_time\": \"\",\n  \"end_date_time\": \"\",\n  \"confirmated_date_time\": \"\"\n}\n```\n\n**Solo hora (con día previo en chat):**\n`last_response`: “el lunes me queda bien” → `new_message`: “¿A las 10:00?”\n\n```json\n{\n  \"state\": \"consulta\",\n  \"start_date_time\": \"2025-10-13 10:00:00{{ $('Start').item.json.utc }}\",\n  \"end_date_time\": \"2025-10-13 11:00:00{{ $('Start').item.json.utc }}\",\n  \"confirmated_date_time\": \"\"\n}\n```\n\n**Consulta con frase “al final del día”:**\n`last_response`: “tengo espacios por la mañana” → `new_message`: “mejor al final del día”\n\n```json\n{\n  \"state\": \"consulta\",\n  \"start_date_time\": \"2025-10-13 18:00:00{{ $('Start').item.json.utc }}\",\n  \"end_date_time\": \"2025-10-13 20:00:00{{ $('Start').item.json.utc }}\",\n  \"confirmated_date_time\": \"\"\n}\n```\n\n**Confirmación (aceptar o mover):**\n“Perfecto, queda a las 3pm”, “mejor hagámoslo a las 4pm”, “podemos cambiarlo para mañana a las 10”\n\n```json\n{\n  \"state\": \"confirmacion\",\n  \"confirmated_date_time\": \"2025-10-13 15:00:00{{ $('Start').item.json.utc }}\"\n}\n```\n\n**Cancelación (explícita):**\n“Quiero cancelar la reunión”, “Por favor elimina mi cita”\n\n```json\n{\n  \"state\": \"cancelacion\",\n  \"start_date_time\": \"\",\n  \"end_date_time\": \"\",\n  \"confirmated_date_time\": \"\"\n}\n```\n\n**Ninguno:**\n“Gracias, te aviso”\n\n```json\n{\n  \"state\": \"ninguno\",\n  \"start_date_time\": \"\",\n  \"end_date_time\": \"\",\n  \"confirmated_date_time\": \"\"\n}\n```\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -2992,
+        832
+      ],
+      "id": "77164b8f-a5bc-403a-b003-1d55cb88cd17",
+      "name": "Detector de consultas"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.state }}",
+                    "rightValue": "consulta",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "25d0feeb-3f46-41ee-b881-4382ced3f98c"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "consulta"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "80992ef5-e598-495b-8062-48a93d1ed34e",
+                    "leftValue": "={{ $json.output.state }}",
+                    "rightValue": "confirmacion",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "confirmacion"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "fbba3f56-5a05-48c8-97f3-32dba7cc6eaa",
+                    "leftValue": "={{ $json.output.state }}",
+                    "rightValue": "cancelacion",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cancelacion"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e869989b-e55b-4f6a-ac4c-ed76d8a6c176",
+                    "leftValue": "={{ $json.output.state }}",
+                    "rightValue": "ninguno",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ninguno"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -2544,
+        800
+      ],
+      "id": "98acfcad-9454-442d-bec9-9d86639f0ad3",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.available_slots }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "array",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "id": "9fffad0a-5858-4eba-a4be-d297940f5b9c"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "hay disponibilidad"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d8f37260-64b9-4240-a705-8c44d66b5622",
+                    "leftValue": "={{ $json.recommended_slots }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "array",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "hay recomendaciones"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1a063e8a-1c93-435f-8c4f-9d35f1bcab11",
+                    "leftValue": "={{ $json.recommended_slots }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "array",
+                      "operation": "empty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "no hay recomendaciones"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -976,
+        240
+      ],
+      "id": "1d5e7623-41a8-4747-b3ed-e4fbb8555d41",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.calendar_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notExists",
+                      "singleValue": true
+                    },
+                    "id": "9fffad0a-5858-4eba-a4be-d297940f5b9c"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "crea"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d8f37260-64b9-4240-a705-8c44d66b5622",
+                    "leftValue": "={{ $json.calendar_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "elimina antiguo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1424,
+        640
+      ],
+      "id": "8448d95e-e788-4c34-be14-f49dfd96a5c9",
+      "name": "Switch3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Merge').item.json.new_message }}",
+        "options": {
+          "systemMessage": "=# Agente de Citas – Hans\n\n## Contexto\n\nEste agente tiene como objetivo **coordinar una reunión gratuita** con el cliente.\n\n## Rol\n\nTu misión es **proponer horarios claros y viables** para agendar una reunión, manteniendo una comunicación **natural, empática y profesional**.\n\n---\n\n## Estilo y Tono\n\n* Conversación **natural, cercana y sin tono robótico**.\n* Usa expresiones casuales y positivas cuando encajen:\n  > “super”, “genial”, “perfecto”.\n* Respuestas **breves, claras y amables**, sin tecnicismos ni estructuras forzadas.\n* Si el cliente ya mostró interés, **avanza directo a la propuesta de horarios**.\n\n---\n\n## ⚙️ Reglas Generales\n\n1. **Fuente de verdad:**\n   Usa únicamente la información validada y confirmada por el sistema.\n\n   > ⚠️ No inventes, no infieras ni asumas datos.\n\n2. **Zona horaria:**\n   Todos los horarios deben comunicarse en **UTC-5 (hora Lima)**.\n\n3. **Propuesta de horarios:**\n\n   * Usa los primeros espacios válidos en `available_slots`; si está vacío, usa `recommended_slots`.\n   * Muestra máximo **2 horarios** y **en orden cronológico**.\n   * Si no hay opciones válidas, responde con empatía e invita al cliente a proponer un horario.\n\n4. **Evita redundancias:**\n   No repitas información ya mencionada (día, tipo de reunión, duración, etc.).\n\n5. **Fluidez natural:**\n   Si ya mencionas un día o franja (“por la mañana”, “por la tarde”), **no repitas la fecha completa** al listar las horas.\n\n6. **Empatía y cierre:**\n   Si el cliente acepta, confirma con entusiasmo y menciona que recibirán el enlace de la reunión en breve.\n   Si no confirma, mantén una actitud abierta y propón continuar más adelante.\n\n7. **Siempre usa la informacion del objetivo**, evita usar el historico\n\n---\n\n{{ $('Data result').item.json.objetivo }}\n\n---\n\n**🕒 Hora actual (UTC-5):**\n{{ $now.setZone('America/Lima').weekdayLong }} {{ $now.setZone('America/Lima') }}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -304,
+        640
+      ],
+      "id": "768c2ffd-6d5e-481d-81ee-58a2ad1eaf4a",
+      "name": "Citas Agent"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -3216,
+        832
+      ],
+      "id": "cfec69e7-4fc9-4990-8440-29950464eef7",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "rxwFZhg6ZGR17uqS",
+          "mode": "list",
+          "cachedResultName": "YT - Tool Calendario"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "type": "delete_meet",
+            "delete_id": "={{ $('Get calendar id').item.json.calendar_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "start_date_time",
+              "displayName": "start_date_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "end_date_time",
+              "displayName": "end_date_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "meet_date_time",
+              "displayName": "meet_date_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "delete_id",
+              "displayName": "delete_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -1200,
+        720
+      ],
+      "id": "afdba232-1845-4907-8207-88c63ac5ed9a",
+      "name": "Delete meet"
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "=calendar_id_{{ $('Start').item.json.conversation_id }}",
+        "value": "={{ $('Assing meet').item.json.calendar_id }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -976,
+        640
+      ],
+      "id": "40841358-ffe0-4401-8842-218611b3d6f1",
+      "name": "Set Calendar id",
+      "credentials": {
+        "redis": {
+          "id": "PzE6mHRT82GNdnDe",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "calendar_id",
+        "key": "=calendar_id_{{ $('Start').item.json.conversation_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -1424,
+        1072
+      ],
+      "id": "0fd98983-9da0-47dd-95a4-c6b1edf794fd",
+      "name": "Get calendar id1",
+      "credentials": {
+        "redis": {
+          "id": "PzE6mHRT82GNdnDe",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "=calendar_id_{{ $('Start').item.json.conversation_id }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -976,
+        1072
+      ],
+      "id": "a0c72d7d-c68f-4ad3-93ff-3d69049adeea",
+      "name": "Delete Calendar id",
+      "credentials": {
+        "redis": {
+          "id": "PzE6mHRT82GNdnDe",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "calendar_id",
+        "key": "=calendar_id_{{ $('Start').item.json.conversation_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -1648,
+        640
+      ],
+      "id": "5c19eedb-fa49-4ae1-bd8e-adcb7da696fc",
+      "name": "Get calendar id",
+      "credentials": {
+        "redis": {
+          "id": "PzE6mHRT82GNdnDe",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Datos Base",
+        "height": 832,
+        "width": 416
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -4144,
+        592
+      ],
+      "typeVersion": 1,
+      "id": "30dd8777-9242-4eea-bf62-ba3028e6cf12",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Captura de datos clave",
+        "height": 832,
+        "width": 1088,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3712,
+        592
+      ],
+      "typeVersion": 1,
+      "id": "75533ecc-6950-4b0e-bdda-823ece91a866",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Chatbot con informacion actualizada",
+        "height": 544,
+        "width": 624,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -384,
+        544
+      ],
+      "typeVersion": 1,
+      "id": "7b6e6c3c-072c-4518-803a-1e141dd1826a",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Plan de Acción",
+        "height": 1408,
+        "width": 2208,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2608,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "60124f1c-4f18-481b-aea7-27105e3a7499",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Start').item.json.chatwoot_url }}/api/v1/accounts/{{ $('Start').item.json.account_id }}/conversations/{{ $('Start').item.json.conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "={{ $('Citas Agent').item.json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        48,
+        640
+      ],
+      "id": "e884c62e-a748-4673-9bcd-cfc07f5eda6d",
+      "name": "Enviar mensaje para Citas",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9fwaWcktiMKQaHox",
+          "name": "Chatwoot access key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3a7e8a5c-a9fb-48be-b548-75bffd4a1234",
+              "name": "titulo",
+              "value": "=Reunion con {{ $('Chatwoot Trigger').item.json.body.custom_attributes.nombre_contacto }}",
+              "type": "string"
+            },
+            {
+              "id": "fc17ae00-89f2-4849-8877-d90c61e67246",
+              "name": "correo",
+              "value": "={{ $('Chatwoot Trigger').item.json.body.custom_attributes.correo }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2320,
+        736
+      ],
+      "id": "ab1cde01-1b61-456d-afc6-15e20fc33e12",
+      "name": "Meet Data"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "rxwFZhg6ZGR17uqS",
+          "mode": "list",
+          "cachedResultName": "YT - Tool Calendario"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "type": "get_available",
+            "start_date_time": "={{ $json.output.start_date_time }}",
+            "end_date_time": "={{ $json.output.end_date_time }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "start_date_time",
+              "displayName": "start_date_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "end_date_time",
+              "displayName": "end_date_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "meet_date_time",
+              "displayName": "meet_date_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "delete_id",
+              "displayName": "delete_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -1200,
+        256
+      ],
+      "id": "894a29b3-a470-46d0-a2eb-2854e408c96c",
+      "name": "Available slots"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Start').item.json.conversation_id }}",
+        "tableName": "={{ $('Start').item.json.chat_table }}",
+        "contextWindowLength": 1
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -176,
+        864
+      ],
+      "id": "4d5f2729-64dc-4cb8-a6aa-4d250bb80ed6",
+      "name": "Postgres Chat Memory3",
+      "credentials": {
+        "postgres": {
+          "id": "s5B6xuVOHH0pHUzG",
+          "name": "Supabase - Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuración\n\n1. **Configura la herramienta \"Tool Calendario\" y los datos base**\n2. **Actualiza tu zona horaria en el nodo start**\n3. **Actualiza el nodo start en base a la configuracion de tu negocio**\n4. **Actualiza los siguientes nodos**: Meet Data, Get calendar id, Set Calendar id, Delete calendar id\n\n---\n\n📺 Puedes guiarte con este video:  \n👉 [Cómo configurar paso a paso](https://youtu.be/EE6oo6NY7Wk)  \n\n🔔 Además, tienes más **video-guías completas** en mi canal de YouTube:  \n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 560,
+        "width": 1520,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -4144,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "938eb550-4b37-4c6b-967c-ed19d200c6ec",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {
+    "Chatwoot Trigger": [
+      {
+        "json": {
+          "headers": {
+            "connection": "Upgrade",
+            "host": "n8n.hansacha.com",
+            "x-real-ip": "136.113.154.153",
+            "x-forwarded-for": "136.113.154.153",
+            "x-forwarded-proto": "https",
+            "content-length": "3078",
+            "accept": "application/json",
+            "user-agent": "rest-client/2.1.0 (linux-musl x86_64) ruby/3.3.3p89",
+            "content-type": "application/json",
+            "accept-encoding": "gzip;q=1.0,deflate;q=0.6,identity;q=0.3"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "additional_attributes": {
+              "chat_id": 913422811
+            },
+            "can_reply": true,
+            "channel": "Channel::Telegram",
+            "contact_inbox": {
+              "id": 269,
+              "contact_id": 265,
+              "inbox_id": 29,
+              "source_id": "913422811",
+              "created_at": "2025-10-18T06:29:59.976Z",
+              "updated_at": "2025-10-18T06:29:59.976Z",
+              "hmac_verified": false,
+              "pubsub_token": "8HQoe3UBRkP862433Uf2qyXK"
+            },
+            "id": 21,
+            "inbox_id": 29,
+            "messages": [
+              {
+                "id": 2506,
+                "content": "no, prefiero fechas del lunes",
+                "account_id": 3,
+                "inbox_id": 29,
+                "conversation_id": 21,
+                "message_type": 0,
+                "created_at": 1760777779,
+                "updated_at": "2025-10-18T08:56:19.057Z",
+                "private": false,
+                "status": "sent",
+                "source_id": "189",
+                "content_type": "text",
+                "content_attributes": {},
+                "sender_type": "Contact",
+                "sender_id": 265,
+                "external_source_ids": {},
+                "additional_attributes": {},
+                "processed_message_content": "no, prefiero fechas del lunes",
+                "sentiment": {},
+                "conversation": {
+                  "assignee_id": 1,
+                  "unread_count": 1,
+                  "last_activity_at": 1760777779,
+                  "contact_inbox": {
+                    "source_id": "913422811"
+                  }
+                },
+                "sender": {
+                  "additional_attributes": {
+                    "username": "HanTroid",
+                    "language_code": "en",
+                    "social_telegram_user_id": 913422811,
+                    "social_telegram_user_name": "HanTroid"
+                  },
+                  "custom_attributes": {},
+                  "email": null,
+                  "id": 265,
+                  "identifier": null,
+                  "name": "Hans ",
+                  "phone_number": null,
+                  "thumbnail": "https://chatwoot.hansacha.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYWc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--c00812c9639d23f5030b93e4367d28ff09428c47/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--57acfb5b5983d36d7afa40e269fadaacb64d7003/file_2.jpg",
+                  "blocked": false,
+                  "type": "contact"
+                }
+              }
+            ],
+            "labels": [],
+            "meta": {
+              "sender": {
+                "additional_attributes": {
+                  "username": "HanTroid",
+                  "language_code": "en",
+                  "social_telegram_user_id": 913422811,
+                  "social_telegram_user_name": "HanTroid"
+                },
+                "custom_attributes": {},
+                "email": null,
+                "id": 265,
+                "identifier": null,
+                "name": "Hans ",
+                "phone_number": null,
+                "thumbnail": "https://chatwoot.hansacha.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYWc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--c00812c9639d23f5030b93e4367d28ff09428c47/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--57acfb5b5983d36d7afa40e269fadaacb64d7003/file_2.jpg",
+                "blocked": false,
+                "type": "contact"
+              },
+              "assignee": {
+                "id": 1,
+                "name": "Hans",
+                "available_name": "Hans",
+                "avatar_url": "",
+                "type": "user",
+                "availability_status": null,
+                "thumbnail": ""
+              },
+              "team": null,
+              "hmac_verified": false
+            },
+            "status": "open",
+            "custom_attributes": {
+              "ciudad": "lima",
+              "correo": "hmac.inv@gmail.com",
+              "tamano": "22",
+              "nombre_contacto": "hans",
+              "tipo_de_espacio": "sala",
+              "tipo_de_servicio": "remodelacion",
+              "nivel_de_intervencion": "completa"
+            },
+            "snoozed_until": null,
+            "unread_count": 1,
+            "first_reply_created_at": "2025-10-18T06:30:04.833Z",
+            "priority": null,
+            "waiting_since": 1760777779,
+            "agent_last_seen_at": 1760777753,
+            "contact_last_seen_at": 0,
+            "last_activity_at": 1760777779,
+            "timestamp": 1760777779,
+            "created_at": 1760769000,
+            "updated_at": 1760777779.101346,
+            "event": "automation_event.message_created"
+          },
+          "webhookUrl": "https://n8n.hansacha.com/webhook/hans-yt",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Detector de consultas",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Detector de consultas",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assing meet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Get calendar id",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Confirmacion Fallida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "source_of_truth fail ninguno": {
+      "main": [
+        [
+          {
+            "node": "Ninguno",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Citas Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Con disponibilidad": {
+      "main": [
+        [
+          {
+            "node": "Data result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sin recomendaciones": {
+      "main": [
+        [
+          {
+            "node": "Data result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Con recomendaciones": {
+      "main": [
+        [
+          {
+            "node": "Data result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmacion Exitosa": {
+      "main": [
+        [
+          {
+            "node": "Data result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmacion Fallida": {
+      "main": [
+        [
+          {
+            "node": "Data result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ninguno": {
+      "main": [
+        [
+          {
+            "node": "Data result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cancelado": {
+      "main": [
+        [
+          {
+            "node": "Data result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete meet1": {
+      "main": [
+        [
+          {
+            "node": "Delete Calendar id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data result": {
+      "main": [
+        [
+          {
+            "node": "Citas Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Historial": {
+      "main": [
+        [
+          {
+            "node": "Merge History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge History": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Chatwoot Trigger": {
+      "main": [
+        [
+          {
+            "node": "Start",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Historial",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detector de consultas": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Available slots",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Meet Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get calendar id1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "source_of_truth fail ninguno",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "Con disponibilidad",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Con recomendaciones",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sin recomendaciones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch3": {
+      "main": [
+        [
+          {
+            "node": "Set Calendar id",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete meet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Citas Agent": {
+      "main": [
+        [
+          {
+            "node": "Enviar mensaje para Citas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Detector de consultas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete meet": {
+      "main": [
+        [
+          {
+            "node": "Set Calendar id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Calendar id": {
+      "main": [
+        [
+          {
+            "node": "Confirmacion Exitosa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get calendar id1": {
+      "main": [
+        [
+          {
+            "node": "Delete meet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Calendar id": {
+      "main": [
+        [
+          {
+            "node": "Cancelado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get calendar id": {
+      "main": [
+        [
+          {
+            "node": "Switch3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meet Data": {
+      "main": [
+        [
+          {
+            "node": "Assing meet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Available slots": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory3": {
+      "ai_memory": [
+        [
+          {
+            "node": "Citas Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "72a580e8-956c-45c1-b921-30645631d08b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
+  },
+  "id": "5M8vbY0d1lkvpnCl",
+  "tags": []
+}
