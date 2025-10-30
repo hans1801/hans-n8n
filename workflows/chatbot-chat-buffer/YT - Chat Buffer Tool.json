@@ -1,0 +1,333 @@
+{
+  "name": "YT - Chat Buffer Tool",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "conversation_id"
+            },
+            {
+              "name": "message"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1344,
+        96
+      ],
+      "id": "35784ad2-cbf3-46ae-8b60-3572a167e2b4",
+      "name": "Start"
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "=conversation_{{ $('Start').item.json.conversation_id }}",
+        "messageData": "={{ $('Start').item.json.message }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -1120,
+        96
+      ],
+      "id": "bc3d13a2-b8de-4beb-88b5-ee97b61b3371",
+      "name": "Add messages",
+      "credentials": {
+        "redis": {
+          "id": "PzE6mHRT82GNdnDe",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 15
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -672,
+        96
+      ],
+      "id": "80508f27-a985-4173-8fdf-b6d812c78bba",
+      "name": "Wait",
+      "webhookId": "61538ec5-c92b-4d28-838f-b0869adc880e"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e0c6c33a-f2b9-4ffd-a0c9-b2f9c5c5e7c8",
+              "leftValue": "={{ $('Get After Data').item.json.messages.length }}",
+              "rightValue": "={{ $('Get Before Data').item.json.messages.length }}",
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -928,
+        496
+      ],
+      "id": "77304127-d8a8-4cfb-9cef-3624bb970618",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "const messages = $('Get After Data').first().json.messages;\n\n// invierte el orden de los mensajes\nconst reversed = [...messages].reverse();\n\n// une los mensajes con salto de línea\nconst merged = reversed.join(\"\\n\");\n\nreturn [\n  { \n    message: merged,\n    send_message: true,\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -480,
+        400
+      ],
+      "id": "6460f623-a8f8-451b-904d-ef9ff1e844e7",
+      "name": "Send message"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  { \n    message: \"\",\n    send_message: false,\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -704,
+        592
+      ],
+      "id": "04bc53e1-d5a7-457f-8743-a199363a027b",
+      "name": "Not Send message"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "=conversation_{{ $('Start').item.json.conversation_id }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -704,
+        400
+      ],
+      "id": "b55402cb-1862-4772-968a-7ff689027733",
+      "name": "Delete redis messages",
+      "credentials": {
+        "redis": {
+          "id": "PzE6mHRT82GNdnDe",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "messages",
+        "key": "=conversation_{{ $('Start').item.json.conversation_id }}",
+        "keyType": "list",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -896,
+        96
+      ],
+      "id": "3fb30f1a-0b39-4160-95c0-dccc95917b35",
+      "name": "Get Before Data",
+      "credentials": {
+        "redis": {
+          "id": "PzE6mHRT82GNdnDe",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "messages",
+        "key": "=conversation_{{ $('Start').item.json.conversation_id }}",
+        "keyType": "list",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        96
+      ],
+      "id": "989c7062-c2a4-4fdb-84f5-dd380e1f688b",
+      "name": "Get After Data",
+      "credentials": {
+        "redis": {
+          "id": "PzE6mHRT82GNdnDe",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Guarda los datos",
+        "height": 320,
+        "width": 640,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1392,
+        -16
+      ],
+      "typeVersion": 1,
+      "id": "29df0ed3-7200-4c6c-8332-30ba02aca022",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Espera nuevos mensajes",
+        "height": 320,
+        "width": 416,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -704,
+        -16
+      ],
+      "typeVersion": 1,
+      "id": "d7072876-cc71-49a1-85fc-3f42e386ae53",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Responde o no",
+        "height": 416,
+        "width": 672,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -960,
+        336
+      ],
+      "typeVersion": 1,
+      "id": "e4868004-3016-4166-ac41-a7cd0f791ab8",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Add messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add messages": {
+      "main": [
+        [
+          {
+            "node": "Get Before Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get After Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Delete redis messages",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Not Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete redis messages": {
+      "main": [
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Before Data": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get After Data": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e85539c8-2ed8-4e7d-8f66-10ccd8e1796b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
+  },
+  "id": "DgCuGeMjdO9Mze8i",
+  "tags": []
+}

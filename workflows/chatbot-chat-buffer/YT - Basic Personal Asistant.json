@@ -1,0 +1,356 @@
+{
+  "name": "YT - Basic Personal Asistant",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -32,
+        0
+      ],
+      "id": "bf2d1c7c-492f-41be-9671-fdcbb0d2ab2c",
+      "name": "Telegram Trigger",
+      "webhookId": "845ad8eb-4d3f-47ef-9475-8de152fd634e",
+      "credentials": {
+        "telegramApi": {
+          "id": "vQulFLRQOzHxIZqF",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "09c1fe62-63bb-4f81-a85c-395b261ccd96",
+              "name": "conversation_id",
+              "value": "={{ $json.message.chat.id }}",
+              "type": "string"
+            },
+            {
+              "id": "c467e3b3-19ba-488d-a5fc-fa3c75035a67",
+              "name": "message",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        160,
+        0
+      ],
+      "id": "c7240d3d-3612-4e02-9cce-e9b48691f29c",
+      "name": "Base Data"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "DgCuGeMjdO9Mze8i",
+          "mode": "list",
+          "cachedResultName": "YT - Chat Buffer Tool"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "conversation_id": "={{ $json.conversation_id }}",
+            "message": "={{ $json.message }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "8b376573-15c4-43c5-b357-cececeabe27b",
+      "name": "Chat Buffer"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        128,
+        352
+      ],
+      "id": "54b35569-8c7e-43a0-964f-e669ab305834",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        144,
+        576
+      ],
+      "id": "5e9f85a3-9210-4f52-900e-0b643d5fe06e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "XifEwxpfufUK3ARh",
+          "name": "OpenAi account - GPT5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Base Data').item.json.conversation_id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        272,
+        576
+      ],
+      "id": "f1015d0a-eba8-4ec2-b508-44a6d0c295ba",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        480,
+        352
+      ],
+      "id": "4f0e2865-61c7-4c2c-a818-a5a1fc470a32",
+      "name": "Send a text message",
+      "webhookId": "1e2f7783-f739-41c8-8570-d88df4b787a3",
+      "credentials": {
+        "telegramApi": {
+          "id": "vQulFLRQOzHxIZqF",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Datos Base",
+        "height": 320,
+        "width": 448,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -96,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "0b2d5854-a582-4ce4-abc5-6f43b89421d9",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Chat Buffer",
+        "height": 320,
+        "width": 448,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        384,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "3616951a-7efc-4e18-bdf5-ffd8d3ad52ec",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Procesar mensaje",
+        "height": 432,
+        "width": 576,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        96,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "4322225a-01d4-46c6-a660-6a9973edaefd",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7aa347e3-abb4-4e5b-85c7-66fb0d97dced",
+              "leftValue": "={{ $json.send_message }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "ec0deecf-d7ec-4577-b288-80e49915cf97",
+      "name": "Send message?"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Base Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base Data": {
+      "main": [
+        [
+          {
+            "node": "Chat Buffer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Buffer": {
+      "main": [
+        [
+          {
+            "node": "Send message?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message?": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c0e60e01-791b-4aed-a20c-7d8f95a1f3b6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
+  },
+  "id": "NUmnaw01seq8DzR2",
+  "tags": []
+}
