@@ -230,6 +230,22 @@
       "typeVersion": 1,
       "id": "e4868004-3016-4166-ac41-a7cd0f791ab8",
       "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuración\n\n1. **Actualiza** las credenciales de **Redis**\n\n---\n\n📺 Puedes guiarte con este video:  \n👉 [Cómo configurar paso a paso](https://youtu.be/h6Ae7QRYpJA)  \n\n🔔 Además, tienes más **video-guías completas** en mi canal de YouTube:  \n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 416,
+        "width": 384,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1392,
+        336
+      ],
+      "typeVersion": 1,
+      "id": "80846516-c32a-4938-866e-4da70d4341dc",
+      "name": "Sticky Note3"
     }
   ],
   "pinData": {},
@@ -323,7 +339,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "e85539c8-2ed8-4e7d-8f66-10ccd8e1796b",
+  "versionId": "c1f273f9-bb18-46ac-a274-b237aa10c558",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
