@@ -1,0 +1,630 @@
+{
+  "name": "YT - Back up + Depuracion",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        96,
+        128
+      ],
+      "id": "492d3f1a-1f4f-45fb-b832-a880f9859377",
+      "name": "When chat message received",
+      "webhookId": "addfe574-7a6d-486e-a287-3a5700e5d392"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        320,
+        128
+      ],
+      "id": "5064cafe-9495-48ba-a9e8-f4f95cbd0f7b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        352
+      ],
+      "id": "f49811c5-6122-405c-b7bb-ba75068a9d85",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "CJp5VijgPVJDBcEc",
+          "name": "Own Credential"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        416,
+        352
+      ],
+      "id": "7cf65256-2240-4af6-9b1a-41ba1e98e975",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_chat_histories",
+          "mode": "list",
+          "cachedResultName": "n8n_chat_histories"
+        },
+        "sort": {
+          "values": [
+            {
+              "column": "id",
+              "direction": "DESC"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        80,
+        656
+      ],
+      "id": "5d2e593e-3e78-4f07-bfe8-0d9b9409f253",
+      "name": "Select rows from a table",
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Asistente Basico",
+        "height": 512,
+        "width": 736
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "e0344b91-7754-428f-9f36-b37ffd203057",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Añadir tiempo de creacion (1 vez por tabla)",
+        "height": 272,
+        "width": 736,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        880
+      ],
+      "typeVersion": 1,
+      "id": "4507fc7d-1328-427c-b525-a8d04f222f8b",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Cambiar `n8n_chat_histories` por el nombre de la tabla que manejes\nALTER TABLE n8n_chat_histories\nADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT NOW();",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        80,
+        976
+      ],
+      "id": "555c10c2-290a-4618-a109-951dc224f3ee",
+      "name": "Add created time",
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Ver datos de una tabla",
+        "height": 272,
+        "width": 736,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        560
+      ],
+      "typeVersion": 1,
+      "id": "38d7d660-ee29-42bb-b9b1-cb36db88214e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Cron Depurador de datos + Backup",
+        "height": 432,
+        "width": 2240,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        1216
+      ],
+      "typeVersion": 1,
+      "id": "b2a895e0-f912-4066-a767-d386805c79e9",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        64,
+        1312
+      ],
+      "id": "e0095050-2058-4314-9e09-8cecc1ecb1cf",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM {{ $('Base Data').item.json.table_name }}\nWHERE id < {{ $('Get last id').item.json.last_id }};",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1984,
+        1280
+      ],
+      "id": "e4852aa6-ec28-4f47-bfdc-56f81706a61f",
+      "name": "Delete history",
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Cambiar `n8n_chat_histories` por el nombre de la tabla que manejes\n\nSELECT * FROM {{ $('Base Data').item.json.table_name }}\nWHERE created_at < NOW() - INTERVAL '{{ $('Base Data').item.json.days_before }} days';",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        496,
+        1312
+      ],
+      "id": "762b720d-9502-4f3a-b1db-27d522484948",
+      "name": "Select data to delete",
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": "={{ $prevNode.name === 'Select data to delete' }}"
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        704,
+        1312
+      ],
+      "id": "967a966d-7467-474a-9a4e-efea1140f245",
+      "name": "Loop Over Items",
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "14tj50tAyMMIBf3d_SbjazNoOe-Iu_ZKw8QwQaUGyd4U",
+          "mode": "list",
+          "cachedResultName": "Backup",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14tj50tAyMMIBf3d_SbjazNoOe-Iu_ZKw8QwQaUGyd4U/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14tj50tAyMMIBf3d_SbjazNoOe-Iu_ZKw8QwQaUGyd4U/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.id }}",
+            "session_id": "={{ $json.session_id }}",
+            "message": "={{ $json.message }}",
+            "created_at": "={{ $json.created_at }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        912,
+        1408
+      ],
+      "id": "acdeecdd-b8f6-4e93-8ac8-a59495f2658e",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "DjqeEZjBp3RJQmAR",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1312,
+        1296
+      ],
+      "id": "8df24239-d706-4a1c-944e-63d5b72a3981",
+      "name": "Wait",
+      "webhookId": "a56d2e1c-1833-4c94-964d-8f74452134c4"
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "={{ $('Base Data').item.json.table_name }}_last_id",
+        "value": "={{ $json.id }}",
+        "keyType": "string"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        1296
+      ],
+      "id": "264cfcd1-a4b0-41c2-a953-73b8b18543e3",
+      "name": "Set Id Buffer",
+      "credentials": {
+        "redis": {
+          "id": "PzE6mHRT82GNdnDe",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0e6dbf9a-51b9-4df9-a39d-8d62b062da65",
+              "leftValue": "={{ $('Get last id').item.json.last_id }}",
+              "rightValue": "={{ $('Loop Over Items').item.json.id.toString() }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1728,
+        1296
+      ],
+      "id": "00fcf679-61ae-447d-9545-ebc84aec993c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "last_id",
+        "key": "={{ $('Base Data').item.json.table_name }}_last_id",
+        "keyType": "string",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        1296
+      ],
+      "id": "18d75415-a1e0-43fc-95c5-3d61d5c03245",
+      "name": "Get last id",
+      "credentials": {
+        "redis": {
+          "id": "PzE6mHRT82GNdnDe",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "79a4ef03-b6bc-4bfd-9bd4-febc1f8b088e",
+              "name": "days_before",
+              "value": "0",
+              "type": "string"
+            },
+            {
+              "id": "37cfc3c5-2b2f-463c-9278-627abaf5abaa",
+              "name": "table_name",
+              "value": "n8n_chat_histories",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        288,
+        1312
+      ],
+      "id": "c931b5e7-5784-41ac-acb2-5067a7ed1661",
+      "name": "Base Data"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Base Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select data to delete": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Set Id Buffer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Id Buffer": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get last id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get last id": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Delete history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base Data": {
+      "main": [
+        [
+          {
+            "node": "Select data to delete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "18e37258-f97b-4f2b-b3cc-dc39ba79c77d",
+  "meta": {
+    "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
+  },
+  "id": "yOCR9OPM4LS63cUO",
+  "tags": []
+}
