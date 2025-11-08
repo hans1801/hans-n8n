@@ -8,7 +8,7 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.3,
       "position": [
-        96,
+        -224,
         128
       ],
       "id": "250b1e23-3042-44be-ad32-c164c20e3afe",
@@ -110,7 +110,7 @@
     },
     {
       "parameters": {
-        "content": "## Asistente Basico",
+        "content": "## Asistente Memoria Postgres",
         "height": 512,
         "width": 736
       },
@@ -252,6 +252,85 @@
           "name": "Local Postgres"
         }
       }
+    },
+    {
+      "parameters": {
+        "content": "## Asistente Memoria local",
+        "height": 512,
+        "width": 736
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        -592
+      ],
+      "typeVersion": 1,
+      "id": "d42b5528-0e75-4ff0-a13b-68778fa5a84a",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        -240
+      ],
+      "id": "4bd98eab-9d65-430b-836e-73b21b020fb8",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "CJp5VijgPVJDBcEc",
+          "name": "Own Credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        320,
+        -464
+      ],
+      "id": "db99a93e-77c1-497c-b760-321f5f6275c5",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        416,
+        -240
+      ],
+      "id": "ad57bc26-d267-4077-9f6f-a6769a76f9b1",
+      "name": "Simple Memory2"
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuración\n\n1. **Actualiza** las credenciales de **Postgres**\n2. **Verifica** que estes usando **la misma tabla para las conversaciones y depuración**\n\n---\n\n📺 Puedes guiarte con este video:  \n👉 [Cómo configurar paso a paso](https://youtu.be/aJouAkbEGM0)  \n\n🔔 Además, tienes más **video-guías completas** en mi canal de YouTube:  \n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 416,
+        "width": 384,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        832,
+        48
+      ],
+      "typeVersion": 1,
+      "id": "05fc8041-fd12-43b6-82c2-b3b986f0ea0a",
+      "name": "Sticky Note5"
     }
   ],
   "pinData": {},
@@ -310,13 +389,35 @@
           }
         ]
       ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory2": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "1f126967-8a9f-4e1b-9d03-b2f5b3b732e1",
+  "versionId": "ab222c94-9390-4911-9a4c-9773355dfb14",
   "meta": {
     "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
   },

@@ -212,7 +212,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "DELETE FROM {{ $('Base Data').item.json.table_name }}\nWHERE id < {{ $('Get last id').item.json.last_id }};",
+        "query": "DELETE FROM {{ $('Base Data').item.json.table_name }}\nWHERE id <= {{ $('Get last id').item.json.last_id }};",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
@@ -473,6 +473,22 @@
       ],
       "id": "c931b5e7-5784-41ac-acb2-5067a7ed1661",
       "name": "Base Data"
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuración\n\n1. **Actualiza** las credenciales de **Postgres y Redis**\n2. **Verifica** que estes usando **la misma tabla para las conversaciones y depuración**\n3. **Actualiza tus credenciales** de Google Sheets\n\n---\n\n📺 Puedes guiarte con este video:  \n👉 [Cómo configurar paso a paso](https://youtu.be/aJouAkbEGM0)  \n\n🔔 Además, tienes más **video-guías completas** en mi canal de YouTube:  \n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 416,
+        "width": 384,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        832,
+        32
+      ],
+      "typeVersion": 1,
+      "id": "7058b1d7-8a13-4291-94e7-378a4394d5df",
+      "name": "Sticky Note4"
     }
   ],
   "pinData": {},
@@ -621,7 +637,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "18e37258-f97b-4f2b-b3cc-dc39ba79c77d",
+  "versionId": "8013d48e-23a3-4c42-843e-0932296fce39",
   "meta": {
     "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
   },
