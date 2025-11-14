@@ -1,45 +1,41 @@
 services:
-  pgvector:
-    image: pgvector/pgvector:pg16
-    container_name: pgvector
+  n8n:
+    container_name: n8n
+    image: n8nio/n8n
     restart: unless-stopped
-    env_file: .env
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - ./data/pgvector:/var/lib/postgresql/data
-      - ./postgres-init:/docker-entrypoint-initdb.d
     ports:
-      - "${POSTGRES_PUBLISH_HOST}:5433:${POSTGRES_PORT}"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
+      - "5678:5678"
+    environment:
+      - N8N_HOST=${N8N_DOMAIN}
+      - WEBHOOK_URL=https://${N8N_DOMAIN}/
+      - WEBHOOK_TUNNEL_URL=https://${N8N_DOMAIN}/
+      # Configuración de Redis
+      - QUEUE_BULL_REDIS_HOST=redis
+      - QUEUE_BULL_REDIS_PORT=6379
+      - QUEUE_BULL_REDIS_DB=0
+    volumes:
+      - ./data:/home/node/.n8n
+    depends_on:
+      - redis
 
   redis:
-    image: redis:7
     container_name: redis
+    image: redis:7
     restart: unless-stopped
-    env_file: .env
     ports:
-      - "${REDIS_PORT}:${REDIS_PORT}"
+      - "6379:6379"
     volumes:
       - ./redis-data:/data
 
-  n8n:
-    image: n8nio/n8n:latest
-    container_name: n8n
+  postgres-vector:
+    container_name: postgres-vector
+    image: ankane/pgvector:latest
     restart: unless-stopped
-    env_file: .env
-    depends_on:
-      pgvector:
-        condition: service_healthy
-      redis:
-        condition: service_started
     ports:
-      - "${N8N_PORT}:${N8N_PORT}"
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=set-user
+      - POSTGRES_PASSWORD=set-any-password
+      - POSTGRES_DB=set-any-database
     volumes:
-      - ./data:/home/node/.n8n
+      - ./postgres-vector-data:/var/lib/postgresql/data
