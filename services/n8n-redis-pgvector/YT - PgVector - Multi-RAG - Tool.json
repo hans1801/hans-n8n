@@ -1,0 +1,2136 @@
+{
+  "name": "YT - PgVector - Multi-RAG - Tool",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## RAG setup - Vectoriza BD - 1 vez por BD",
+        "height": 300,
+        "width": 312,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        176,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "389cb50c-b8a8-4cf9-b514-88d197d5704e",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Enable the pgvector extension to work with embedding vectors\ncreate extension vector;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        272,
+        48
+      ],
+      "id": "7c88c821-7cbb-441e-aaf6-609b2f2a13c4",
+      "name": "Vectoriza Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Consulta:\n{{ $('Start').item.json.query }}\n\nConocimiento:\n{{ JSON.stringify($json.knowledge) }}",
+        "options": {
+          "systemMessage": "=Eres un **asistente inteligente** especializado en responder consultas.\n\n### 🧭 Instrucciones de comportamiento\n\n- ✅ **Solo responde** si la información está claramente respaldada por el conocimiento disponible.\n- ⚠️ Si **no encuentras una respuesta precisa o relevante**, **informa al usuario con claridad**.  \n  *No inventes respuestas ni rellenes información que no esté presente.*\n- 📎 **Valida siempre** que la consulta esté cubierto por el conocimeinto brindado. Si no lo está, indícalo educadamente.\n- 🗣️ Sé claro, directo y profesional en tus respuestas.\n- **No extiendas respuestas ni des recomendaciones**, solo responde en base al conocimiento\n---\n\n🎯 **Objetivo**: Brindar respuestas **fundamentadas, precisas y confiables**, basándote **exclusivamente** en el conocimiento disponible."
+        }
+      },
+      "id": "fe3a4203-bac7-4ee9-b11d-5f71b0c52aed",
+      "name": "RAG AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        1264,
+        464
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "72541be2-872c-45fe-a78f-ed2be57667dd",
+      "name": "OpenAI Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1328,
+        688
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "CJp5VijgPVJDBcEc",
+          "name": "Own Credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        464,
+        784
+      ],
+      "id": "5461441f-24a7-4457-9dc9-30da5d5f396f",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "CJp5VijgPVJDBcEc",
+          "name": "Own Credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const knowledge = $input.all().map(item => item.json);\n\nreturn [\n  {\n    knowledge\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        816,
+        592
+      ],
+      "id": "cdeadae1-2057-44a4-adf0-06dbe737979b",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "tableName": "={{ $('Start').item.json.sector }}_chunks",
+        "prompt": "={{ $('Start').item.json.query }}",
+        "topK": 6,
+        "includeDocumentMetadata": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        464,
+        592
+      ],
+      "id": "bcfa567f-4972-4da8-87a6-523328ddcc59",
+      "name": "Postgres PGVector Store",
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            },
+            {
+              "name": "sector"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        464
+      ],
+      "id": "cba66240-8b50-4845-9e03-248454f9a03b",
+      "name": "Start"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1040,
+        464
+      ],
+      "id": "9f5e6d70-c9e2-4207-9bfb-bc3fae4b13d0",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {}
+      },
+      "id": "f6aba3b2-a20b-4a22-9334-bf2e9d3d2d28",
+      "name": "Embeddings OpenAI1",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1,
+      "position": [
+        5440,
+        1840
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "CJp5VijgPVJDBcEc",
+          "name": "Own Credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## RAG - Generador (Generation)",
+        "height": 1699,
+        "width": 6017,
+        "color": 5
+      },
+      "id": "c43b5d8f-220c-4a74-ad4d-b0e1a7413597",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        176,
+        1056
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Archivo por actualizar').item.json.file_id }}",
+          "mode": "id"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "text/plain"
+            }
+          }
+        }
+      },
+      "id": "24833ec7-b330-4e13-abca-8db9800f0bf6",
+      "name": "Download File",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4624,
+        1680
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "kTHXbmVhUkYiMmTC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Archivo por actualizar').item.json.file_type }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "afc1fb83-c4dc-41ef-8a96-c7377c34339a"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "pdf"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "2ae7faa7-a936-4621-a680-60c512163034",
+                    "leftValue": "={{ $('Archivo por actualizar').item.json.file_type }}",
+                    "rightValue": "=wordprocessingml.document",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "docs"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "b69f5605-0179-4b02-9a32-e34bb085f82d",
+                    "leftValue": "={{ $('Archivo por actualizar').item.json.file_type }}",
+                    "rightValue": "text/plain",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "txt"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "622f41a8-8dd2-4e5c-a085-64d8df6184ae",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        4880,
+        1664
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## RAG - Elimina sectores no usados",
+        "height": 412,
+        "width": 1720,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1584,
+        1136
+      ],
+      "typeVersion": 1,
+      "id": "a5ef18c6-7f05-4ae8-b5de-92267b9e67e4",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM {{ $('Archivo por actualizar').item.json.sector }}_chunks\nWHERE metadata->>'file_id' = '{{ $('Archivo por actualizar').item.json.file_id }}';",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        4160,
+        1680
+      ],
+      "id": "8d283deb-75f1-4957-bebe-f502f852606d",
+      "name": "Delete Chunks",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "file_id",
+                "value": "={{ $('Archivo por actualizar').item.json.file_id }}"
+              },
+              {
+                "name": "=file_title",
+                "value": "={{ $('Archivo por actualizar').item.json.file_title }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        5568,
+        1840
+      ],
+      "id": "93863d95-e65a-4b00-9e68-18abbaa6c43d",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        5696,
+        2016
+      ],
+      "id": "aee9b1cd-0023-4baf-87a2-66ecc5b8fa18",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "={{ $('Documento a eliminar').item.json.sector }}_documents",
+          "mode": "name"
+        },
+        "deleteCommand": "delete",
+        "where": {
+          "values": [
+            {
+              "column": "id",
+              "value": "={{ $('Documento a eliminar').item.json.document_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3072,
+        2400
+      ],
+      "id": "a7559904-3cc9-4c40-8a12-ddbc12b0af83",
+      "name": "Delete Document1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM {{ $('Documento a eliminar').item.json.sector }}_chunks\nWHERE metadata->>'file_id' = '{{ $('Documento a eliminar').item.json.document_id }}';",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2816,
+        2368
+      ],
+      "id": "92bc5b6e-7a54-42c6-8b61-8e55a8ccace1",
+      "name": "Delete Chunks1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "={{ $('Archivo por actualizar').item.json.sector }}_documents",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Archivo por actualizar').item.json.file_id }}",
+            "title": "={{ $('Archivo por actualizar').item.json.file_title }}",
+            "url": "={{ $('Archivo por actualizar').item.json.file_url }}",
+            "updated_at": "={{ $('Archivo por actualizar').item.json.updated_at }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": true,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        4400,
+        1680
+      ],
+      "id": "d5d23367-948c-4905-ad2a-0caeba4b4965",
+      "name": "Actualizar documento",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        272,
+        1840
+      ],
+      "id": "e7ed6cf3-9ccd-4f08-a846-6bfa548a71f5",
+      "name": "Diario - 00:00"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "=",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "={{ $('Sector a actualizar').item.json.id }}",
+            "mode": "id"
+          },
+          "whatToSearch": "files"
+        },
+        "options": {
+          "fields": "={{ [\"id\",\"mimeType\",\"name\",\"modifiedTime\",\"webViewLink\"] }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2048,
+        1744
+      ],
+      "id": "44fa0819-2e15-4ff9-b6ec-c6d1b031e0b9",
+      "name": "Obtener archivos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "kTHXbmVhUkYiMmTC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "={{ $json.sector }}_documents",
+          "mode": "name"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1664,
+        2368
+      ],
+      "id": "a03d8aa9-dc7d-48f9-9ba6-284a6741a350",
+      "name": "Seleccionar documentos",
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $json.title }}",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "={{ $('Sector a actualizar').item.json.id }}",
+            "mode": "id"
+          },
+          "whatToSearch": "files"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2112,
+        2384
+      ],
+      "id": "8b8740c3-22ee-4a2e-b49c-402d2d866e74",
+      "name": "Buscar documento",
+      "alwaysOutputData": true,
+      "retryOnFail": false,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "kTHXbmVhUkYiMmTC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1cPRGvyE3N5V9MJLPXjT9QHh0hRrOcvdJ",
+            "mode": "list",
+            "cachedResultName": "Mi tienda - Conocimiento",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1cPRGvyE3N5V9MJLPXjT9QHh0hRrOcvdJ"
+          },
+          "whatToSearch": "folders"
+        },
+        "options": {
+          "fields": [
+            "mimeType",
+            "id",
+            "name"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        688,
+        1840
+      ],
+      "id": "00fa6a94-2ff5-48ef-b51a-ddd5155404fe",
+      "name": "Conocimiento",
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "kTHXbmVhUkYiMmTC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $json.sql }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1856,
+        1744
+      ],
+      "id": "ab439a79-f1ee-4e25-baea-5be046459d8c",
+      "name": "Crea tablas RAG",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const id = $json.id;\nconst sector = $json.sector;\n\nif (!/^[a-z_][a-z0-9_]*$/i.test(sector)) {\n  throw new Error(\"Nombre de sector inválido\");\n}\n\nconst documentsTable = `${sector}_documents`;\n\nconst sql = `\n-- Insertar o actualizar el sector\ninsert into sectors (id, title)\nvalues ('${id}', '${sector}')\non conflict (id) do update set title = excluded.title;\n\n-- Crear tabla de documentos (nivel documento completo)\ncreate table if not exists ${documentsTable} (\n  id text primary key,\n  title text,\n  url text,\n  updated_at timestamp,\n  created_at timestamp default now()\n);\n`;\n\nreturn {\n  json: {\n    sql,\n  },\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1664,
+        1744
+      ],
+      "id": "a15fd37e-3a86-4a9e-8ead-e8b5f7c40a35",
+      "name": "Script de creacion",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "sectors",
+          "mode": "list",
+          "cachedResultName": "sectors"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1696,
+        1232
+      ],
+      "id": "f6436054-7c8c-4c54-b6ad-e79145b7a932",
+      "name": "Obtener sectores",
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c9d6fd6f-1955-466b-aa95-c1bf7eda1be0",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "={{ $('Loop Over Items').item.json.id }}",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2448,
+        1248
+      ],
+      "id": "bb08ac1c-d745-488f-b27b-a8a09da26905",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const id = $('Loop Over Items').first().json.id; // Ejemplo: \"test\"\nconst sector = $('Loop Over Items').first().json.title; // Ejemplo: \"test\"\n\nif (!/^[a-z_][a-z0-9_]*$/i.test(sector)) {\n  throw new Error(\"Nombre de sector inválido\");\n}\n\nconst documentsTable = `${sector}_documents`;\nconst chunksTable = `${sector}_chunks`;\nconst functionName = `match_${sector}_chunks`;\n\nconst sql = `\ndrop function if exists ${functionName};\ndrop table if exists ${chunksTable};\ndrop table if exists ${documentsTable};\ndelete from sectors where id = '${id}';\n`;\n\nreturn [{ json: { sql } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2720,
+        1232
+      ],
+      "id": "2fe8eec9-dd0c-4b82-9e15-52dcac317b1a",
+      "name": "Script de Eliminacion"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $json.sql }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        2960,
+        1264
+      ],
+      "id": "57191450-6e0e-4cc8-a51e-69f90eb328f2",
+      "name": "Elimina Tabla RAG",
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Crear tabla de sectores (contiene todos los sectores)\ncreate table if not exists sectors (\n  id text primary key,\n  title text\n);\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        480,
+        1840
+      ],
+      "id": "2058a2b8-a0c6-46ea-958f-8d2c097ad212",
+      "name": "Crear sectors",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "={{ $('Loop Over Items2').item.json.sector }}_documents",
+          "mode": "name"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "=id",
+              "value": "={{ $('Loop Over Items2').item.json.file_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2720,
+        1872
+      ],
+      "id": "c05c20fe-f121-4057-8a17-b60d6cd25eec",
+      "name": "Buscar Archivo",
+      "alwaysOutputData": true,
+      "executeOnce": false,
+      "notesInFlow": false,
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": "={{ $prevNode.name === 'Obtener sectores' }}"
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1952,
+        1232
+      ],
+      "id": "ed8cebd9-aa66-4bfa-a2e6-7c804e6932d7",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": "={{ $prevNode.name === 'Seleccionar documentos' }}"
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1888,
+        2368
+      ],
+      "id": "e54b2a96-47ba-4db6-9ee2-9e2979a97302",
+      "name": "Loop Over Items3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ecf2a2b1-6ca9-491a-ab88-5efd8980f463",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2304,
+        2384
+      ],
+      "id": "3de25aa6-71d9-440c-8981-a64a351492ec",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "81949a51-a337-4e27-88db-c76d13fc6685",
+              "name": "sector",
+              "value": "={{ $('Sector a actualizar').item.json.sector }}",
+              "type": "string"
+            },
+            {
+              "id": "adaf6edd-d8e1-4441-a611-6d26540bac05",
+              "name": "document_id",
+              "value": "={{ $('Loop Over Items3').item.json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2560,
+        2368
+      ],
+      "id": "4aae99ef-e255-4500-a7a9-7b97ce82259b",
+      "name": "Documento a eliminar"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "27c8a97a-fc43-4831-814e-a3aedd3de94e",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "258bc7c0-c149-4eb5-81ba-36d1735c8b1b",
+              "name": "sector",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4d114fda-6a0c-42d7-aaf7-4eb48413cd86",
+      "name": "Sector a actualizar",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1168,
+        1856
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": "={{ $prevNode.name === 'Archivo por revisar' }}"
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2512,
+        1744
+      ],
+      "id": "3306d916-3bda-4f90-ada5-c76cdd8c340e",
+      "name": "Loop Over Items2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "67aa4a10-dd16-49f2-9406-1415017bde0d",
+              "leftValue": "={{ $json.require_update }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3072,
+        1728
+      ],
+      "id": "9d8d32ba-0bb8-46dc-a675-a3faa9f602ca",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": "={{ $prevNode.name === 'If1' }}"
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        3408,
+        1680
+      ],
+      "id": "4f455c73-42fa-47ed-b200-dee0e007e1ed",
+      "name": "Loop Over Items4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "45e95b33-79e5-4c86-8625-5318d01103dd",
+              "name": "sector",
+              "value": "={{ $('Archivo por revisar').item.json.sector }}",
+              "type": "string"
+            },
+            {
+              "id": "46a47b30-d8b3-4b95-9825-150c82cc52e5",
+              "name": "file_id",
+              "value": "={{ $('Archivo por revisar').item.json.file_id }}",
+              "type": "string"
+            },
+            {
+              "id": "6d42866c-05ab-4720-a4f4-8edfc4580d5b",
+              "name": "file_type",
+              "value": "={{ $('Archivo por revisar').item.json.file_type }}",
+              "type": "string"
+            },
+            {
+              "id": "c4acc692-b2ff-47db-acfa-61f17da02faa",
+              "name": "file_title",
+              "value": "={{ $('Archivo por revisar').item.json.file_title }}",
+              "type": "string"
+            },
+            {
+              "id": "292453e9-6abe-482d-b54c-a1bd685e5035",
+              "name": "file_url",
+              "value": "={{ $('Archivo por revisar').item.json.file_url }}",
+              "type": "string"
+            },
+            {
+              "id": "7fe2df32-4b65-4b50-8e7c-3003944bda29",
+              "name": "updated_at",
+              "value": "={{ $('Archivo por revisar').item.json.updated_at }}",
+              "type": "string"
+            },
+            {
+              "id": "b40fcaf2-5322-42cb-9bc7-78ae665ef331",
+              "name": "updated_at_bd",
+              "value": "={{ $json.updated_at }}",
+              "type": "string"
+            },
+            {
+              "id": "e0d28aec-e0f5-495c-9a3f-71658bea56e1",
+              "name": "require_update",
+              "value": "={{ $('Archivo por revisar').item.json.updated_at != $json.updated_at }}",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2944,
+        1872
+      ],
+      "id": "9158cbc8-9112-4cbc-963f-39ba0cfc051b",
+      "name": "Archivo revisado"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f5c3036e-29f4-4e1b-8a3d-cf2cfdac4ac0",
+              "name": "sector",
+              "value": "={{ $('Sector a actualizar').item.json.sector }}",
+              "type": "string"
+            },
+            {
+              "id": "10646eae-ae46-4327-a4dc-9987c2d76173",
+              "name": "file_id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "f4536df5-d0b1-4392-bf17-b8137fb31a44",
+              "name": "file_type",
+              "value": "={{ $json.mimeType }}",
+              "type": "string"
+            },
+            {
+              "id": "77d782de-169d-4a46-8a8e-a3831c04d90f",
+              "name": "file_title",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "9bde4d7f-e4f3-4ebd-9338-dce1350f9eab",
+              "name": "file_url",
+              "value": "={{ $json.webViewLink }}",
+              "type": "string"
+            },
+            {
+              "id": "8c069a62-f5ac-4bf7-bc8b-fba7c98b6b26",
+              "name": "updated_at",
+              "value": "={{ $json.modifiedTime }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "42c8288a-997a-4c4d-88be-e194c777b78c",
+      "name": "Archivo por revisar",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2256,
+        1744
+      ]
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        5920,
+        2240
+      ],
+      "id": "363c12cc-dc8a-429e-94bc-c97f4b04797e",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5908c111-6258-4b00-95b8-2da99cf4cf6b",
+              "name": "sector",
+              "value": "={{ $json.sector }}",
+              "type": "string"
+            },
+            {
+              "id": "b3076275-3664-4c39-bb5a-60b3d77e857b",
+              "name": "file_id",
+              "value": "={{ $json.file_id }}",
+              "type": "string"
+            },
+            {
+              "id": "06e284a7-7ac8-4757-b98f-798324b67a60",
+              "name": "file_title",
+              "value": "={{ $json.file_title }}",
+              "type": "string"
+            },
+            {
+              "id": "3e8ea03b-240f-4251-b391-3dfab52574b0",
+              "name": "file_type",
+              "value": "={{ $json.file_type }}",
+              "type": "string"
+            },
+            {
+              "id": "d289b5c5-f915-4ad9-8647-49ceb61c131c",
+              "name": "file_url",
+              "value": "={{ $json.file_url }}",
+              "type": "string"
+            },
+            {
+              "id": "ada18686-ef5f-4e18-9595-2e0147e40695",
+              "name": "updated_at",
+              "value": "={{ $json.updated_at }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3712,
+        1696
+      ],
+      "id": "5cc68b29-1e00-4a52-9582-71961eb075fc",
+      "name": "Archivo por actualizar"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": "={{ $prevNode.name === 'Conocimiento' }}"
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        928,
+        1840
+      ],
+      "id": "37a74eaf-7162-40b6-ac72-a3438df2bd4a",
+      "name": "Loop Over Items5"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $json.title }}",
+        "limit": 1,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1cPRGvyE3N5V9MJLPXjT9QHh0hRrOcvdJ",
+            "mode": "list",
+            "cachedResultName": "Mi tienda - Conocimiento",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1cPRGvyE3N5V9MJLPXjT9QHh0hRrOcvdJ"
+          },
+          "whatToSearch": "folders"
+        },
+        "options": {
+          "fields": [
+            "id",
+            "name",
+            "mimeType"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2208,
+        1248
+      ],
+      "id": "0a1f39d0-f82d-4d65-8a65-a64b77cb6180",
+      "name": "Buscar Sector",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "kTHXbmVhUkYiMmTC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## RAG - Vectoriza documentos",
+        "height": 1036,
+        "width": 2776,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3344,
+        1424
+      ],
+      "typeVersion": 1,
+      "id": "feddcb86-3ad3-4af7-8235-469d70b5b82d",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## RAG - Detecta documentos que se deben actualizar",
+        "height": 492,
+        "width": 1720
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1584,
+        1632
+      ],
+      "typeVersion": 1,
+      "id": "3c870f30-ac13-4057-9767-f430cdb3a1d4",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "## RAG - Elimina documentos no usados",
+        "height": 444,
+        "width": 1720,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1584,
+        2208
+      ],
+      "typeVersion": 1,
+      "id": "be14570c-ec69-4a22-b73d-c4fb458477a3",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "## RAG - Detecta todo el conocimiento",
+        "height": 476,
+        "width": 1192,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        224,
+        1648
+      ],
+      "typeVersion": 1,
+      "id": "165ffffe-bea5-4905-a858-81c572438dd2",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f2b4f24b-3339-4e35-9182-b8d3fde3dd20",
+              "leftValue": "={{ $('Archivo por actualizar').item.json.file_type }}",
+              "rightValue": "=application/pdf",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "1b64c784-acd5-423f-b12f-a42cbe210911",
+              "leftValue": "={{ $('Archivo por actualizar').item.json.file_type }}",
+              "rightValue": "text/plain",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "2fee83c3-5251-46f7-a448-da2967c97035",
+              "leftValue": "={{ $('Archivo por actualizar').item.json.file_type }}",
+              "rightValue": "wordprocessingml.document",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3920,
+        1696
+      ],
+      "id": "cf5bdc11-0768-4ae7-8631-3982f62a10a4",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": "={{ $('Archivo por actualizar').item.json.sector }}_chunks",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        5536,
+        1616
+      ],
+      "id": "bc631f3c-a89b-4f97-934b-54b5f23b7dde",
+      "name": "Insert vectors",
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_chat_histories",
+          "mode": "list",
+          "cachedResultName": "n8n_chat_histories"
+        },
+        "deleteCommand": "drop",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        192,
+        2992
+      ],
+      "id": "d057bf4a-36f5-4d2d-9556-3d626d09b306",
+      "name": "Delete table or rows",
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "soporte_chunks",
+          "mode": "list",
+          "cachedResultName": "soporte_chunks"
+        },
+        "returnAll": true,
+        "options": {
+          "outputColumns": [
+            "id",
+            "text",
+            "metadata"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        192,
+        3184
+      ],
+      "id": "108304b7-1612-418c-bb9b-4c88e0b4b001",
+      "name": "Select rows from a table",
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## RAG Agent - Agente Especializado",
+        "height": 625,
+        "width": 1452,
+        "color": 4
+      },
+      "id": "f24c20f9-156f-4733-9d05-0e41ff7cc0fd",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        176,
+        320
+      ]
+    }
+  ],
+  "pinData": {
+    "Start": [
+      {
+        "json": {
+          "query": "que servicios brinda?",
+          "sector": "soporte"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "OpenAI Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "RAG AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Postgres PGVector Store": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "RAG AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Insert vectors",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download File": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Insert vectors",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insert vectors",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insert vectors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Chunks": {
+      "main": [
+        [
+          {
+            "node": "Actualizar documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Insert vectors",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Document1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Chunks1": {
+      "main": [
+        [
+          {
+            "node": "Delete Document1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar documento": {
+      "main": [
+        [
+          {
+            "node": "Download File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Diario - 00:00": {
+      "main": [
+        [
+          {
+            "node": "Crear sectors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener archivos": {
+      "main": [
+        [
+          {
+            "node": "Archivo por revisar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Seleccionar documentos": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar documento": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conocimiento": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crea tablas RAG": {
+      "main": [
+        [
+          {
+            "node": "Obtener archivos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Script de creacion": {
+      "main": [
+        [
+          {
+            "node": "Crea tablas RAG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener sectores": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Script de Eliminacion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Script de Eliminacion": {
+      "main": [
+        [
+          {
+            "node": "Elimina Tabla RAG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Elimina Tabla RAG": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear sectors": {
+      "main": [
+        [
+          {
+            "node": "Conocimiento",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Obtener sectores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Archivo": {
+      "main": [
+        [
+          {
+            "node": "Archivo revisado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Buscar Sector",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items3": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Buscar documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Documento a eliminar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Documento a eliminar": {
+      "main": [
+        [
+          {
+            "node": "Delete Chunks1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sector a actualizar": {
+      "main": [
+        [
+          {
+            "node": "Script de creacion",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Seleccionar documentos",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Loop Over Items5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items2": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Buscar Archivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items4": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Archivo por actualizar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Archivo revisado": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Archivo por revisar": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Operation, do nothing": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Archivo por actualizar": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items5": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Sector a actualizar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Sector": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Delete Chunks",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert vectors": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f7dc7f89-4534-484d-bc1e-56ddb2406135",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
+  },
+  "id": "Fr61717rXn2i5eRv",
+  "tags": []
+}

@@ -1,0 +1,347 @@
+{
+  "name": "YT - Postgres - Depurador de mensajes",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -384,
+        -64
+      ],
+      "id": "b605ef92-bb3a-4138-9985-fd114c9be745",
+      "name": "When chat message received",
+      "webhookId": "addfe574-7a6d-486e-a287-3a5700e5d392"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -160,
+        -64
+      ],
+      "id": "4ba53088-763e-478f-9f42-f42b8fc3906f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -160,
+        160
+      ],
+      "id": "431b6e1a-68ff-4b9c-8b3d-ccf4c12d9c8e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "CJp5VijgPVJDBcEc",
+          "name": "Own Credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_chat_histories",
+          "mode": "list",
+          "cachedResultName": "n8n_chat_histories"
+        },
+        "sort": {
+          "values": [
+            {
+              "column": "id",
+              "direction": "DESC"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -400,
+        496
+      ],
+      "id": "0140a964-0a61-43e8-ba53-9134a2d4eb8b",
+      "name": "Select rows from a table",
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Asistente Basico",
+        "height": 512,
+        "width": 736
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -480,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "b4aa2220-158a-4857-9c03-a8947b2b888e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Añadir tiempo de creacion (1 vez por tabla)",
+        "height": 272,
+        "width": 736,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -480,
+        720
+      ],
+      "typeVersion": 1,
+      "id": "5c867586-9dac-43a5-be65-544478656c48",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Cambiar `n8n_chat_histories` por el nombre de la tabla que manejes\nALTER TABLE n8n_chat_histories\nADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT NOW();",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -400,
+        816
+      ],
+      "id": "a34d9458-f8db-4358-bc28-0d9669eed1c7",
+      "name": "Add created time",
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Ver datos de una tabla",
+        "height": 272,
+        "width": 736,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -480,
+        400
+      ],
+      "typeVersion": 1,
+      "id": "2d3997cc-b597-4446-898a-2e8350fc01cf",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Cron Depurador de datos",
+        "height": 272,
+        "width": 736,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -480,
+        1056
+      ],
+      "typeVersion": 1,
+      "id": "810bd632-5bde-458b-991c-def806d8185c",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -416,
+        1152
+      ],
+      "id": "dfc518fc-8a76-46ed-a272-b3298c463d58",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "79a4ef03-b6bc-4bfd-9bd4-febc1f8b088e",
+              "name": "days_before",
+              "value": "0",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -192,
+        1152
+      ],
+      "id": "6954a881-731d-47ac-b03f-ee0f84146e7e",
+      "name": "Days before"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Cambiar `n8n_chat_histories` por el nombre de la tabla que manejes\n\nDELETE FROM public.n8n_chat_histories\nWHERE created_at < NOW() - INTERVAL '{{ $json.days_before }} days';",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        32,
+        1152
+      ],
+      "id": "48f6d2c5-e0fa-416d-be44-fd8bf94373dd",
+      "name": "Delete history",
+      "credentials": {
+        "postgres": {
+          "id": "f4LjmMiXWt93U9Vj",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -32,
+        160
+      ],
+      "id": "6ad7a7de-32e8-4ed1-8e65-5b4c8dcbaffc",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "PsXEAyW69ubLT6uL",
+          "name": "PGVector local"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuración\n\n1. **Actualiza** las credenciales de **Postgres**\n2. **Verifica** que estes usando **la misma tabla para las conversaciones y depuración**\n\n---\n\n📺 Puedes guiarte con este video:  \n👉 [Cómo configurar paso a paso](https://youtu.be/aJouAkbEGM0)  \n\n🔔 Además, tienes más **video-guías completas** en mi canal de YouTube:  \n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 416,
+        "width": 384,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        368,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "26b98bac-6a12-4a2a-9992-6d3488336e4f",
+      "name": "Sticky Note5"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select rows from a table": {
+      "main": [
+        []
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Days before",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Days before": {
+      "main": [
+        [
+          {
+            "node": "Delete history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "071bf333-349c-4720-89b8-0d84cfcf34de",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
+  },
+  "id": "8XcZm643Rwo9JRHw",
+  "tags": []
+}
