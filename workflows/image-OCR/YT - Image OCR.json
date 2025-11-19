@@ -1,0 +1,309 @@
+{
+  "name": "YT - Image OCR",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/responses",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"{{ $('Request Prompt Structure').item.json.model }}\",\n  \"input\": [\n    {\n      \"role\": \"user\",\n      \"content\": [\n        {\n          \"type\": \"input_text\",\n          \"text\": {{ JSON.stringify($('Request Prompt Structure').item.json.prompt) }}\n        },\n        {\n          \"type\": \"input_image\",\n          \"image_url\": \"{{ $('Request Prompt Structure').item.json.img_url }}\"\n        }\n      ]\n    }\n  ],\n  \"text\": {{ $('Request Prompt Structure').item.json.format }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -48,
+        208
+      ],
+      "id": "e09e7a22-c0ad-4f93-b36a-f45c3fa18856",
+      "name": "Analize Image Open AI",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "BPNmeZQMAOcJOBK2",
+          "name": "Valentina OpenAI Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b27a0d1d-f4d4-4e33-9c37-513139f89324",
+              "name": "prompt",
+              "value": "=# 🧾 Prompt Mejorado y Optimizado para OCR\n\nTu tarea es **extraer datos exclusivamente del contenido visible en la imagen**. No inventes, no interpretes y no completes información faltante. Si un valor no está presente, deja el campo en blanco (`\"\"`).\n\n---\n\n## 📌 1. Captura los siguientes campos principales:\n\n* \"cliente\"\n* \"direccion\"\n* \"fecha\" (formato **dd/mm/yyyy**).\n* \"total\"\n* \"items\"\n\n---\n\n## 📌 2. Reglas para \"items\"\n\n* Captura **todas las filas exactamente como aparecen**.\n* Mantén el orden original.\n* No modifiques texto, números ni formato.\n* Cada elemento debe contener solo:\n\n  * \"item\"\n  * \"codigo\"\n  * \"producto\"\n  * \"cantidad\"\n  * \"valor_unitario\"\n  * \"subtotal\"\n* Si algún valor está vacío o no aparece en la imagen, devuélvelo como `\"\"`.\n\n---\n\n## 📌 3. Reglas estrictas de OCR\n\n* No normalices mayúsculas/minúsculas.\n* No reestructures texto.\n* No corrijas palabras mal escritas.\n* Respeta símbolos de moneda, puntos, comas y espacios.\n* Lee únicamente lo visible en la imagen.\n\n---\n\n## 📌 4. Respuesta\n\nDevuelve **únicamente** el JSON final, sin comentarios ni explicaciones.\n\n---\n\n## 📌 Ejemplo de salida esperada\n\n```json\n{\n  \"cliente\": \"007\",\n  \"direccion\": \"Plaza garibaldi #1 Puerto Vallarta, Mexico\",\n  \"fecha\": \"11/08/2024\",\n  \"total\": \"228,500.00\",\n  \"items\": [\n    {\n      \"item\": \"1\",\n      \"codigo\": \"90018\",\n      \"producto\": \"Guirnalda de luces LED para exteriores de 100 pies con 52 bombillas\",\n      \"cantidad\": \"1\",\n      \"valor_unitario\": \"16,500.00\",\n      \"subtotal\": \"16,500.00\"\n    }\n  ]\n}\n```\n",
+              "type": "string"
+            },
+            {
+              "id": "c803f2e5-86c6-41ce-ad05-58a9bb53a883",
+              "name": "img_url",
+              "value": "={{ $('Start').item.json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "17cc1601-7046-4de3-b849-f9f6a659ffb5",
+              "name": "format",
+              "value": "={\n  \"format\": {\n    \"type\": \"json_schema\",\n    \"name\": \"factura_ocr\",\n    \"schema\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"cliente\": { \"type\": \"string\" },\n        \"direccion\": { \"type\": \"string\" },\n        \"fecha\": {\n          \"type\": \"string\",\n          \"description\": \"Fecha en formato dd/mm/yyyy\",\n          \"pattern\": \"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\\\\d{4}$\"\n        },\n        \"total\": { \"type\": \"string\" },\n        \"items\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"item\": { \"type\": \"string\" },\n              \"codigo\": { \"type\": \"string\" },\n              \"producto\": { \"type\": \"string\" },\n              \"cantidad\": { \"type\": \"string\" },\n              \"valor_unitario\": { \"type\": \"string\" },\n              \"subtotal\": { \"type\": \"string\" }\n            },\n            \"required\": [\n              \"item\",\n              \"codigo\",\n              \"producto\",\n              \"cantidad\",\n              \"valor_unitario\",\n              \"subtotal\"\n            ],\n            \"additionalProperties\": false\n          }\n        }\n      },\n      \"required\": [\n        \"cliente\",\n        \"direccion\",\n        \"fecha\",\n        \"total\",\n        \"items\"\n      ],\n      \"additionalProperties\": false\n    },\n    \"strict\": true\n  }\n}",
+              "type": "string"
+            },
+            {
+              "id": "2531e779-2854-448a-ae11-6fc8e1217c02",
+              "name": "model",
+              "value": "gpt-5-mini",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -272,
+        208
+      ],
+      "id": "8efe86ea-9604-4772-ab3f-f668c75532bf",
+      "name": "Request Prompt Structure"
+    },
+    {
+      "parameters": {
+        "jsCode": "const json_to_parse = $('Analize Image Open AI').first().json.output[1].content[0].text;\n\n// Parsear el texto a JSON\nlet parsed;\ntry {\n  parsed = JSON.parse(json_to_parse);\n} catch (error) {\n  throw new Error(\"Error al parsear el JSON: \" + error.message);\n}\n\n// Devolver el objeto parseado\nreturn [{\n  output: parsed\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        176,
+        208
+      ],
+      "id": "8c244151-e0c6-4cbd-8556-1e1c142d4632",
+      "name": "To JSON"
+    },
+    {
+      "parameters": {
+        "content": "## OCR - Altamente recomendado",
+        "height": 384,
+        "width": 656,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -320,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "7ded2f73-9dc5-4228-85d0-7f3e7878bb21",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "url"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -576,
+        -16
+      ],
+      "id": "73717f4c-170f-4558-9406-43d922b86d6f",
+      "name": "Start"
+    },
+    {
+      "parameters": {
+        "content": "## OCR -  Recomendado",
+        "height": 416,
+        "width": 656
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -320,
+        -384
+      ],
+      "typeVersion": 1,
+      "id": "d60f864d-308b-4405-bb18-388e54c69c37",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "text": "=# 🧾 Prompt Mejorado y Optimizado para OCR\n\nTu tarea es **extraer datos exclusivamente del contenido visible en la imagen**. No inventes, no interpretes y no completes información faltante. Si un valor no está presente, deja el campo en blanco (`\"\"`).\n\n---\n\n## 📌 1. Captura los siguientes campos principales:\n\n* \"cliente\"\n* \"direccion\"\n* \"fecha\" (formato **dd/mm/yyyy**).\n* \"total\"\n* \"items\"\n\n---\n\n## 📌 2. Reglas para \"items\"\n\n* Captura **todas las filas exactamente como aparecen**.\n* Mantén el orden original.\n* No modifiques texto, números ni formato.\n* Cada elemento debe contener solo:\n\n  * \"item\"\n  * \"codigo\"\n  * \"producto\"\n  * \"cantidad\"\n  * \"valor_unitario\"\n  * \"subtotal\"\n* Si algún valor está vacío o no aparece en la imagen, devuélvelo como `\"\"`.\n\n---\n\n## 📌 3. Reglas estrictas de OCR\n\n* No normalices mayúsculas/minúsculas.\n* No reestructures texto.\n* No corrijas palabras mal escritas.\n* Respeta símbolos de moneda, puntos, comas y espacios.\n* Lee únicamente lo visible en la imagen.\n\n---\n\n## 📌 4. Respuesta\n\nDevuelve **únicamente** el JSON final, sin comentarios ni explicaciones.\n\n---\n\n## 📌 Ejemplo de salida esperada\n\n```json\n{\n  \"cliente\": \"007\",\n  \"direccion\": \"Plaza garibaldi #1 Puerto Vallarta, Mexico\",\n  \"fecha\": \"11/08/2024\",\n  \"total\": \"228,500.00\",\n  \"items\": [\n    {\n      \"item\": \"1\",\n      \"codigo\": \"90018\",\n      \"producto\": \"Guirnalda de luces LED para exteriores de 100 pies con 52 bombillas\",\n      \"cantidad\": \"1\",\n      \"valor_unitario\": \"16,500.00\",\n      \"subtotal\": \"16,500.00\"\n    }\n  ]\n}\n```",
+        "imageUrls": "={{ $json.url }}",
+        "options": {
+          "detail": "auto",
+          "maxTokens": 500
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        -272,
+        -304
+      ],
+      "id": "c102faac-df66-4dee-b46b-b67b6eca87ea",
+      "name": "Analyze image",
+      "credentials": {
+        "openAiApi": {
+          "id": "CJp5VijgPVJDBcEc",
+          "name": "Own Credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -48,
+        -96
+      ],
+      "id": "72fb9220-5d62-4157-95a1-9d81fcb5880a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "CJp5VijgPVJDBcEc",
+          "name": "Own Credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=parsea este texto en json\n\n {{ $json['0'].content[0].text }}",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -48,
+        -304
+      ],
+      "id": "c4356240-60fc-4236-9dcd-2a2775dce0f5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"cliente\": \"007\",\n  \"direccion\": \"Plaza garibaldi #1 Puerto Vallarta, Mexico\",\n  \"fecha\": \"11/08/2024\",\n  \"total\": \"228,500.00\",\n  \"items\": [\n    {\n      \"item\": \"1\",\n      \"codigo\": \"90018\",\n      \"producto\": \"Guirnalda de luces LED para exteriores de 100 pies con 52 bombillas\",\n      \"cantidad\": \"1\",\n      \"valor_unitario\": \"16,500.00\",\n      \"subtotal\": \"16,500.00\"\n    }\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        112,
+        -112
+      ],
+      "id": "2a30245b-3387-49b5-843c-83946925cfd2",
+      "name": "Structured Output Parser"
+    }
+  ],
+  "pinData": {
+    "Start": [
+      {
+        "json": {
+          "url": "https://imgv2-1-f.scribdassets.com/img/document/358849121/original/90aa8907b3/1?v=1"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Analize Image Open AI": {
+      "main": [
+        [
+          {
+            "node": "To JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Request Prompt Structure": {
+      "main": [
+        [
+          {
+            "node": "Analize Image Open AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Request Prompt Structure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze image": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "24d2afe7-fe50-407d-abb1-2c8d39d38f8a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
+  },
+  "id": "Tp1xHRc0Zd6zsFsu",
+  "tags": []
+}

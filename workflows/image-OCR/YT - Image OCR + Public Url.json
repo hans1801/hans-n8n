@@ -1,0 +1,780 @@
+{
+  "name": "YT - Image OCR + Public Url",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -96
+      ],
+      "id": "657a36af-9ac4-461c-8d8d-25d0e9c7423e",
+      "name": "Telegram Trigger",
+      "webhookId": "1345e511-e782-4c9e-82bf-f98a673ce6b2",
+      "credentials": {
+        "telegramApi": {
+          "id": "vQulFLRQOzHxIZqF",
+          "name": "Telegram YT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9f4cc407-f4f9-4615-a224-97003111b3e4",
+                    "leftValue": "={{ $json.message.document.mime_type }}",
+                    "rightValue": "image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "image"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d0c2454e-62c2-41c5-8ee0-8da5ca06744b",
+                    "leftValue": "={{ $json.message.photo[0].file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "photo"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "conversation",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "id": "acfdebbf-8af8-44f7-8f70-f1bd037577b2"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        224,
+        -128
+      ],
+      "id": "3d0fcd59-1b1f-4012-9a28-f2f6cce23a28",
+      "name": "Switch",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "496bcebc-7b07-4d37-b6a9-ff7e2d33eeb2",
+              "name": "chat_id",
+              "value": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+              "type": "number"
+            },
+            {
+              "id": "0f9e8d0e-0c82-45ca-81ab-884d4b2fcb23",
+              "name": "text",
+              "value": "={{ $('Telegram Trigger').item.json.message.caption.toLowerCase() }}",
+              "type": "string"
+            },
+            {
+              "id": "a47f2e24-0bf9-447d-a6fa-611453cbaf03",
+              "name": "file_id",
+              "value": "={{ \n  $json.message.photo && $json.message.photo.length > 0\n    ? (\n        $json.message.photo[3]?.file_id ||\n        $json.message.photo[2]?.file_id ||\n        $json.message.photo[1]?.file_id ||\n        $json.message.photo[0]?.file_id\n      )\n    : ($json.message.document && $json.message.document.file_id)\n}}",
+              "type": "string"
+            },
+            {
+              "id": "753df1e4-71e3-4c90-a8d1-ed3605aea606",
+              "name": "file_type",
+              "value": "={{ $json.message.document?.mime_type ?? \"image/jpeg\" }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        448,
+        -96
+      ],
+      "id": "846e9ba2-b33b-4e1d-9713-6581677c426a",
+      "name": "Image Data"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Image Data').item.json.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        -96
+      ],
+      "id": "fd99d5cf-0e93-478d-9114-9c2ca615b951",
+      "name": "Get a file",
+      "webhookId": "45c1b8b7-f3d1-42b4-88cf-6695f8c36bf8",
+      "credentials": {
+        "telegramApi": {
+          "id": "vQulFLRQOzHxIZqF",
+          "name": "Telegram YT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.result.file_unique_id }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1xBE_aJQoetzQa9U5d4Jcd4HmxTWv6p9j",
+          "mode": "list",
+          "cachedResultName": "Temporal photo",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1xBE_aJQoetzQa9U5d4Jcd4HmxTWv6p9j"
+        },
+        "options": {
+          "simplifyOutput": false
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        896,
+        -96
+      ],
+      "id": "766115fe-863e-4702-8edf-b7bb4c698ab5",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "kTHXbmVhUkYiMmTC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "deleteFile",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Upload file').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        208,
+        336
+      ],
+      "id": "020703cf-5ba5-443c-b7bc-610d0291e81f",
+      "name": "Delete a file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "kTHXbmVhUkYiMmTC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Generate Public URL",
+        "height": 384,
+        "width": 816,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        416,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "23664faf-c567-4d5a-8b65-6b1c2f7c8f55",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Capture Data",
+        "height": 384,
+        "width": 416,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -48,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "f3834558-a120-4126-ab2f-438df24e0739",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Continue Flow",
+        "height": 384,
+        "width": 1328
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        176,
+        176
+      ],
+      "typeVersion": 1,
+      "id": "06ee4779-b811-4aea-8d3c-f974822a3379",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6fc409e0-e203-4826-8b73-72e1af959382",
+              "name": "url",
+              "value": "={{ $('Upload file').item.json.thumbnailLink }}0",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1104,
+        -96
+      ],
+      "id": "5716f944-a4db-4fe6-8b1f-0c0cf3c89d71",
+      "name": "Public Url"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Tp1xHRc0Zd6zsFsu",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/Tp1xHRc0Zd6zsFsu",
+          "cachedResultName": "YT - Image OCR"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "url": "={{ $('Public Url').item.json.url }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1328,
+        -96
+      ],
+      "id": "38889530-6866-438d-bf01-b7f4d678a04a",
+      "name": "Call 'YT - Image OCR'"
+    },
+    {
+      "parameters": {
+        "content": "## OCR Image",
+        "height": 384,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1264,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "37fa7172-7bc7-437f-8ebe-aa2ad5c001f6",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        656,
+        336
+      ],
+      "id": "f95e3480-db8e-46f4-8af7-e7b2d8e0d6ef",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1328,
+        336
+      ],
+      "id": "3c939134-f73c-4858-b27d-b7b75b131af9",
+      "name": "Wait",
+      "webhookId": "b0bd60e8-6b55-44b5-ae9c-0acbd4bc9b11"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n\nreturn $('Call \\'YT - Image OCR\\'').first().json.output.items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        336
+      ],
+      "id": "04affcad-0898-489c-87da-63b56351c3fa",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1xZoK4xbEP9vUiSM1JNT9Ed_PLPH69ISvWSIZX7Ye6E4",
+          "mode": "list",
+          "cachedResultName": "Items",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xZoK4xbEP9vUiSM1JNT9Ed_PLPH69ISvWSIZX7Ye6E4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 645509027,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xZoK4xbEP9vUiSM1JNT9Ed_PLPH69ISvWSIZX7Ye6E4/edit#gid=645509027"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        880,
+        256
+      ],
+      "id": "458d6646-667e-4155-8ea2-686c0a5de1e1",
+      "name": "Get Total Rows",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "DjqeEZjBp3RJQmAR",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1xZoK4xbEP9vUiSM1JNT9Ed_PLPH69ISvWSIZX7Ye6E4",
+          "mode": "list",
+          "cachedResultName": "Items",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xZoK4xbEP9vUiSM1JNT9Ed_PLPH69ISvWSIZX7Ye6E4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ojY_f9XxAmkWE1rM5tUxFaqqKV9M4hqFT6eqYes74DM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Get Total Rows').item.json.Total + 1 }}",
+            "item": "={{ $('Loop Over Items').item.json.item }}",
+            "codigo": "={{ $('Loop Over Items').item.json.codigo }}",
+            "producto": "={{ $('Loop Over Items').item.json.producto }}",
+            "cantidad": "={{ $('Loop Over Items').item.json.cantidad }}",
+            "valor_unitario": "={{ $('Loop Over Items').item.json.valor_unitario }}",
+            "total": "={{ $('Loop Over Items').item.json.subtotal }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "item",
+              "displayName": "item",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "codigo",
+              "displayName": "codigo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "producto",
+              "displayName": "producto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "cantidad",
+              "displayName": "cantidad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "valor_unitario",
+              "displayName": "valor_unitario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "total",
+              "displayName": "total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1104,
+        256
+      ],
+      "id": "3444554c-f237-4fa5-9cca-03ea67574ca9",
+      "name": "Add Row",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "DjqeEZjBp3RJQmAR",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 465205452,
+          "message": {
+            "message_id": 287,
+            "from": {
+              "id": 913422811,
+              "is_bot": false,
+              "first_name": "Hans",
+              "username": "HanTroid",
+              "language_code": "en"
+            },
+            "chat": {
+              "id": 913422811,
+              "first_name": "Hans",
+              "username": "HanTroid",
+              "type": "private"
+            },
+            "date": 1763524493,
+            "document": {
+              "file_name": "image.png",
+              "mime_type": "image/png",
+              "thumbnail": {
+                "file_id": "AAMCAQADGQEAAgEfaR0_jT1ZgcYBq_GSh8HDAkSR4jMAAg0JAAJ84ulE6IUJedo-I58BAAdtAAM2BA",
+                "file_unique_id": "AQADDQkAAnzi6URy",
+                "file_size": 14823,
+                "width": 320,
+                "height": 179
+              },
+              "thumb": {
+                "file_id": "AAMCAQADGQEAAgEfaR0_jT1ZgcYBq_GSh8HDAkSR4jMAAg0JAAJ84ulE6IUJedo-I58BAAdtAAM2BA",
+                "file_unique_id": "AQADDQkAAnzi6URy",
+                "file_size": 14823,
+                "width": 320,
+                "height": 179
+              },
+              "file_id": "BQACAgEAAxkBAAIBH2kdP409WYHGAavxkofBwwJEkeIzAAINCQACfOLpROiFCXnaPiOfNgQ",
+              "file_unique_id": "AgADDQkAAnzi6UQ",
+              "file_size": 131039
+            }
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Image Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Image Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Public Url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete a file": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Data": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Public Url": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT - Image OCR'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT - Image OCR'": {
+      "main": [
+        [
+          {
+            "node": "Delete a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Get Total Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Total Rows": {
+      "main": [
+        [
+          {
+            "node": "Add Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Row": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1ecf2a11-d783-477e-933e-23c9d8f61424",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
+  },
+  "id": "xX9Hg8QEV68I1vc7",
+  "tags": []
+}
