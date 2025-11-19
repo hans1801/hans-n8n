@@ -1,5 +1,5 @@
 {
-  "name": "YT - Image OCR",
+  "name": "YT - Image OCR - Tool",
   "nodes": [
     {
       "parameters": {
@@ -299,7 +299,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "24d2afe7-fe50-407d-abb1-2c8d39d38f8a",
+  "versionId": "7aae8997-76f1-4f77-aeb0-9d4bf40aea85",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
