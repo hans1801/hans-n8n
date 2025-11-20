@@ -183,6 +183,7 @@
     },
     {
       "parameters": {
+        "inputDataFieldName": "=data",
         "name": "={{ $json.result.file_unique_id }}",
         "driveId": {
           "__rl": true,
@@ -319,7 +320,7 @@
           "value": "Tp1xHRc0Zd6zsFsu",
           "mode": "list",
           "cachedResultUrl": "/workflow/Tp1xHRc0Zd6zsFsu",
-          "cachedResultName": "YT - Image OCR"
+          "cachedResultName": "YT - Image OCR - Tool"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -563,15 +564,31 @@
           "name": "Google Sheets account"
         }
       }
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuración\n\n1. Configura correctamente el subflujo Call 'YT - Image OCR'\n2. Actualiza los nodos de drive\n3. Actualiza la parte de \"Continue Flow\" y \"Capture Data\" en base a tus necesidades\n\n---\n\n📺 Puedes guiarte con este video:  \n👉 [Cómo configurar paso a paso](https://youtu.be/kBDWFWXoXxM)  \n\n🔔 Además, tienes más **video-guías completas** en mi canal de YouTube:  \n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 416,
+        "width": 384,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -512,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "ecbea56b-4ec6-40d2-b28b-b8e226ab37e2",
+      "name": "Sticky Note4"
     }
   ],
   "pinData": {
     "Telegram Trigger": [
       {
         "json": {
-          "update_id": 465205452,
+          "update_id": 465205455,
           "message": {
-            "message_id": 287,
+            "message_id": 290,
             "from": {
               "id": 913422811,
               "is_bot": false,
@@ -585,26 +602,26 @@
               "username": "HanTroid",
               "type": "private"
             },
-            "date": 1763524493,
+            "date": 1763537901,
             "document": {
               "file_name": "image.png",
               "mime_type": "image/png",
               "thumbnail": {
-                "file_id": "AAMCAQADGQEAAgEfaR0_jT1ZgcYBq_GSh8HDAkSR4jMAAg0JAAJ84ulE6IUJedo-I58BAAdtAAM2BA",
-                "file_unique_id": "AQADDQkAAnzi6URy",
+                "file_id": "AAMCAQADGQEAAgEiaR1z7dirbxoAAdgUzF1LFBILVAKVAAJFCQACfOLpRO_ga_Otzt0SAQAHbQADNgQ",
+                "file_unique_id": "AQADRQkAAnzi6URy",
                 "file_size": 14823,
                 "width": 320,
                 "height": 179
               },
               "thumb": {
-                "file_id": "AAMCAQADGQEAAgEfaR0_jT1ZgcYBq_GSh8HDAkSR4jMAAg0JAAJ84ulE6IUJedo-I58BAAdtAAM2BA",
-                "file_unique_id": "AQADDQkAAnzi6URy",
+                "file_id": "AAMCAQADGQEAAgEiaR1z7dirbxoAAdgUzF1LFBILVAKVAAJFCQACfOLpRO_ga_Otzt0SAQAHbQADNgQ",
+                "file_unique_id": "AQADRQkAAnzi6URy",
                 "file_size": 14823,
                 "width": 320,
                 "height": 179
               },
-              "file_id": "BQACAgEAAxkBAAIBH2kdP409WYHGAavxkofBwwJEkeIzAAINCQACfOLpROiFCXnaPiOfNgQ",
-              "file_unique_id": "AgADDQkAAnzi6UQ",
+              "file_id": "BQACAgEAAxkBAAIBImkdc-3Yq28aAAHYFMxdSxQSC1QClQACRQkAAnzi6UTv4Gvzrc7dEjYE",
+              "file_unique_id": "AgADRQkAAnzi6UQ",
               "file_size": 131039
             }
           }
@@ -770,7 +787,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "1ecf2a11-d783-477e-933e-23c9d8f61424",
+  "versionId": "1c6801a1-2369-47ed-9558-2e3d0cbf5225",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"

@@ -22,8 +22,8 @@
       "name": "Analize Image Open AI",
       "credentials": {
         "httpBearerAuth": {
-          "id": "BPNmeZQMAOcJOBK2",
-          "name": "Valentina OpenAI Key"
+          "id": "Xi1hHMna1ChlyIFj",
+          "name": "Temp Open AI"
         }
       }
     },
@@ -118,7 +118,7 @@
     },
     {
       "parameters": {
-        "content": "## OCR -  Recomendado",
+        "content": "## OCR -  No Tan Recomendado",
         "height": 416,
         "width": 656
       },
@@ -145,7 +145,7 @@
         "imageUrls": "={{ $json.url }}",
         "options": {
           "detail": "auto",
-          "maxTokens": 500
+          "maxTokens": 1000
         }
       },
       "type": "@n8n/n8n-nodes-langchain.openAi",
@@ -216,6 +216,22 @@
       ],
       "id": "2a30245b-3387-49b5-843c-83946925cfd2",
       "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuración\n\n1. **Actualiza** las credenciales de **Analize Image Open AI** con tu API key de Open AI\n2. Actualiza las credenciales de Open AI en los demas nodos\n\n---\n\n📺 Puedes guiarte con este video:  \n👉 [Cómo configurar paso a paso](https://youtu.be/kBDWFWXoXxM)  \n\n🔔 Además, tienes más **video-guías completas** en mi canal de YouTube:  \n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 416,
+        "width": 384,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        400,
+        -176
+      ],
+      "typeVersion": 1,
+      "id": "1d750d00-c6b7-43c4-afa6-3cce696d450a",
+      "name": "Sticky Note3"
     }
   ],
   "pinData": {
@@ -299,7 +315,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "7aae8997-76f1-4f77-aeb0-9d4bf40aea85",
+  "versionId": "a727a497-cf52-4054-8573-1d4998262f84",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
