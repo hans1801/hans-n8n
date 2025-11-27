@@ -15,7 +15,6 @@ cd "$PROJECT_DIR"
 
 # Crear .env
 cat > .env <<EOF
-CONFIG_SESSION_PHONE_VERSION=2.3000.1023204200
 AUTHENTICATION_API_KEY=change-password
 
 DATABASE_ENABLED=true
@@ -34,7 +33,7 @@ cat > docker-compose.yml <<EOF
 services:
   evolution_api:
     container_name: evolution_api
-    image: atendai/evolution-api:latest
+    image: evoapicloud/evolution-api:latest
     restart: always
     ports:
       - "8080:8080"
