@@ -3,7 +3,7 @@
 # ============================
 # CONFIGURACIÓN INICIAL
 # ============================
-N8N_DOMAIN="n8n-demo.hansacha.com"
+N8N_DOMAIN="TU_DOMINIO.com"
 PROJECT_DIR="n8n_project"
 
 # ============================
