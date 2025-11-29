@@ -45,9 +45,9 @@ QUEUE_BULL_REDIS_PORT=6379
 QUEUE_BULL_REDIS_DB=0
 
 # Postgres Vector
-POSTGRES_USER=set-user
-POSTGRES_PASSWORD=set-any-password
-POSTGRES_DB=set-any-database
+POSTGRES_USER=postgres-user
+POSTGRES_PASSWORD=postgres-password
+POSTGRES_DB=postgres-db
 EOF
 
   echo ".env creado correctamente."

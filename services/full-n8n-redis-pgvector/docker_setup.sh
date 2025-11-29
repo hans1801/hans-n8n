@@ -1,10 +1,11 @@
+# Paso 1
 # Instalar Docker - "docker --version"
 sudo apt update
 sudo apt install -y docker.io
 sudo systemctl start docker
 sudo systemctl enable docker
 
-
+# Paso 2
 # Instalar Docker compose - "docker compose version"
 sudo apt update
 sudo apt install -y ca-certificates curl gnupg
