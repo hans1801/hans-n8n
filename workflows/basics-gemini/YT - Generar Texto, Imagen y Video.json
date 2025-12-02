@@ -1,0 +1,403 @@
+{
+  "name": "YT - Generar Texto, Imagen y Video",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -976,
+        688
+      ],
+      "id": "37d7c722-7103-4a7e-aac3-978e03371ed4",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "67c358c4-e43e-462f-8f6d-111f69ed3868",
+              "name": "prompt",
+              "value": "=cuanto vale pi",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -704,
+        288
+      ],
+      "id": "9492ba6e-49ea-4f0c-accc-f3c812dd16cc",
+      "name": "Prompt generacion de texto"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.prompt }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        288
+      ],
+      "id": "b2c1a35a-b8d4-419a-96f9-99f663ec66ae",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ejlGdC5kKsJzh0b6",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Generación de texto",
+        "height": 304,
+        "width": 608,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -768,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "9c03064a-1db4-42e5-9720-c27f04c240c9",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Generación de imagen (Banana)",
+        "height": 304,
+        "width": 528,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -96,
+        176
+      ],
+      "typeVersion": 1,
+      "id": "8a648f7d-ca5e-4805-b19e-5e92ad0aa8ba",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash-image",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash-image (Nano Banana)"
+        },
+        "prompt": "={{ $json.prompt }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        176,
+        288
+      ],
+      "id": "c599fc68-4cec-4d86-9f57-52a5b9d8f911",
+      "name": "Generate an image",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ejlGdC5kKsJzh0b6",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Generación de imagen (Banana Pro)",
+        "height": 304,
+        "width": 848,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -96,
+        576
+      ],
+      "typeVersion": 1,
+      "id": "53d76c7f-5070-495b-ba87-4fa59caea46e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "67c358c4-e43e-462f-8f6d-111f69ed3868",
+              "name": "prompt",
+              "value": "=genera una imagen de un cachorro husky con un gorro de dinosaurio en ilustracion tipo sticker chibi",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -32,
+        288
+      ],
+      "id": "dd8484ee-1a5e-4e95-9a59-388189f88b5f",
+      "name": "Prompt generacion de imagen Banana"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "67c358c4-e43e-462f-8f6d-111f69ed3868",
+              "name": "prompt",
+              "value": "=genera una imagen de un cachorro husky con un gorro de dinosaurio en ilustracion tipo sticker chibi",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -32,
+        688
+      ],
+      "id": "c38a0391-ed8d-4ffe-afaa-b53f814a695c",
+      "name": "Prompt generacion de imagen Banana Pro"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/nano-banana-pro-preview",
+          "mode": "list",
+          "cachedResultName": "models/nano-banana-pro-preview"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.prompt }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        176,
+        688
+      ],
+      "id": "588ae451-82eb-414f-89fc-3941c0a365d2",
+      "name": "Message a model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ejlGdC5kKsJzh0b6",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "content.parts[0].inlineData.data",
+        "options": {
+          "mimeType": "={{ $json.content.parts[0].inlineData.mimeType }}"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        528,
+        688
+      ],
+      "id": "d1f0e01a-9f2a-42b6-8701-dccd3f288fac",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "content": "## Generación de video (Veo 3)",
+        "height": 304,
+        "width": 528,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -768,
+        576
+      ],
+      "typeVersion": 1,
+      "id": "c920dd30-101f-4170-b5dc-c63f00e07f33",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "67c358c4-e43e-462f-8f6d-111f69ed3868",
+              "name": "prompt",
+              "value": "=Crea un video con las siguientes características: Una aventura en un mundo donde los animales hablan, Fondo: Cañón rocoso con un río serpenteante, Acción: Disfrutando un picnic, Movimiento de cámara: Contrapicado, Estado emocional: Alegría, Preset de estilo: CGI",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -688,
+        688
+      ],
+      "id": "379fd629-3e5c-45bd-9632-a068af34a2e9",
+      "name": "Prompt generacion de video"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "modelId": {
+          "__rl": true,
+          "value": "models/veo-3.0-fast-generate-001",
+          "mode": "list",
+          "cachedResultName": "models/veo-3.0-fast-generate-001"
+        },
+        "prompt": "={{ $json.prompt }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -464,
+        688
+      ],
+      "id": "9284722a-b4fc-4156-bd71-d286afdceffb",
+      "name": "Generate a video",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ejlGdC5kKsJzh0b6",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuración\n\n1. Configura correctamente la credencial de google Gemini en cada nodo\n2. Experimenta cada flujo\n\n---\n\n📺 Puedes guiarte con este video:  \n👉 [Cómo configurar paso a paso](https://youtu.be/_rGMDpjyjSA)  \n\n🔔 Además, tienes más **video-guías completas** en mi canal de YouTube:  \n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 416,
+        "width": 384,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1200,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "54878a53-72f5-4d4c-b5dd-abe5ea1646d5",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Prompt generacion de video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prompt generacion de texto": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prompt generacion de imagen Banana": {
+      "main": [
+        [
+          {
+            "node": "Generate an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prompt generacion de imagen Banana Pro": {
+      "main": [
+        [
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prompt generacion de video": {
+      "main": [
+        [
+          {
+            "node": "Generate a video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "74a73378-ea5b-4c98-812c-2ce6f1b94e5e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "87133338b76165c0c00cd3bca160984371f1bfef9b461d628efd43cae8813df6"
+  },
+  "id": "kYjWoNn3sBXDBMgC",
+  "tags": []
+}
