@@ -3,7 +3,7 @@
 # ============================
 # CONFIGURACIÓN INICIAL
 # ============================
-N8N_DOMAIN="TU_DOMINIO.com"
+N8N_HOST="SUBDOMINIO.DOMINIO.COM"
 PROJECT_DIR="n8n_project"
 
 # ============================
@@ -32,19 +32,20 @@ if [ ! -f ".env" ]; then
 # VARIABLES PARA N8N
 # ============================
 
-N8N_ENCRYPTION_KEY=9c204c9a-952a-4045-97e8-c128f92c04c0
+# n8n - env variables
+N8N_HOST=$N8N_HOST
+WEBHOOK_URL=https://$N8N_HOST/
+N8N_ENCRYPTION_KEY=1631eafc-9943-4059-99c7-55e3e31c8707
+
 N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
-N8N_DOMAIN=$N8N_DOMAIN
-N8N_HOST=$N8N_DOMAIN
-WEBHOOK_URL=https://$N8N_DOMAIN/
-WEBHOOK_TUNNEL_URL=https://$N8N_DOMAIN/
+N8N_BLOCK_ENV_ACCESS_IN_NODE=true
+NODES_EXCLUDE="[]"
 
-# Redis
-QUEUE_BULL_REDIS_HOST=redis
-QUEUE_BULL_REDIS_PORT=6379
-QUEUE_BULL_REDIS_DB=0
+# n8n task ruuner - env variables
 
-# Postgres Vector
+# Redis - env variables
+
+# Postgres - env variables
 POSTGRES_USER=postgres-user
 POSTGRES_PASSWORD=postgres-password
 POSTGRES_DB=postgres-db
@@ -66,23 +67,32 @@ if [ ! -f "docker-compose.yml" ]; then
 services:
   n8n:
     container_name: n8n
-    image: n8nio/n8n:latest
+    image: n8nio/n8n:stable
     restart: unless-stopped
     ports:
       - "5678:5678"
+    env_file:
+      - .env
     environment:
-      - N8N_ENCRYPTION_KEY=\${N8N_ENCRYPTION_KEY}
-      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=\${N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS}
-      - N8N_HOST=\${N8N_HOST}
-      - WEBHOOK_URL=\${WEBHOOK_URL}
-      - WEBHOOK_TUNNEL_URL=\${WEBHOOK_TUNNEL_URL}
-      - QUEUE_BULL_REDIS_HOST=\${QUEUE_BULL_REDIS_HOST}
-      - QUEUE_BULL_REDIS_PORT=\${QUEUE_BULL_REDIS_PORT}
-      - QUEUE_BULL_REDIS_DB=\${QUEUE_BULL_REDIS_DB}
+      - N8N_RUNNERS_ENABLED=true
+      - N8N_RUNNERS_MODE=external
+      - N8N_RUNNERS_BROKER_LISTEN_ADDRESS=0.0.0.0
+      - N8N_RUNNERS_BROKER_PORT=5679
+      - N8N_RUNNERS_AUTH_TOKEN=runner_token-7b686508-2570-47d6-a39b-0e5bc4c18d7a
     volumes:
       - ./data:/home/node/.n8n
     depends_on:
       - redis
+
+  task-runner:
+    container_name: n8n-task-runner
+    image: n8nio/runners:stable
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - N8N_RUNNERS_AUTH_TOKEN=runner_token-7b686508-2570-47d6-a39b-0e5bc4c18d7a
+      - N8N_RUNNERS_TASK_BROKER_URI=http://n8n:5679
 
   redis:
     container_name: redis
@@ -90,6 +100,8 @@ services:
     restart: unless-stopped
     ports:
       - "6379:6379"
+    env_file:
+      - .env
     volumes:
       - ./redis-data:/data
 
@@ -99,10 +111,8 @@ services:
     restart: unless-stopped
     ports:
       - "5432:5432"
-    environment:
-      - POSTGRES_USER=\${POSTGRES_USER}
-      - POSTGRES_PASSWORD=\${POSTGRES_PASSWORD}
-      - POSTGRES_DB=\${POSTGRES_DB}
+    env_file:
+      - .env
     volumes:
       - ./postgres-vector-data:/var/lib/postgresql/data
 EOF

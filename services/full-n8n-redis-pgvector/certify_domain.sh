@@ -6,7 +6,7 @@ sudo apt install -y nginx
 sudo bash -c 'cat > /etc/nginx/sites-available/n8n <<EOF
 server {
     listen 80;
-    server_name TU_DOMINIO.com;
+    server_name TU_URL_COMPLETA;
     location / {
         proxy_pass http://localhost:5678;
         proxy_http_version 1.1;
@@ -28,20 +28,20 @@ sudo nginx -t && sudo systemctl restart nginx
 sudo apt install certbot python3-certbot-nginx -y
 
 # 5. Obtener certificado SSL automáticamente
-sudo certbot --nginx -d TU_DOMINIO.com
+sudo certbot --nginx -d TU_URL_COMPLETA
 
 # 6. Reemplazar configuración con versión segura (HTTPS + headers)
 sudo bash -c 'cat > /etc/nginx/sites-available/n8n <<EOF
 server {
     listen 80;
-    server_name TU_DOMINIO.com;
+    server_name TU_URL_COMPLETA;
     return 301 https://\$host\$request_uri;
 }
 server {
     listen 443 ssl;
-    server_name TU_DOMINIO.com;
-    ssl_certificate /etc/letsencrypt/live/TU_DOMINIO.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/TU_DOMINIO.com/privkey.pem;
+    server_name TU_URL_COMPLETA;
+    ssl_certificate /etc/letsencrypt/live/TU_URL_COMPLETA/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/TU_URL_COMPLETA/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_prefer_server_ciphers on;
     ssl_ciphers HIGH:!aNULL:!MD5;
