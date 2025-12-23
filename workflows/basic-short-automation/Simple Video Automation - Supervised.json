@@ -1,0 +1,1347 @@
+{
+  "name": "Simple Video Automation - Supervised",
+  "nodes": [
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"output\": {\n    \"scene\": \"Dos personas en la entrada de un edificio, discutiendo en voz baja junto a una puerta entreabierta\",\n    \"time_of_day\": \"night\",\n    \"environment_type\": \"exterior\",\n    \"style\": \"ultra-realistic cinematic\",\n    \"camera\": {\n      \"shot_type\": \"handheld\",\n      \"lens_framing\": \"plano medio a la altura de los ojos, enfoque natural\",\n      \"movement\": \"ligero temblor de mano, pequeña corrección de encuadre\"\n    },\n    \"characters\": [\n      {\n        \"id\": \"c1\",\n        \"name\": \"Persona 1\",\n        \"description\": \"30s, chaqueta oscura, mirada intensa y tensa\"\n      },\n      {\n        \"id\": \"c2\",\n        \"name\": \"Persona 2\",\n        \"description\": \"20s, hoodie claro, evita la mirada, nervioso\"\n      }\n    ],\n    \"dialogue\": [\n      {\n        \"character_id\": \"c1\",\n        \"line\": \"Dime la verdad, ya.\"\n      },\n      {\n        \"character_id\": \"c2\",\n        \"line\": \"No era mi intención…\"\n      }\n    ],\n    \"action\": \"Persona 1 se acerca medio paso; Persona 2 retrocede y traga saliva; la puerta se mueve levemente\",\n    \"audio\": \"tráfico distante, zumbido de un foco, pasos lejanos\",\n    \"background\": \"una entrada con luz tenue, pared de concreto y un pasillo oscuro al fondo\"\n  }\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -192,
+        1280
+      ],
+      "id": "77a63a93-fa56-4169-9316-3ef4232df94a",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Estrcutura de la idea:\n{{ $('Idea').item.json.idea }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Eres un agente de IA que convierte una IDEA (simple o compleja)\nen parámetros listos para generar un video de 8 segundos con Google VEO 3.\n\nInput: idea del usuario\n\nObjetivo:\n- Convertir la idea en UNA SOLA ESCENA filmable en 8 segundos.\n- Permitir múltiples personajes.\n- Generar un diálogo corto en forma de lista, asignando cada línea a un personaje. (opcional)\n- Elige el tipo de cámara según la idea.\n\nReglas de compatibilidad (OBLIGATORIO):\n- 8 segundos\n- UNA sola escena (sin cortes, sin transiciones, sin cambio de lugar/tiempo)\n- Acción simple y clara (un “momento”)\n- Diálogo total muy corto (ideal 1–4 líneas en total)\n- Todo debe ser coherente y filmable en tiempo real\n\nRespeta instrucciones explícitas del usuario:\n- Si el usuario define personajes, diálogo o estilo, úsalo.\n- Si hay demasiadas escenas/acciones, comprímelo a un único instante clave.\n- Si falta información, completa con detalles realistas y coherentes.\n\nDevuelve ÚNICAMENTE un JSON válido con esta estructura exacta:\n\n{\n  \"output\": {\n    \"scene\": \"\",\n    \"time_of_day\": \"day|night|dusk|dawn\",\n    \"environment_type\": \"interior|exterior\",\n    \"style\": \"\",\n    \"camera\": {\n      \"shot_type\": \"\",\n      \"lens_framing\": \"\",\n      \"movement\": \"\"\n    },\n    \"characters\": [\n      {\n        \"id\": \"c1\",\n        \"name\": \"\",\n        \"description\": \"\"\n      }\n    ],\n    \"dialogue\": [\n      {\n        \"character_id\": \"c1\",\n        \"line\": \"\"\n      }\n    ],\n    \"action\": \"\",\n    \"audio\": \"\",\n    \"background\": \"\"\n  }\n}\n\nDefinición de campos:\n- scene: lugar + situación en una sola frase clara\n- style: estilo visual (si el usuario no especifica, usa \"ultra-realistic cinematic\")\n- camera.shot_type: ejemplo \"POV\", \"handheld\", \"tripod\", \"security cam\", \"over-the-shoulder\", \"medium shot\"\n- camera.lens_framing: encuadre (primer plano, plano medio, plano general) + detalles realistas\n- camera.movement: movimiento suave y realista (ligero temblor, paneo lento, etc.)\n- characters: lista de personajes (mínimo 1). description: edad aprox, ropa, expresión/actitud\n- dialogue: lista de líneas cortas. Máximo recomendado 1–4 líneas total\n- action: acción principal breve + microgesto(s)\n- audio: sonidos ambientales naturales (sin música)\n- background: lo que se ve detrás, coherente con la escena\n\nReglas estrictas:\n- No pongas texto fuera del JSON\n- No inventes elementos que contradigan la idea del usuario\n- No agregues cortes o múltiples escenas\n- Mantén el diálogo corto y natural\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -320,
+        1056
+      ],
+      "id": "9752ffc8-ae1c-4f55-9e66-82be5d94e0af",
+      "name": "Video Strcuture Generator"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc",
+          "mode": "list",
+          "cachedResultName": "Simple Video Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1605010118,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc/edit#gid=1605010118"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        32,
+        1168
+      ],
+      "id": "9dc569dc-0aea-4549-a47b-7d7e4df248c2",
+      "name": "Total Ideas",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7h5GUO4vnqiS6fGb",
+          "name": "Hans Acha Brand - Google Sheet Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc",
+          "mode": "list",
+          "cachedResultName": "Simple Video Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Total Ideas').item.json.total + 1}}",
+            "idea": "={{ $('Idea').item.json.source }}",
+            "prompt": "={{ $('Video Strcuture Generator').item.json.output.toJsonString() }}",
+            "status": "defined"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "idea",
+              "displayName": "idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "video folder",
+              "displayName": "video folder",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "generated_veo3",
+              "displayName": "generated_veo3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "generated_sora",
+              "displayName": "generated_sora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        256,
+        1168
+      ],
+      "id": "7cbed97b-e004-4620-94d5-36892da0a5cd",
+      "name": "Add Idea",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7h5GUO4vnqiS6fGb",
+          "name": "Hans Acha Brand - Google Sheet Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1472,
+        1648
+      ],
+      "id": "91f3bedc-965a-43d5-9244-23dec041d2a0",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=Idea_{{ $('Get Approved Idea').item.json.id }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "16yiaNCrXkD4MNq4rrgigTlibjqKJbV9v",
+          "mode": "list",
+          "cachedResultName": "Simple Video Automation",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/16yiaNCrXkD4MNq4rrgigTlibjqKJbV9v"
+        },
+        "options": {
+          "simplifyOutput": false
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1024,
+        1648
+      ],
+      "id": "2939f689-5763-4e2c-ba86-055067dc38a5",
+      "name": "Create folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc",
+          "mode": "list",
+          "cachedResultName": "Simple Video Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "approved"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1248,
+        1648
+      ],
+      "id": "9baf45d8-0a6b-463d-81a2-c2573fcbe371",
+      "name": "Get Approved Idea",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7h5GUO4vnqiS6fGb",
+          "name": "Hans Acha Brand - Google Sheet Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "modelId": {
+          "__rl": true,
+          "value": "models/veo-3.0-fast-generate-001",
+          "mode": "list",
+          "cachedResultName": "models/veo-3.0-fast-generate-001"
+        },
+        "prompt": "={{ $('Get Approved Idea').item.json.prompt }}",
+        "options": {
+          "aspectRatio": "9:16"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -528,
+        1552
+      ],
+      "id": "e9c24a3b-6017-4f56-b81f-925a7b6631a8",
+      "name": "Generate a video - Veo 3",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "pOulU84R26R4pD5U",
+          "name": "Hans Acha Prod - Gemini Account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "name": "=veo_3",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -304,
+        1552
+      ],
+      "id": "99a2c50f-8082-4dc8-b7a6-e8dd26752104",
+      "name": "Upload Veo 3 video",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "=sora_2",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -304,
+        1744
+      ],
+      "id": "552b7046-4d37-4ca9-b7cc-f0057a806fae",
+      "name": "Upload Sora 2 video",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc",
+          "mode": "list",
+          "cachedResultName": "Simple Video Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Get Approved Idea').item.json.id }}",
+            "status": "generated",
+            "video folder": "={{ $('Create folder').item.json.webViewLink }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "idea",
+              "displayName": "idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "video folder",
+              "displayName": "video folder",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "generated_veo3",
+              "displayName": "generated_veo3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "generated_sora",
+              "displayName": "generated_sora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -800,
+        1648
+      ],
+      "id": "1aaae52b-4492-4353-9d5c-013bd5a48a72",
+      "name": "Set Idea as Generated",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7h5GUO4vnqiS6fGb",
+          "name": "Hans Acha Brand - Google Sheet Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc",
+          "mode": "list",
+          "cachedResultName": "Simple Video Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Get Approved Idea').item.json.id }}",
+            "generated_sora": "={{ $('Upload Sora 2 video').item.json.webViewLink }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "idea",
+              "displayName": "idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "generated_veo3",
+              "displayName": "generated_veo3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "generated_sora",
+              "displayName": "generated_sora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -80,
+        1744
+      ],
+      "id": "6d7b536b-f1e0-4a4c-ad7e-5759c996bf30",
+      "name": "Update Sora 2 Field",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7h5GUO4vnqiS6fGb",
+          "name": "Hans Acha Brand - Google Sheet Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "modelId": {
+          "__rl": true,
+          "value": "sora-2",
+          "mode": "list",
+          "cachedResultName": "SORA-2"
+        },
+        "prompt": "={{ $('Get Approved Idea').item.json.prompt }}",
+        "size": "720x1280",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        -528,
+        1744
+      ],
+      "id": "92be18a7-5e5c-44fd-bf12-cca48f1d3d95",
+      "name": "Generate a video - Sora 2",
+      "credentials": {
+        "openAiApi": {
+          "id": "V6Wm417pFj30dZix",
+          "name": "OpenAi account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "formTitle": "Simple Video Automation",
+        "formDescription": "Automation to generate videos in Sora 2, Veo 3 and more",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Simple Idea"
+            },
+            {
+              "fieldLabel": "Video Url"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -1440,
+        1168
+      ],
+      "id": "b418372a-2796-415a-b965-b129b42c2332",
+      "name": "On form submission",
+      "webhookId": "b36858be-6154-4654-915a-b67e207338fb"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "11122cad-5522-4da7-b73d-a5a4d9368f75",
+                    "leftValue": "={{ $('On form submission').item.json['Simple Idea'] }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "idea"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('On form submission').item.json['Video Url'] }}",
+                    "rightValue": "video_url",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "id": "074cadd0-4349-4a5b-bacd-59b0b8ae9ac0"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "video_url"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -1216,
+        1152
+      ],
+      "id": "ca200511-f577-4f19-824c-305c0dc4753a",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "48c12c1b-96ab-4c39-99fb-8e5646e86291",
+              "name": "idea",
+              "value": "={{ $('Switch').item.json['Simple Idea'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -768,
+        1072
+      ],
+      "id": "8eec90c0-487a-43c4-b4ed-164547f9bfbc",
+      "name": "Text Idea"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "48c12c1b-96ab-4c39-99fb-8e5646e86291",
+              "name": "idea",
+              "value": "={{ $('Analyze video1').item.json.content.parts[0].text }}",
+              "type": "string"
+            },
+            {
+              "id": "8a852666-a751-48d8-9604-3776bdbcb016",
+              "name": "source",
+              "value": "={{ $('Switch').item.json['Video Url'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -768,
+        1264
+      ],
+      "id": "af1b6b3c-5b6c-4f22-9c28-f4d832957e0e",
+      "name": "Url Idea"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f6f17eea-55df-4624-8b24-5f2a72cdfeb1",
+              "name": "source",
+              "value": "={{ $json.source }}",
+              "type": "string"
+            },
+            {
+              "id": "0af52008-849f-48e6-9edc-a0ad06a0adc3",
+              "name": "idea",
+              "value": "={{ $json.idea }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -544,
+        1168
+      ],
+      "id": "0b63d3c5-df07-48e2-a2ac-6b61e9c936dc",
+      "name": "Idea"
+    },
+    {
+      "parameters": {
+        "content": "## Capture Data",
+        "height": 496,
+        "width": 896,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1520,
+        944
+      ],
+      "typeVersion": 1,
+      "id": "8ab44bdc-2c33-4c38-9dd6-860942fffa98",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3-flash-preview",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3-flash-preview"
+        },
+        "text": "Describe el video de tal forma que me detalle todo el contenido",
+        "videoUrls": "={{ $('Switch').item.json['Video Url'] }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -992,
+        1264
+      ],
+      "id": "78a2d0a6-c5e4-4c03-86d4-6229bc38ad3d",
+      "name": "Analyze video1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "pOulU84R26R4pD5U",
+          "name": "Hans Acha Prod - Gemini Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Idea Samples\n- **ASMR Viral:** una manzana de cristal fundido con un interior de lava incandescente siendo cortada lentamente para un video de ASMR\n- **Dialogo Viral:** Esta sherk y un constructor en una obra, el constructor le dice a Sherk que deben buscar otro trabajo porq el patron los esta explotando y no paga a tiempo, y Sherk dice \"la verdad que si carnal\", Los personajes hablan español latam\n- **Security Cam:** Una cámara de seguridad de timbre captura el momento en que un chihuahua y un gato son levantados por la fuerza del viento de un tornado en el porche de una casa suburbana.\n- **Eating ASMR:** Una chica con rasgos etéreos está sentada en un jardín nocturno, probando un marshmallows de lava la textura del mashmellow debe ser de lava bien realista, ultra realista, para un video de ASMR",
+        "height": 304,
+        "width": 896
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1520,
+        608
+      ],
+      "typeVersion": 1,
+      "id": "3cc2df59-7a69-4a03-8585-b8de068e75b9",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Video Structure",
+        "height": 496,
+        "width": 544,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -592,
+        944
+      ],
+      "typeVersion": 1,
+      "id": "6742a0f5-baa6-44c5-ac6f-1a641673d676",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Save In Sheets",
+        "height": 496,
+        "width": 416,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -16,
+        944
+      ],
+      "typeVersion": 1,
+      "id": "57ac7b29-c45c-4ca6-91e7-989f1724c903",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Capture Aprroved Ideas",
+        "height": 496,
+        "width": 896,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1520,
+        1488
+      ],
+      "typeVersion": 1,
+      "id": "ed564a29-79c9-41ad-8d8d-b55c96b4462f",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Videos",
+        "height": 496,
+        "width": 224,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -592,
+        1488
+      ],
+      "typeVersion": 1,
+      "id": "654f7d28-908c-4ea6-82fd-0cfb2e000008",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Save In Drive & Sheets",
+        "height": 496,
+        "width": 416,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -336,
+        1488
+      ],
+      "typeVersion": 1,
+      "id": "2e7bcc1c-faac-47f7-921d-b87b8defd306",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc",
+          "mode": "list",
+          "cachedResultName": "Simple Video Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eFCg7jUaihhdGF370l_sa3VR9NFyAJtAbdK1fdea8bc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Get Approved Idea').item.json.id }}",
+            "generated_veo3": "={{ $('Upload Veo 3 video').item.json.webViewLink }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "idea",
+              "displayName": "idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "generated_veo3",
+              "displayName": "generated_veo3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "generated_sora",
+              "displayName": "generated_sora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -80,
+        1552
+      ],
+      "id": "acee9fac-c2cc-4642-bf97-6d4e420791cc",
+      "name": "Update Veo 3 Field",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7h5GUO4vnqiS6fGb",
+          "name": "Hans Acha Brand - Google Sheet Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        1280
+      ],
+      "id": "15a7e400-eb29-4533-96d5-8d4c32423a4f",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "pOulU84R26R4pD5U",
+          "name": "Hans Acha Prod - Gemini Account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Schedule Trigger": [
+      {
+        "json": {
+          "timestamp": "2025-12-21T21:44:08.993-05:00",
+          "Readable date": "December 21st 2025, 9:44:08 pm",
+          "Readable time": "9:44:08 pm",
+          "Day of week": "Sunday",
+          "Year": "2025",
+          "Month": "December",
+          "Day of month": "21",
+          "Hour": "21",
+          "Minute": "44",
+          "Second": "08",
+          "Timezone": "America/New_York (UTC-05:00)"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Video Strcuture Generator",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video Strcuture Generator": {
+      "main": [
+        [
+          {
+            "node": "Total Ideas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Total Ideas": {
+      "main": [
+        [
+          {
+            "node": "Add Idea",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Approved Idea",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Approved Idea": {
+      "main": [
+        [
+          {
+            "node": "Create folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create folder": {
+      "main": [
+        [
+          {
+            "node": "Set Idea as Generated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate a video - Veo 3": {
+      "main": [
+        [
+          {
+            "node": "Upload Veo 3 video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Idea as Generated": {
+      "main": [
+        [
+          {
+            "node": "Generate a video - Veo 3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate a video - Sora 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Veo 3 video": {
+      "main": [
+        [
+          {
+            "node": "Update Veo 3 Field",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Sora 2 video": {
+      "main": [
+        [
+          {
+            "node": "Update Sora 2 Field",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate a video - Sora 2": {
+      "main": [
+        [
+          {
+            "node": "Upload Sora 2 video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Text Idea",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Analyze video1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Idea": {
+      "main": [
+        [
+          {
+            "node": "Idea",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Url Idea": {
+      "main": [
+        [
+          {
+            "node": "Idea",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze video1": {
+      "main": [
+        [
+          {
+            "node": "Url Idea",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Idea": {
+      "main": [
+        [
+          {
+            "node": "Video Strcuture Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Video Strcuture Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fcf1dbea-e675-4b1d-b498-c09e264f7d3b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "kyeBgtLbfEa5JYdK",
+  "tags": []
+}

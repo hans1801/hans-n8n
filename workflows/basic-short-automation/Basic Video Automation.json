@@ -1,0 +1,263 @@
+{
+  "name": "Basic Video Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"output\": {\n    \"scene\": \"Dos personas en la entrada de un edificio, discutiendo en voz baja junto a una puerta entreabierta\",\n    \"time_of_day\": \"night\",\n    \"environment_type\": \"exterior\",\n    \"style\": \"ultra-realistic cinematic\",\n    \"camera\": {\n      \"shot_type\": \"handheld\",\n      \"lens_framing\": \"plano medio a la altura de los ojos, enfoque natural\",\n      \"movement\": \"ligero temblor de mano, pequeña corrección de encuadre\"\n    },\n    \"characters\": [\n      {\n        \"id\": \"c1\",\n        \"name\": \"Persona 1\",\n        \"description\": \"30s, chaqueta oscura, mirada intensa y tensa\"\n      },\n      {\n        \"id\": \"c2\",\n        \"name\": \"Persona 2\",\n        \"description\": \"20s, hoodie claro, evita la mirada, nervioso\"\n      }\n    ],\n    \"dialogue\": [\n      {\n        \"character_id\": \"c1\",\n        \"line\": \"Dime la verdad, ya.\"\n      },\n      {\n        \"character_id\": \"c2\",\n        \"line\": \"No era mi intención…\"\n      }\n    ],\n    \"action\": \"Persona 1 se acerca medio paso; Persona 2 retrocede y traga saliva; la puerta se mueve levemente\",\n    \"audio\": \"tráfico distante, zumbido de un foco, pasos lejanos\",\n    \"background\": \"una entrada con luz tenue, pared de concreto y un pasillo oscuro al fondo\"\n  }\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1312,
+        384
+      ],
+      "id": "91bd5595-a190-4a5f-a114-c52da2a877d2",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Estrcutura de la idea:\n{{ $('Idea').item.json.idea }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Eres un agente de IA que convierte una IDEA (simple o compleja)\nen parámetros listos para generar un video de 8 segundos con Google VEO 3.\n\nInput: idea del usuario\n\nObjetivo:\n- Convertir la idea en UNA SOLA ESCENA filmable en 8 segundos.\n- Permitir múltiples personajes.\n- Generar un diálogo corto en forma de lista, asignando cada línea a un personaje. (opcional)\n- Elige el tipo de cámara según la idea.\n\nReglas de compatibilidad (OBLIGATORIO):\n- 8 segundos\n- UNA sola escena (sin cortes, sin transiciones, sin cambio de lugar/tiempo)\n- Acción simple y clara (un “momento”)\n- Diálogo total muy corto (ideal 1–4 líneas en total)\n- Todo debe ser coherente y filmable en tiempo real\n\nRespeta instrucciones explícitas del usuario:\n- Si el usuario define personajes, diálogo o estilo, úsalo.\n- Si hay demasiadas escenas/acciones, comprímelo a un único instante clave.\n- Si falta información, completa con detalles realistas y coherentes.\n\nDevuelve ÚNICAMENTE un JSON válido con esta estructura exacta:\n\n{\n  \"output\": {\n    \"scene\": \"\",\n    \"time_of_day\": \"day|night|dusk|dawn\",\n    \"environment_type\": \"interior|exterior\",\n    \"style\": \"\",\n    \"camera\": {\n      \"shot_type\": \"\",\n      \"lens_framing\": \"\",\n      \"movement\": \"\"\n    },\n    \"characters\": [\n      {\n        \"id\": \"c1\",\n        \"name\": \"\",\n        \"description\": \"\"\n      }\n    ],\n    \"dialogue\": [\n      {\n        \"character_id\": \"c1\",\n        \"line\": \"\"\n      }\n    ],\n    \"action\": \"\",\n    \"audio\": \"\",\n    \"background\": \"\"\n  }\n}\n\nDefinición de campos:\n- scene: lugar + situación en una sola frase clara\n- style: estilo visual (si el usuario no especifica, usa \"ultra-realistic cinematic\")\n- camera.shot_type: ejemplo \"POV\", \"handheld\", \"tripod\", \"security cam\", \"over-the-shoulder\", \"medium shot\"\n- camera.lens_framing: encuadre (primer plano, plano medio, plano general) + detalles realistas\n- camera.movement: movimiento suave y realista (ligero temblor, paneo lento, etc.)\n- characters: lista de personajes (mínimo 1). description: edad aprox, ropa, expresión/actitud\n- dialogue: lista de líneas cortas. Máximo recomendado 1–4 líneas total\n- action: acción principal breve + microgesto(s)\n- audio: sonidos ambientales naturales (sin música)\n- background: lo que se ve detrás, coherente con la escena\n\nReglas estrictas:\n- No pongas texto fuera del JSON\n- No inventes elementos que contradigan la idea del usuario\n- No agregues cortes o múltiples escenas\n- Mantén el diálogo corto y natural\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1168,
+        160
+      ],
+      "id": "4e23034c-0814-41bb-bdeb-b627da993b9c",
+      "name": "Video Strcuture Generator"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "modelId": {
+          "__rl": true,
+          "value": "models/veo-3.0-fast-generate-001",
+          "mode": "list",
+          "cachedResultName": "models/veo-3.0-fast-generate-001"
+        },
+        "prompt": "={{ $('Video Strcuture Generator').item.json.output.toJsonString() }}",
+        "options": {
+          "aspectRatio": "9:16"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1536,
+        64
+      ],
+      "id": "4a67474b-1f2a-4c10-be91-e3be1673f019",
+      "name": "Generate a video - Veo 3",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "pOulU84R26R4pD5U",
+          "name": "Hans Acha Prod - Gemini Account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "modelId": {
+          "__rl": true,
+          "value": "sora-2",
+          "mode": "list",
+          "cachedResultName": "SORA-2"
+        },
+        "prompt": "={{ $('Video Strcuture Generator').item.json.output.toJsonString() }}",
+        "size": "720x1280",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        1536,
+        256
+      ],
+      "id": "17557d44-a7fe-4892-ac19-4ef5ab710517",
+      "name": "Generate a video - Sora 2",
+      "credentials": {
+        "openAiApi": {
+          "id": "V6Wm417pFj30dZix",
+          "name": "OpenAi account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1184,
+        384
+      ],
+      "id": "1b8ad021-b3dd-403f-8d34-6e729056f045",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "pOulU84R26R4pD5U",
+          "name": "Hans Acha Prod - Gemini Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0af52008-849f-48e6-9edc-a0ad06a0adc3",
+              "name": "idea",
+              "value": "=una manzana de cristal fundido con un interior de lava incandescente siendo cortada lentamente para un video de ASMR",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        960,
+        160
+      ],
+      "id": "639ec30d-35af-40f3-b8ed-407ea1e3a085",
+      "name": "Idea"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Video Structure",
+        "height": 528,
+        "width": 544,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        912,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "983fe0ed-9f3a-4147-bcf1-cf0737b631b0",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Videos",
+        "height": 528,
+        "width": 304,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1472,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "55a4299f-4981-41a4-884c-1b8e247600a0",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        736,
+        160
+      ],
+      "id": "498b9c94-dd87-4eea-8bd3-5b60ed42b521",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Video Strcuture Generator",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video Strcuture Generator": {
+      "main": [
+        [
+          {
+            "node": "Generate a video - Veo 3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate a video - Sora 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate a video - Veo 3": {
+      "main": [
+        []
+      ]
+    },
+    "Generate a video - Sora 2": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Video Strcuture Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Idea": {
+      "main": [
+        [
+          {
+            "node": "Video Strcuture Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Idea",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d74eaf4c-2855-418c-9f51-8b994fff938e",
+  "meta": {
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "dpjwWfUuNBHqxRy6",
+  "tags": []
+}
