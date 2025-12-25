@@ -282,9 +282,9 @@
         "resource": "video",
         "modelId": {
           "__rl": true,
-          "value": "models/veo-3.0-fast-generate-001",
+          "value": "models/veo-3.1-fast-generate-preview",
           "mode": "list",
-          "cachedResultName": "models/veo-3.0-fast-generate-001"
+          "cachedResultName": "models/veo-3.1-fast-generate-preview"
         },
         "prompt": "={{ $('Get Approved Idea').item.json.prompt }}",
         "options": {
@@ -625,6 +625,7 @@
           "cachedResultName": "SORA-2"
         },
         "prompt": "={{ $('Get Approved Idea').item.json.prompt }}",
+        "seconds": 8,
         "size": "720x1280",
         "options": {}
       },
@@ -748,6 +749,12 @@
               "name": "idea",
               "value": "={{ $('Switch').item.json['Simple Idea'] }}",
               "type": "string"
+            },
+            {
+              "id": "86d089b3-a458-4665-b7be-e43efa2c537f",
+              "name": "source",
+              "value": "={{ $('Switch').item.json['Simple Idea'] }}",
+              "type": "string"
             }
           ]
         },
@@ -867,7 +874,7 @@
     },
     {
       "parameters": {
-        "content": "## Idea Samples\n- **ASMR Viral:** una manzana de cristal fundido con un interior de lava incandescente siendo cortada lentamente para un video de ASMR\n- **Dialogo Viral:** Esta sherk y un constructor en una obra, el constructor le dice a Sherk que deben buscar otro trabajo porq el patron los esta explotando y no paga a tiempo, y Sherk dice \"la verdad que si carnal\", Los personajes hablan español latam\n- **Security Cam:** Una cámara de seguridad de timbre captura el momento en que un chihuahua y un gato son levantados por la fuerza del viento de un tornado en el porche de una casa suburbana.\n- **Eating ASMR:** Una chica con rasgos etéreos está sentada en un jardín nocturno, probando un marshmallows de lava la textura del mashmellow debe ser de lava bien realista, ultra realista, para un video de ASMR",
+        "content": "## Idea Samples\n- **ASMR Viral:** una manzana de cristal fundido con un interior de lava incandescente siendo cortada lentamente para un video de ASMR\n- **Dialogo Viral:** Un reportero se acerca a una abuelita, y le dice: “Que prefiere a cristiano Ronaldo o a Messi” Y la abuelita le responde: “No se, pero a mi me gusta mas el bicho”, Luego dice “Siuuu!” Y se ríen ambos En el día, en el parque\n- **Security Cam:** Una cámara de seguridad de timbre captura el momento en que un chihuahua y un gato son levantados por la fuerza del viento de un tornado en el porche de una casa suburbana.\n- **Eating ASMR:** Una chica con rasgos etéreos está sentada en un jardín nocturno, probando un marshmallows de lava la textura del mashmellow debe ser de lava bien realista, ultra realista, para un video de ASMR",
         "height": 304,
         "width": 896
       },
@@ -1097,6 +1104,22 @@
           "name": "Hans Acha Prod - Gemini Account"
         }
       }
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuración\n\n1. Configura correctamente la **credenciales de Gemini, Open AI, Google Drive y Google Sheets**\n2. Experimenta cada flujo\n\n---\n\n📺 Puedes guiarte con este video:  \n👉 [Cómo configurar paso a paso](https://youtu.be/VuvfazDhe5s)  \n\n🔔 Además, tienes más **video-guías completas** en mi canal de YouTube:  \n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 416,
+        "width": 384,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1952,
+        608
+      ],
+      "typeVersion": 1,
+      "id": "a9c92927-6c0c-473d-bc68-ae0ba64180ce",
+      "name": "Sticky Note7"
     }
   ],
   "pinData": {
@@ -1337,7 +1360,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "fcf1dbea-e675-4b1d-b498-c09e264f7d3b",
+  "versionId": "87c6e70c-de9e-41b3-9d4c-27115a9d7279",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"

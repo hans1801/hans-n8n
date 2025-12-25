@@ -82,8 +82,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        304,
-        368
+        -1184,
+        976
       ],
       "id": "6f39e4e2-55fa-4789-b5b4-684977b9c9f5",
       "name": "Total Ideas",
@@ -117,8 +117,8 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        528,
-        368
+        -960,
+        976
       ],
       "id": "28c3a3c4-c772-4173-a60a-bb3d0ae6f787",
       "name": "Create folder",
@@ -146,8 +146,8 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        976,
-        272
+        -512,
+        880
       ],
       "id": "54861b67-7790-4b46-b943-d52c7cbc6976",
       "name": "Generate a video - Veo 3",
@@ -177,8 +177,8 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        1200,
-        272
+        -288,
+        880
       ],
       "id": "3f0343bd-0850-4ae7-9bd8-10c4c9623551",
       "name": "Upload Veo 3 video",
@@ -207,8 +207,8 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        1200,
-        464
+        -288,
+        1072
       ],
       "id": "95ea5b21-eaec-4054-bf53-6c17d073f736",
       "name": "Upload Sora 2 video",
@@ -336,8 +336,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1424,
-        272
+        -64,
+        880
       ],
       "id": "9d94e93c-9450-44d8-bea2-b982b521c758",
       "name": "Update Veo 3 Field",
@@ -465,8 +465,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1424,
-        464
+        -64,
+        1072
       ],
       "id": "9c0af3ba-bdf1-44b8-b49f-f24db91553c7",
       "name": "Update Sora 2 Field",
@@ -487,14 +487,15 @@
           "cachedResultName": "SORA-2"
         },
         "prompt": "={{ $('Add Idea').item.json.prompt }}",
+        "seconds": 8,
         "size": "720x1280",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 2.1,
       "position": [
-        976,
-        464
+        -512,
+        1072
       ],
       "id": "7466beaf-960d-49b3-8140-d1f26b41cc49",
       "name": "Generate a video - Sora 2",
@@ -631,8 +632,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        752,
-        368
+        -736,
+        976
       ],
       "id": "9abe381e-00b7-46cd-8bc2-2cc0b72ac716",
       "name": "Add Idea",
@@ -839,13 +840,13 @@
       "parameters": {
         "content": "## Generate Videos & Load in Drive",
         "height": 528,
-        "width": 1360,
+        "width": 1472,
         "color": 6
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        256,
-        208
+        -1232,
+        816
       ],
       "typeVersion": 1,
       "id": "e12948bf-c381-4fae-a7f0-e69473174621",
@@ -866,6 +867,22 @@
       "typeVersion": 1,
       "id": "fc3f1746-b350-4354-bc6e-3658bc4727a9",
       "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuración\n\n1. Configura correctamente la **credenciales de Gemini, Open AI, Google Drive y Google Sheets**\n2. Experimenta cada flujo\n\n---\n\n📺 Puedes guiarte con este video:  \n👉 [Cómo configurar paso a paso](https://youtu.be/VuvfazDhe5s)  \n\n🔔 Además, tienes más **video-guías completas** en mi canal de YouTube:  \n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 416,
+        "width": 384,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1712,
+        432
+      ],
+      "typeVersion": 1,
+      "id": "adf6e4f7-d701-4471-acc4-cc8345977005",
+      "name": "Sticky Note4"
     }
   ],
   "pinData": {},
@@ -1063,7 +1080,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "4fc56cb2-44d3-4a8f-a68a-634c5fa6f435",
+  "versionId": "2d1a974a-57f5-465c-8026-3b9180643db8",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"

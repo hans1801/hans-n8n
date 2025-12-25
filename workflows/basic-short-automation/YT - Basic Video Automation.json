@@ -175,6 +175,22 @@
       ],
       "id": "498b9c94-dd87-4eea-8bd3-5b60ed42b521",
       "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuración\n\n1. Configura correctamente la **credenciales de Gemini y Open AI**\n2. Experimenta cada flujo\n\n---\n\n📺 Puedes guiarte con este video:  \n👉 [Cómo configurar paso a paso](https://youtu.be/VuvfazDhe5s)  \n\n🔔 Además, tienes más **video-guías completas** en mi canal de YouTube:  \n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 416,
+        "width": 384,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        240,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "393b39aa-424c-4808-ac7e-97c7f75d0cd7",
+      "name": "Sticky Note4"
     }
   ],
   "pinData": {},
@@ -254,7 +270,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "d74eaf4c-2855-418c-9f51-8b994fff938e",
+  "versionId": "5ae5617a-d95b-4acb-85ff-f6bf0aefaa48",
   "meta": {
     "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
   },
