@@ -1,22 +1,71 @@
 # n8n + FFmpeg (Docker Compose)
 
-Guía para agregar FFmpeg a n8n usando Docker.
+Guía minimalista para **agregar FFmpeg a n8n** usando Docker, de forma reproducible y lista para producción.
 
 ---
 
-## ¿Por qué Dockerfile?
+## ⚙️ Configuración previa de n8n
 
-* **FFmpeg no es un servicio**, es un binario que se ejecuta.
+Antes de instalar **FFmpeg**, asegúrate de que **n8n pueda ejecutar comandos del sistema**.
+
+FFmpeg se ejecuta desde n8n mediante el nodo **Execute Command**, el cual corre **dentro del contenedor de n8n**.
+
+---
+
+### Compatibilidad por versión
+
+* **n8n 1.x** → No requiere configuración adicional.
+* **n8n 2.x** → El nodo **Execute Command** está deshabilitado por defecto.
+
+---
+
+### Habilitar Execute Command (n8n 2.x)
+
+Agrega la siguiente variable de entorno en tu `docker-compose.yml` o archivo `.env`:
+
+```env
+NODES_EXCLUDE="[]"
+```
+
+Ejemplo en `docker-compose.yml`:
+
+```yaml
+environment:
+  - NODES_EXCLUDE=[]
+```
+
+Esto indica que **no se excluye ningún nodo**, habilitando el uso de **Execute Command**.
+
+---
+
+### Reiniciar y validar
+
+```bash
+sudo docker compose down
+sudo docker compose up -d
+```
+
+Luego, entra a n8n y verifica que el nodo **Execute Command** esté disponible.
+
+---
+
+## 🎬 Instalación de FFmpeg en n8n
+
+---
+
+### ¿Por qué usar un Dockerfile?
+
+* **FFmpeg no es un servicio**, es un binario que se ejecuta por comandos.
 * El nodo **Execute Command** corre **dentro del contenedor de n8n**.
-* La imagen `n8nio/n8n:stable` **no trae ffmpeg**.
+* La imagen oficial `n8nio/n8n:stable` **no incluye FFmpeg**.
 
-👉 Necesitamos una **imagen custom** de n8n que incluya ffmpeg.
+👉 Necesitamos una **imagen personalizada de n8n** que incluya FFmpeg.
 
 ---
 
-## 1) Estructura del proyecto
+### 1) Estructura del proyecto
 
-Solo añadimos **un archivo nuevo** al mismo nivel que `docker-compose.yml`:
+Solo se agrega **un archivo nuevo** al mismo nivel que `docker-compose.yml`:
 
 ```
 n8n_project/
@@ -29,9 +78,9 @@ n8n_project/
 
 ---
 
-## 2) Dockerfile (n8n + FFmpeg)
+### 2) Dockerfile (n8n + FFmpeg)
 
-`Dockerfile`:
+Crea un archivo `Dockerfile`:
 
 ```dockerfile
 # Stage 1: FFmpeg estático
@@ -49,15 +98,15 @@ USER node
 
 ---
 
-## 3) docker-compose.yml (ÚNICO CAMBIO)
+### 3) docker-compose.yml (único cambio)
 
-En el servicio `n8n`, **reemplaza esta línea**:
+En el servicio `n8n`, **reemplaza**:
 
 ```yaml
 image: n8nio/n8n:stable
 ```
 
-**por esta configuración**:
+por:
 
 ```yaml
 build:
@@ -66,16 +115,16 @@ build:
 image: n8n-with-ffmpeg:stable
 ```
 
-🔹 **No cambies nada más del servicio** (ports, env, volumes, depends_on, etc).
+🔹 No modifiques ningún otro parámetro del servicio (`ports`, `env`, `volumes`, etc.).
 
-Esto indica a Docker que:
+Esto le indica a Docker que:
 
-* construya una imagen nueva usando el `Dockerfile`
+* construya una imagen personalizada usando el `Dockerfile`
 * use esa imagen (`n8n-with-ffmpeg`) al levantar el contenedor
 
 ---
 
-## 4) Build & Up
+### 4) Build & Run
 
 ```bash
 sudo docker compose down
@@ -85,20 +134,20 @@ sudo docker compose up -d
 
 ---
 
-## 5) Verificación rápida
+### 5) Verificación rápida
 
 ```bash
 sudo docker exec -it n8n ffmpeg -version
 ```
 
-Si ves la versión → **listo** ✅
+Si se muestra la versión de FFmpeg → ✅ instalación correcta.
 
 ---
 
-## Resumen
+## ✅ Resumen
 
-* Dockerfile = define **qué trae la imagen** (ffmpeg).
-* docker-compose = define **cómo se ejecuta** n8n.
-* FFmpeg debe existir **en el contenedor**, no como servicio.
+* `Dockerfile` → define **qué trae la imagen** (FFmpeg).
+* `docker-compose` → define **cómo se ejecuta** n8n.
+* FFmpeg debe existir **dentro del contenedor**, no como servicio separado.
 
 Minimal, reproducible y listo para producción.
