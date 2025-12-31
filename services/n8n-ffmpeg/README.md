@@ -78,6 +78,7 @@ Esto indica a Docker que:
 ## 4) Build & Up
 
 ```bash
+sudo docker compose down
 sudo docker compose build --no-cache n8n
 sudo docker compose up -d
 ```
