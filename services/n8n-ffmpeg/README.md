@@ -1,6 +1,6 @@
 # n8n + FFmpeg (Docker Compose)
 
-Guía minimalista para **agregar FFmpeg a n8n** usando Docker, de forma reproducible y lista para producción.
+Guía para **agregar FFmpeg a n8n** usando Docker, de forma reproducible y lista para producción.
 
 ---
 
