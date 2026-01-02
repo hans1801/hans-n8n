@@ -78,27 +78,7 @@ n8n_project/
 
 ---
 
-### 2) Dockerfile (n8n + FFmpeg)
-
-Crea un archivo `Dockerfile`:
-
-```dockerfile
-# Stage 1: FFmpeg estático
-FROM mwader/static-ffmpeg:8.0 AS ffmpeg
-
-# Stage 2: n8n
-FROM n8nio/n8n:stable
-
-USER root
-COPY --from=ffmpeg /ffmpeg /usr/local/bin/
-COPY --from=ffmpeg /ffprobe /usr/local/bin/
-RUN chmod +x /usr/local/bin/ffmpeg /usr/local/bin/ffprobe
-USER node
-```
-
----
-
-### 3) docker-compose.yml (único cambio)
+### 2) docker-compose.yml (único cambio)
 
 En el servicio `n8n`, **reemplaza**:
 
@@ -112,7 +92,7 @@ por:
 build:
   context: .
   dockerfile: Dockerfile
-image: n8n-with-ffmpeg:stable
+image: n8n-with-ffmpeg
 ```
 
 🔹 No modifiques ningún otro parámetro del servicio (`ports`, `env`, `volumes`, etc.).
@@ -121,6 +101,28 @@ Esto le indica a Docker que:
 
 * construya una imagen personalizada usando el `Dockerfile`
 * use esa imagen (`n8n-with-ffmpeg`) al levantar el contenedor
+
+Nota: guarda el valor del tag que usabas, por ejemplo aqui seria `stable`
+
+---
+
+### 3) Dockerfile (n8n + FFmpeg)
+
+Crea un archivo `Dockerfile`:
+
+```dockerfile
+# Stage 1: FFmpeg estático
+FROM mwader/static-ffmpeg:8.0 AS ffmpeg
+
+# Stage 2: n8n (usa el tag guardado)
+FROM n8nio/n8n:stable
+
+USER root
+COPY --from=ffmpeg /ffmpeg /usr/local/bin/
+COPY --from=ffmpeg /ffprobe /usr/local/bin/
+RUN chmod +x /usr/local/bin/ffmpeg /usr/local/bin/ffprobe
+USER node
+```
 
 ---
 
