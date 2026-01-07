@@ -1,0 +1,485 @@
+{
+  "name": "YT  - FFmpeg - Combine Video & Audio",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "input_video_id"
+            },
+            {
+              "name": "input_audio_id"
+            },
+            {
+              "name": "output_folder_id"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        256
+      ],
+      "id": "d9fb7019-43c3-42b2-8653-c0d8fc9fe07c",
+      "name": "Input"
+    },
+    {
+      "parameters": {
+        "command": "=mkdir -p {{ $('Config').item.json.path }}"
+      },
+      "id": "bbae1503-9fb0-4cdf-bac2-5e49e0907f55",
+      "name": "Temporary workspace",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        688,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "command": "=rm -rf {{ $('Config').item.json.path }}/*"
+      },
+      "id": "d251c648-ff3f-4653-9904-738d38cc9ce7",
+      "name": "Cleanup workspace",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1296,
+        816
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Setup",
+        "height": 224,
+        "width": 864,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        64,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "d99c9d13-f164-4e6a-bf4b-46ee93a527ba",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "51e6ccac-6a9f-459f-8ba6-4b70438648f9",
+              "name": "path",
+              "value": "./.n8n-files/ffmpeg-temp/combine-audio-video",
+              "type": "string"
+            },
+            {
+              "id": "f65100ae-e591-4487-b6d2-5663192e1b35",
+              "name": "video_file",
+              "value": "combined_audio_video",
+              "type": "string"
+            },
+            {
+              "id": "b6193555-9535-4d89-9992-c39b6117f160",
+              "name": "video_extension",
+              "value": "mp4",
+              "type": "string"
+            },
+            {
+              "id": "da865327-958e-43f6-b9c7-17e90e5577ba",
+              "name": "audio_extension",
+              "value": "mp3",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        464,
+        256
+      ],
+      "id": "1f6c6608-5908-4af1-8a9f-bba91323a5ee",
+      "name": "Config"
+    },
+    {
+      "parameters": {
+        "content": "## Donwload",
+        "height": 496,
+        "width": 864,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        64,
+        464
+      ],
+      "typeVersion": 1,
+      "id": "53f23521-6b41-4d4e-9ffe-aadd8486f13c",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## FFmpeg\n## Combine Video & Audio",
+        "height": 224,
+        "width": 752,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        976,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "5f6c852c-3178-4659-94d7-44cd99e7e0ab",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Upload",
+        "height": 240,
+        "width": 752
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        976,
+        464
+      ],
+      "typeVersion": 1,
+      "id": "29b75729-ac1f-4d6f-b0e3-e1d26a3b4993",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Cleanup",
+        "height": 224,
+        "width": 752,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        976,
+        736
+      ],
+      "typeVersion": 1,
+      "id": "b9cdb32c-49a4-4af6-951b-4c0f435f2b6d",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ $('Config').item.json.path }}/video_to_merge.{{ $('Config').item.json.video_extension }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        688,
+        528
+      ],
+      "id": "fc480b16-f3f6-461e-929d-dded07421f1d",
+      "name": "Save Videos Locally"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "459d815a-b99c-4c56-b1fc-8bf62eaaa8b3",
+              "name": "output",
+              "value": "={{ $('Upload Combined Video').item.json }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1520,
+        816
+      ],
+      "id": "f74618cf-f40c-41ca-a613-f0474e8ace02",
+      "name": "Output"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Input').item.json.input_video_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        480,
+        528
+      ],
+      "id": "14456d4b-7eed-4f43-9f86-d6d13d563c71",
+      "name": "Download Video",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ $('Config').item.json.path }}/audio_to_merge.{{ $('Config').item.json.audio_extension }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        688,
+        800
+      ],
+      "id": "6033cffa-4b86-4ea3-aa4f-461cba9a49f0",
+      "name": "Save Videos Locally1"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Input').item.json.input_audio_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        480,
+        800
+      ],
+      "id": "3c4970f2-5adc-413c-a8be-80e32fc8a3e2",
+      "name": "Download Audio",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "=cd {{ $('Config').item.json.path }} &&\n\nffmpeg -i video_to_merge.{{ $('Config').item.json.video_extension }} -i audio_to_merge.{{ $('Config').item.json.audio_extension }} \\\n-c:v copy \\\n-c:a aac \\\n-shortest \\\n{{ $('Config').item.json.video_file }}.{{ $('Config').item.json.video_extension }}"
+      },
+      "id": "bc936e9f-83b7-42ec-8e39-90373aaeb765",
+      "name": "FFmpeg - Combine Audio & Video",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1296,
+        272
+      ],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $('Config').item.json.path }}/{{ $('Config').item.json.video_file }}.{{ $('Config').item.json.video_extension }}",
+        "options": {
+          "fileExtension": "={{ $('Config').item.json.video_extension }}",
+          "mimeType": "=video/{{ $('Config').item.json.video_extension }}"
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1296,
+        544
+      ],
+      "id": "4f82a700-c707-401c-8da4-1efc7f7ceab3",
+      "name": "Get Combined Local Video"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Get Combined Local Video').item.json.fileName }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Input').item.json.output_folder_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1520,
+        544
+      ],
+      "id": "cf3e6d2d-d953-4f38-9727-3645fd7ddb47",
+      "name": "Upload Combined Video",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Input": [
+      {
+        "json": {
+          "input_video_id": "1V9cddKLGc1-5lWOVREKBNM1UtxoHZUoi",
+          "input_audio_id": "1walBBh0ETIQfh_rsnDmCup_fK8xNkg5k",
+          "output_folder_id": "194owQp_WsQQhrVJxDul3JYROh6-U8cTT"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Input": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Temporary workspace": {
+      "main": [
+        [
+          {
+            "node": "Download Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cleanup workspace": {
+      "main": [
+        [
+          {
+            "node": "Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Temporary workspace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Videos Locally": {
+      "main": [
+        [
+          {
+            "node": "Download Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Video": {
+      "main": [
+        [
+          {
+            "node": "Save Videos Locally",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Audio": {
+      "main": [
+        [
+          {
+            "node": "Save Videos Locally1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Videos Locally1": {
+      "main": [
+        [
+          {
+            "node": "FFmpeg - Combine Audio & Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FFmpeg - Combine Audio & Video": {
+      "main": [
+        [
+          {
+            "node": "Get Combined Local Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Combined Local Video": {
+      "main": [
+        [
+          {
+            "node": "Upload Combined Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Combined Video": {
+      "main": [
+        [
+          {
+            "node": "Cleanup workspace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "983c2044-e909-4fd2-beb0-701abd5f54b0",
+  "meta": {
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "AMQQsugsOvXBYwdp",
+  "tags": []
+}
