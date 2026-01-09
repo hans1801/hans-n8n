@@ -1,4 +1,4 @@
-# 🎬 n8n + FFmpeg Templates
+# 🎬 n8n + FFmpeg Basics - Templates
 
 Plantillas de **n8n** para **automatizar edición de video y audio usando FFmpeg**.
 
