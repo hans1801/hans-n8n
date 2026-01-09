@@ -355,6 +355,22 @@
       ],
       "id": "1eb3be7c-3928-41c8-a895-c24224c3e6d1",
       "name": "Output"
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuración\n\n1. Configura correctamente la **credenciales de Google Drive** y el nodo **Config**\n2. Experimenta cada flujo\n\n---\n\n📺 Puedes guiarte con este video:  \n👉 [Cómo configurar paso a paso](https://youtu.be/7cTo0udHt8A)  \n\n🔔 Además, tienes más **video-guías completas** en mi canal de YouTube:  \n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 416,
+        "width": 384,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -416,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "b7217a14-80cf-4f75-8839-d47e8a1eb4fd",
+      "name": "Sticky Note7"
     }
   ],
   "pinData": {
@@ -497,7 +513,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "86e1e617-1787-47e1-bd4a-5570946c0dd4",
+  "versionId": "f3624a88-1e74-42ee-ab36-b0c0ad3804f8",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"

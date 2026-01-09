@@ -327,6 +327,22 @@
       ],
       "id": "7d018d36-8068-400e-90d3-df240df400b4",
       "name": "Get Local Combined Video"
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuración\n\n1. Configura correctamente la **credenciales de Google Drive** y el nodo **Config**\n2. Experimenta cada flujo\n\n---\n\n📺 Puedes guiarte con este video:  \n👉 [Cómo configurar paso a paso](https://youtu.be/7cTo0udHt8A)  \n\n🔔 Además, tienes más **video-guías completas** en mi canal de YouTube:  \n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 416,
+        "width": 384,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -432,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "70009032-4257-41f3-b401-d1f43cff164e",
+      "name": "Sticky Note7"
     }
   ],
   "pinData": {
@@ -465,11 +481,11 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "f0175116-7bd9-4ff6-a843-6bb66a6c6459",
+  "versionId": "efaff4bd-f992-48ab-8a67-2381c2d4f012",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"

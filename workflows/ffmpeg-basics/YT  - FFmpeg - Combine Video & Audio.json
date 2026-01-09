@@ -336,14 +336,30 @@
           "name": "Hans Acha Brand - Google Drive account"
         }
       }
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuración\n\n1. Configura correctamente la **credenciales de Google Drive** y el nodo **Config**\n2. Experimenta cada flujo\n\n---\n\n📺 Puedes guiarte con este video:  \n👉 [Cómo configurar paso a paso](https://youtu.be/7cTo0udHt8A)  \n\n🔔 Además, tienes más **video-guías completas** en mi canal de YouTube:  \n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 416,
+        "width": 384,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -352,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "d1d2dde3-9b2f-4da5-b173-c6bfd0e2a84b",
+      "name": "Sticky Note7"
     }
   ],
   "pinData": {
     "Input": [
       {
         "json": {
-          "input_video_id": "1V9cddKLGc1-5lWOVREKBNM1UtxoHZUoi",
-          "input_audio_id": "1walBBh0ETIQfh_rsnDmCup_fK8xNkg5k",
+          "input_video_id": "1U5ZIIkrZWnSt3r9kDqvoNT7tYxqob8PY",
+          "input_audio_id": "1nzsssQBlxNOa5wOtMWXqAyiTKqA0Xiz3",
           "output_folder_id": "194owQp_WsQQhrVJxDul3JYROh6-U8cTT"
         }
       }
@@ -476,7 +492,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "983c2044-e909-4fd2-beb0-701abd5f54b0",
+  "versionId": "79a230c0-5333-499e-9151-7ba637708ab8",
   "meta": {
     "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
   },
