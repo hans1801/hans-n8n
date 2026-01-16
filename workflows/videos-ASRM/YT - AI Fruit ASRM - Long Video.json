@@ -1,0 +1,632 @@
+{
+  "name": "YT - AI Fruit ASRM - Long Video",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        80,
+        704
+      ],
+      "id": "686bcc22-3879-4ea4-90b5-9e4d84c5ec3e",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "pOulU84R26R4pD5U",
+          "name": "Hmac Viral Rand  - Gemini Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"theme\": \"corte lento de frutas con contrastes suaves\",\n  \"video_title\": \"Cortes Suaves de Frutas ASMR\",\n  \"fixed_parameters\": {\n    \"texture\": \"textura de vidrio liso y translúcido\"\n  },\n  \"sets\": [\n    {\n      \"fruit\": \"banana madura\",\n      \"texture\": \"textura de vidrio liso y translúcido\",\n      \"interior\": \"crema espesa de chocolate tipo nutella\"\n    },\n    {\n      \"fruit\": \"pera jugosa\",\n      \"texture\": \"textura de vidrio liso y translúcido\",\n      \"interior\": \"relleno denso de caramelo suave\"\n    },\n    {\n      \"fruit\": \"manzana roja\",\n      \"texture\": \"textura de vidrio liso y translúcido\",\n      \"interior\": \"puré cremoso de frutos rojos\"\n    }\n  ]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        704
+      ],
+      "id": "433a336e-4564-4d31-a3b5-f74d87ad1cb5",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "jsCode": "const sets = $('Random Content Generator').first().json.output.sets || [];\n\nreturn sets.map(set => ({\n  json: set,\n}));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        480
+      ],
+      "id": "d3262ffd-4de6-4311-935d-66428b0a51cd",
+      "name": "Get Videos Params"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        656,
+        480
+      ],
+      "id": "48acdb30-c2b2-4051-8db3-e690d00e0751",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        912,
+        112
+      ],
+      "id": "bb0ab182-1a75-4070-ba3f-6a52e9fa0ba2",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Config').item.json.google_sheet_id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 920663033,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1edjAoOFvG7qXLOVKkjZaRIbdnaQsbdE-p66h-mlWwv8/edit#gid=920663033"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        432,
+        112
+      ],
+      "id": "4682dfec-1cc8-4196-b001-319ab6544af6",
+      "name": "Get Long Video Id",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7h5GUO4vnqiS6fGb",
+          "name": "Hans Acha Brand - Google Sheet Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=long_{{ String($('Get Long Video Id').item.json.total + 1).padStart(6, '0') }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1jZC7w3l6PO3Gy7NxaCCt2tCAKi_dss4m",
+          "mode": "list",
+          "cachedResultName": "ASMR Fruit Videos",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1jZC7w3l6PO3Gy7NxaCCt2tCAKi_dss4m"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        640,
+        112
+      ],
+      "id": "b3eee823-8e73-4f66-9038-864289a2aa35",
+      "name": "Create Shorts To Merge Folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Config').item.json.google_sheet_id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Hpyi9EKlY30r5dqMJDuypNYcX1GaIK0Ml4b5-dVBlc4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Get Long Video Id').item.json.total + 1}}",
+            "status": "generated",
+            "theme": "={{ $('Random Content Generator').item.json.output.theme }}",
+            "params": "={{ $('Random Content Generator').item.json.output.sets.toJsonString() }}",
+            "video_url": "={{ $('Combine Videos With Transitions').item.json.output.webViewLink }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "theme",
+              "displayName": "theme",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "params",
+              "displayName": "params",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "video_url",
+              "displayName": "video_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1280,
+        112
+      ],
+      "id": "a4253b98-44bf-4792-ac53-5d5d2ddcb3c4",
+      "name": "Add Long Video",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7h5GUO4vnqiS6fGb",
+          "name": "Hans Acha Brand - Google Sheet Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "FnRzX1zKt4HeSRDx",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/FnRzX1zKt4HeSRDx",
+          "cachedResultName": "YT - AI  Fruit ASRM - Short Video"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "output_folder_id": "={{ $('Create Shorts To Merge Folder').item.json.id }}",
+            "fruit": "={{ $('Get Videos Params').item.json.fruit }}",
+            "texture": "={{ $('Get Videos Params').item.json.texture }}",
+            "interior": "={{ $('Get Videos Params').item.json.interior }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "fruit",
+              "displayName": "fruit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "texture",
+              "displayName": "texture",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "interior",
+              "displayName": "interior",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        880,
+        528
+      ],
+      "id": "78dc366d-9a0c-49fc-8404-00cbc19bfb0e",
+      "name": "Generate Short Video"
+    },
+    {
+      "parameters": {
+        "content": "## Set up",
+        "height": 336,
+        "width": 816,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "da2367b8-8ed0-4e3b-9e84-8d23bf622d63",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Shorts",
+        "height": 496,
+        "width": 1056,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        368
+      ],
+      "typeVersion": 1,
+      "id": "49ee4bea-4f14-4491-8b7d-b9c05c5fc9e9",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Create Long Video",
+        "height": 336,
+        "width": 624,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        832,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "d3b7d1c1-ebfe-411a-8c48-53bef57cd266",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        32,
+        112
+      ],
+      "id": "3d2ee09f-5bd2-474e-8cd5-338ed64e8969",
+      "name": "Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1d077af8-947e-4a2c-bb7b-7cae812e869a",
+              "name": "google_sheet_id",
+              "value": "1edjAoOFvG7qXLOVKkjZaRIbdnaQsbdE-p66h-mlWwv8",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        112
+      ],
+      "id": "678d0cb7-a116-4082-ad37-484958c1a104",
+      "name": "Config"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=OBJETIVO:\nGenerar una lista de 3 CONJUNTOS de parámetros coherentes para construir un único video ASMR cinematográfico largo, centrado en frutas. Cada conjunto representa una variación suave dentro del mismo video.\n\nTEMÁTICA PRINCIPAL:\n\n* La temática principal NO es un input externo.\n* El modelo debe GENERAR una temática principal de forma REALMENTE ALEATORIA en cada ejecución.\n* La temática debe estar SIEMPRE relacionada con frutas y procesos visuales ASMR.\n* EVITA sesgos comunes como: cristales, gemas, minerales brillantes, bioluminiscencia, magia, fantasía repetitiva.\n* La temática puede inspirarse libremente en:\n  • frutas frescas o maduras\n  • procesos físicos suaves (corte, presión, apertura, separación)\n  • contrastes de texturas comestibles\n  • transformaciones internas inesperadas pero agradables\n* La temática debe seguir siendo adecuada para ASMR visual: suave, ordenada, sin caos.\n* La temática debe influir de manera coherente en todos los conjuntos generados.\n\nPARÁMETROS DE CADA CONJUNTO (OBLIGATORIOS):\nCada conjunto DEBE incluir EXACTAMENTE estos 3 campos (solo contexto frutas):\n\n* fruit\n* texture\n* interior\n\nREGLAS CLAVE:\n\n* Genera EXACTAMENTE 3 conjuntos en total.\n* Debes FIJAR únicamente la TEXTURA como parámetro de referencia común en todos los conjuntos.\n* La textura fija debe aplicarse de forma coherente al exterior de la fruta.\n* Los campos \"fruit\" e \"interior\" deben variar de forma aleatoria y DIVERSA.\n* Evita patrones visuales repetidos (cristalino, luminoso, mágico).\n* Favorece contrastes exterior/interior ASMR-friendly.\n* Todos los conjuntos deben poder combinarse secuencialmente en un solo video ASMR sin romper la armonía visual.\n* Las variaciones deben sentirse progresivas, suaves y relajantes.\n\nROL DEL MODELO:\nEres un director creativo especializado en videos ASMR visuales de frutas en macro cinematografía. Diseñas escenas hipnóticas, controladas y visualmente satisfactorias.\n\nRESTRICCIONES:\n\n* No expliques el razonamiento\n* No uses lenguaje caótico o agresivo\n* Evita repeticiones innecesarias\n* Prioriza sensaciones ASMR: fluidez, repetición, micro-variación y contraste suave\n\nOUTPUT FORMAT (JSON ESTRICTO):\nDevuelve ÚNICAMENTE un objeto JSON válido.\n\nIMPORTANTE:\n\n* TODOS los valores de texto deben estar en ESPAÑOL.\n* No mezcles idiomas.\n* Usa descripciones naturales, cinematográficas y ASMR-friendly en español.\n* La textura fija debe aparecer claramente en los parámetros y reflejarse en todos los sets.\n* La temática generada debe reflejarse en el título y en todos los parámetros.\n\nESTRUCTURA DEL JSON:\n\n{\n\"theme\": \"string\",\n\"video_title\": \"string\",\n\"fixed_parameters\": {\n\"texture\": \"string\"\n},\n\"sets\": [\n{\n\"fruit\": \"string\",\n\"texture\": \"string\",\n\"interior\": \"string\"\n}\n]\n}\n,\n\"sets\": [\n{\n\"substance\": \"string\",\n\"liquid\": \"string\",\n\"reaction\": \"string\",\n\"transformation\": \"string\",\n\"art_style_reference\": \"string\"\n}\n]\n}\n\nNOTAS:\n\n* El título debe ser corto, evocador y ASMR-friendly (máx. 12 palabras).\n* \"sets\" debe contener EXACTAMENTE 3 objetos.\n* El valor de \"texture\" debe mantenerse idéntico en todos los conjuntos.\n* TODOS los valores de texto deben estar en ESPAÑOL.\n* No mezcles idiomas.\n",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        80,
+        480
+      ],
+      "id": "cf87aba6-e8dc-4b5e-8936-684fa4d81f3f",
+      "name": "Random Content Generator"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "gjadjGw9vSbT2kSx",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/gjadjGw9vSbT2kSx",
+          "cachedResultName": "YT  - FFmpeg - Combine Videos With Transitions"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "input_folder_id": "={{ $('Create Shorts To Merge Folder').item.json.id }}",
+            "output_folder_id": "={{ $('Create Shorts To Merge Folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "input_folder_id",
+              "displayName": "input_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1088,
+        112
+      ],
+      "id": "a5388797-b154-426d-b974-4f7acda45458",
+      "name": "Combine Videos With Transitions"
+    },
+    {
+      "parameters": {
+        "content": "## 🍓 Flujo: AI Fruit ASMR – Long Video\n\nEste flujo genera un **video ASMR largo** a partir de múltiples clips cortos de frutas, manteniendo una temática coherente y transiciones suaves.\n\nCombina **generación creativa con IA**, producción automática de **Shorts ASMR**, y su **unión final en un solo video largo**.\n\n### ⚙️ Configuración mínima\n\n* Configura las **credenciales de Google Gemini** (chat y generación de video).\n* Configura las **credenciales de Google Drive y Google Sheets**.\n* En el nodo **Config**, define la variable `google_sheet_id` para indicar qué **Google Sheet** se utilizará.\n* Verifica la carpeta base de Google Drive donde se crearán las carpetas de cada video largo.\n* Asegúrate de que el subflujo **AI Fruit ASMR – Short Video** y el flujo **FFmpeg Combine Videos** estén importados y activos.\n\n---\n\n🧠 **¿Qué hace este flujo?**\n\n* Genera automáticamente una temática ASMR centrada en frutas.\n* Crea varios **videos cortos coherentes** (cortes, texturas e interiores).\n* Agrupa los Shorts en una carpeta temporal.\n* Une los clips en un **video largo con transiciones suaves**.\n* Registra el resultado final en Google Sheets.\n\n---\n\n📺 **Guía paso a paso en el video:**\n👉 [Cómo configurar paso a paso](https://youtu.be/xxxxxx)\n\n🔔 **Más flujos, guías y automatizaciones** en el canal:\n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n\n💡 Este flujo puede extenderse fácilmente para:\n\n* Añadir nuevas variaciones de frutas\n* Cambiar la lógica creativa del generador\n* Reutilizar la estructura para otros estilos de ASMR largo\n",
+        "height": 864,
+        "width": 752
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -800,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "b5237c1e-8696-49ae-bc60-1ac47575eaa2",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Random Content Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Random Content Generator",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Videos Params": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate Short Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Long Video Id": {
+      "main": [
+        [
+          {
+            "node": "Create Shorts To Merge Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Shorts To Merge Folder": {
+      "main": [
+        [
+          {
+            "node": "Random Content Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Combine Videos With Transitions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Short Video": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Get Long Video Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Random Content Generator": {
+      "main": [
+        [
+          {
+            "node": "Get Videos Params",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Videos With Transitions": {
+      "main": [
+        [
+          {
+            "node": "Add Long Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "df5515d4-0fb5-4d1b-bf37-9534496f31a9",
+  "meta": {
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "9UllfVkxEydFEaxJ",
+  "tags": []
+}

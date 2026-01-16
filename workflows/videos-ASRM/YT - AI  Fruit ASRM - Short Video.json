@@ -1,0 +1,450 @@
+{
+  "name": "YT - AI  Fruit ASRM - Short Video",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "output_folder_id"
+            },
+            {
+              "name": "fruit"
+            },
+            {
+              "name": "texture"
+            },
+            {
+              "name": "interior"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        -256
+      ],
+      "id": "4bee678e-6392-40b6-9c85-cd5978473c13",
+      "name": "Input"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Config').item.json.google_sheet_id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 587826700,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1j0H8Qoeh3eoObE-ukVS4vr1Jc-d7c4VhZ6rG2SeI8Xw/edit#gid=587826700"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        768,
+        -256
+      ],
+      "id": "c0424975-0f04-4fab-b83c-c9ee4786fd43",
+      "name": "Get Short Id",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7h5GUO4vnqiS6fGb",
+          "name": "Hans Acha Brand - Google Sheet Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "modelId": {
+          "__rl": true,
+          "value": "models/veo-3.1-fast-generate-preview",
+          "mode": "list",
+          "cachedResultName": "models/veo-3.1-fast-generate-preview"
+        },
+        "prompt": "={{ $('Video Prompt').item.json.video_prompt }}",
+        "options": {
+          "aspectRatio": "9:16"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        400,
+        16
+      ],
+      "id": "adb94cd5-6886-488a-98e1-3effaec448c7",
+      "name": "Generate ASRM video",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "pOulU84R26R4pD5U",
+          "name": "Hmac Viral Rand  - Gemini Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "=short_{{ String($('Get Short Id').item.json.total + 1).padStart(6, '0') }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Input').item.json.output_folder_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        656,
+        16
+      ],
+      "id": "6cfbc048-70fa-445f-a2c8-bc0d59a16043",
+      "name": "Upload ASMR Video",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Config').item.json.google_sheet_id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FWxUyMrNGIAb1t1cq7eHNdxlc4IWO9sI0VjOQmoHCq4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Get Short Id').item.json.total + 1 }}",
+            "folder_url": "=https://drive.google.com/drive/u/1/folders/{{ $('Input').item.json.output_folder_id }}",
+            "prompt": "={{ $('Video Prompt').item.json.video_prompt }}",
+            "status": "generated",
+            "video_url": "={{ $('Upload ASMR Video').item.json.webViewLink }}",
+            "fruit": "={{ $('Input').item.json.fruit }}",
+            "texture": "={{ $('Input').item.json.texture }}",
+            "interior": "={{ $('Input').item.json.interior }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "folder_url",
+              "displayName": "folder_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "fruit",
+              "displayName": "fruit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "texture",
+              "displayName": "texture",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "interior",
+              "displayName": "interior",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "video_url",
+              "displayName": "video_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        880,
+        16
+      ],
+      "id": "a93afd90-25d9-4f11-a71a-32b6a8a47cd5",
+      "name": "Add ASMR in Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7h5GUO4vnqiS6fGb",
+          "name": "Hans Acha Brand - Google Sheet Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "19958f1c-7c75-4c74-8549-7b71a7072024",
+              "name": "video_prompt",
+              "value": "=A high-quality cinematic ASMR macro video focused on slow, satisfying cutting visuals and sound.\n\nA ripe {{ $('Input').item.json.fruit }} rests on a clean, minimal surface under soft, controlled lighting.\nIts exterior has a {{ $('Input').item.json.texture }}-like appearance, smooth, reflective, and visually intriguing.\n\nThe scene is quiet and intimate.\nSubtle ambient silence amplifies every small sound.\n\nA sharp knife enters the frame slowly.\nAs it moves, faint metallic air sounds and soft friction tones are implied.\nThe camera captures micro-reflections on the blade in extreme macro.\n\nThe knife gently presses down.\nA delicate initial crack forms, producing a soft, crisp cutting sound.\nThe outer layer separates with a clean, controlled slice.\n\nAs the cut deepens, subtle textural sounds emerge:\ngentle scraping, muted crunch, and smooth resistance.\n\nInside, a {{ $('Input').item.json.interior }}-like filling is revealed.\nIt moves slowly, producing thick, soft flow sounds.\nEach movement feels heavy, rich, and dampened, contrasting with the sharper outer cut.\n\nThe slicing continues in a steady, rhythmic pace.\nEach cut repeats the same soothing audio pattern:\nsoft knife contact, clean separation, slow interior movement.\n\nThe overall sound design feels close, detailed, and calming,\nwith no sudden noises, no harsh tones,\nonly repetitive, controlled ASMR cutting sounds paired with smooth visual motion.\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        16
+      ],
+      "id": "4b2e1cb4-8111-4940-9707-079a082e1596",
+      "name": "Video Prompt"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0fef802e-ba5c-4c2f-a28e-81feb73c1fac",
+              "name": "google_sheet_id",
+              "value": "1j0H8Qoeh3eoObE-ukVS4vr1Jc-d7c4VhZ6rG2SeI8Xw",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        544,
+        -256
+      ],
+      "id": "469cd0eb-1ece-4b8a-bc05-056efdb7d77e",
+      "name": "Config"
+    },
+    {
+      "parameters": {
+        "content": "## Setup",
+        "height": 224,
+        "width": 688,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        272,
+        -320
+      ],
+      "typeVersion": 1,
+      "id": "754e6e90-ec4a-4e38-ba3e-4cf9cb787615",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Generate video",
+        "height": 240,
+        "width": 432,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        144,
+        -48
+      ],
+      "typeVersion": 1,
+      "id": "36cd6e0d-e3eb-46e6-9829-e339029f483d",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Load video",
+        "height": 240,
+        "width": 464,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        608,
+        -48
+      ],
+      "typeVersion": 1,
+      "id": "c25ec40b-8922-4a2b-9338-ccab2645d8b3",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## 🍓 Subflujo: AI Fruit ASMR – Short Video\n\nEste subflujo genera **videos ASMR cortos (formato vertical 9:16)** centrados en frutas, cortes suaves y texturas visuales y sonoras satisfactorias.\n\nEstá pensado para **Shorts, Reels y TikToks**, con generación automática mediante IA y registro del resultado.\n\n### ⚙️ Configuración mínima\n* Configura las **credenciales de Google Gemini** para la generación de video.\n* Configura las **credenciales de Google Drive y Google Sheets**.\n* Define el `output_folder_id` donde se guardarán los videos.\n* En el nodo **Config**, define la variable `google_sheet_id` para indicar qué **Google Sheet** se utilizará.\n* Ajusta el Google Sheet si deseas cambiar el control o registro.\n\n---\n📺 **Guía paso a paso en el video:**\n👉 [Cómo configurar paso a paso](https://youtu.be/xxxxxx)\n\n🔔 **Más flujos, guías y automatizaciones** en el canal:\n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n\n💡 Este subflujo puede reutilizarse o extenderse fácilmente para crear **nuevas variaciones de ASMR de frutas**, modificando únicamente los parámetros de entrada o el prompt.",
+        "height": 512,
+        "width": 784
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -672,
+        -320
+      ],
+      "typeVersion": 1,
+      "id": "1e0c7c5f-69aa-4e2b-a4c4-799822662db9",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {
+    "Input": [
+      {
+        "json": {
+          "output_folder_id": "17FRgwY54HeRhkMj_zvJaEVqE8ByuHk9B",
+          "fruit": "banana",
+          "texture": "glass",
+          "interior": "nutella"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Input": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Short Id": {
+      "main": [
+        [
+          {
+            "node": "Video Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate ASRM video": {
+      "main": [
+        [
+          {
+            "node": "Upload ASMR Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload ASMR Video": {
+      "main": [
+        [
+          {
+            "node": "Add ASMR in Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video Prompt": {
+      "main": [
+        [
+          {
+            "node": "Generate ASRM video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Get Short Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "356b5e54-f708-48dd-ba3e-7418eadb4f7c",
+  "meta": {
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "FnRzX1zKt4HeSRDx",
+  "tags": []
+}

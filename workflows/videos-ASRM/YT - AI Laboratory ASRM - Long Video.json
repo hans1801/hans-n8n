@@ -1,0 +1,655 @@
+{
+  "name": "YT - AI Laboratory ASRM - Long Video",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        624
+      ],
+      "id": "bf3e0bbb-2a44-4b42-a601-f90c6c811f70",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "pOulU84R26R4pD5U",
+          "name": "Hmac Viral Rand  - Gemini Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"theme\": \"laboratorio de crecimiento bioluminiscente\",\n  \"video_title\": \"Crecimiento Bioluminiscente en Laboratorio ASMR\",\n  \"fixed_parameters\": {\n    \"liquid\": \"líquido bioluminiscente de brillo suave\",\n    \"art_style_reference\": \"estilo voxel cinematográfico macro ASMR\"\n  },\n  \"sets\": [\n    {\n      \"substance\": \"polvo mineral oscuro y fino\",\n      \"liquid\": \"líquido bioluminiscente de brillo suave\",\n      \"reaction\": \"brillo pulsante y suave que se expande hacia afuera\",\n      \"transformation\": \"pequeño musgo voxel luminoso\",\n      \"art_style_reference\": \"estilo voxel cinematográfico macro ASMR\"\n    },\n    {\n      \"substance\": \"polvo de grafito suave\",\n      \"liquid\": \"líquido bioluminiscente de brillo suave\",\n      \"reaction\": \"ondas de luz lentas y envolventes\",\n      \"transformation\": \"césped voxel luminoso\",\n      \"art_style_reference\": \"estilo voxel cinematográfico macro ASMR\"\n    },\n    {\n      \"substance\": \"tierra negra de textura mate\",\n      \"liquid\": \"líquido bioluminiscente de brillo suave\",\n      \"reaction\": \"destello radial delicado y ordenado\",\n      \"transformation\": \"brotes voxel bioluminiscentes\",\n      \"art_style_reference\": \"estilo voxel cinematográfico macro ASMR\"\n    }\n  ]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -624,
+        624
+      ],
+      "id": "cad7c6a6-42ab-4b05-87ff-e505238c2721",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "jsCode": "const sets = $('Random Content Generator').first().json.output.sets || [];\n\nreturn sets.map(set => ({\n  json: set,\n}));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -416,
+        400
+      ],
+      "id": "16f439c4-c8a8-4d86-b517-052839307f12",
+      "name": "Get Videos Params"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -192,
+        400
+      ],
+      "id": "2a30615b-5b64-4f3f-9288-e6400a52ee4e",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        32,
+        48
+      ],
+      "id": "b91caf17-8b2d-4f65-8298-0860b28d9b14",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Config').item.json.google_sheet_id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 653637335,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BUE3NaFUlnJ_NINQUBd6QiBLMi3PzgZBlp3Jzw5MoM8/edit#gid=653637335"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -432,
+        32
+      ],
+      "id": "669edc3c-e591-47ee-88cb-822e8f72921e",
+      "name": "Get Long Video Id",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7h5GUO4vnqiS6fGb",
+          "name": "Hans Acha Brand - Google Sheet Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=long_{{ String($('Get Long Video Id').item.json.total + 1).padStart(6, '0') }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1aiyNAaa5nzXe14Q14jrDr0ZDwjRAZkMc",
+          "mode": "list",
+          "cachedResultName": "ASMR Laboratory Videos",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1aiyNAaa5nzXe14Q14jrDr0ZDwjRAZkMc"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -224,
+        32
+      ],
+      "id": "fa29e0ce-74df-4b2e-a1b7-261fbe145b8f",
+      "name": "Create Shorts To Merge Folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Config').item.json.google_sheet_id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Hpyi9EKlY30r5dqMJDuypNYcX1GaIK0Ml4b5-dVBlc4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Get Long Video Id').item.json.total + 1}}",
+            "status": "generated",
+            "theme": "={{ $('Random Content Generator').item.json.output.theme }}",
+            "params": "={{ $('Random Content Generator').item.json.output.sets.toJsonString() }}",
+            "video_url": "={{ $('Combine Videos With Transitions').item.json.output.webViewLink }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "theme",
+              "displayName": "theme",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "params",
+              "displayName": "params",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "video_url",
+              "displayName": "video_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        432,
+        48
+      ],
+      "id": "9bc5ac55-c801-4a18-ae93-8b2d72c13a41",
+      "name": "Add Long Video",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7h5GUO4vnqiS6fGb",
+          "name": "Hans Acha Brand - Google Sheet Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "B5xMCjtjxkmERPTu",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/B5xMCjtjxkmERPTu",
+          "cachedResultName": "YT - AI Laboratory ASRM - Short Video"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "substance": "={{ $('Loop Over Items').item.json.substance }}",
+            "liquid": "={{ $('Loop Over Items').item.json.liquid }}",
+            "reaction": "={{ $('Loop Over Items').item.json.reaction }}",
+            "transformation": "={{ $('Loop Over Items').item.json.transformation }}",
+            "art_style": "={{ $('Loop Over Items').item.json.art_style_reference }}",
+            "output_folder_id": "={{ $('Create Shorts To Merge Folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "substance",
+              "displayName": "substance",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "liquid",
+              "displayName": "liquid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "reaction",
+              "displayName": "reaction",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "transformation",
+              "displayName": "transformation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "art_style",
+              "displayName": "art_style",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        32,
+        448
+      ],
+      "id": "2e0060d3-bd9b-4aa5-8565-78570318c737",
+      "name": "Generate Short Video"
+    },
+    {
+      "parameters": {
+        "content": "## Set up",
+        "height": 336,
+        "width": 784,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -848,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "d3f03658-6deb-4171-a452-7ce2806706f1",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Shorts",
+        "height": 512,
+        "width": 1056,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -848,
+        288
+      ],
+      "typeVersion": 1,
+      "id": "ab65e0f3-0dae-48da-a45e-4b58d02a6c2e",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Create Long Video",
+        "height": 336,
+        "width": 656,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -32,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "7aadfc9c-cc56-4bea-a88c-881c3355f20c",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -816,
+        32
+      ],
+      "id": "c4d8a160-0b85-4e96-bec2-0c9b8bc99d6e",
+      "name": "Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "40cd2d4a-aaa4-46b0-9ced-a9db03fa1554",
+              "name": "google_sheet_id",
+              "value": "1BUE3NaFUlnJ_NINQUBd6QiBLMi3PzgZBlp3Jzw5MoM8",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -624,
+        32
+      ],
+      "id": "e6c45668-d17b-4e6a-97c1-4c137590f75d",
+      "name": "Config"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=### PROMPT ASMR — REACCIÓN QUÍMICA Y CRECIMIENTO DE OBJETOS\n\n---\n\n### OBJETIVO:\n\nGenerar **3 CONJUNTOS de parámetros coherentes** para construir un **único video ASMR cinematográfico largo**, con variaciones suaves, continuas y armónicas.\n\n---\n\n### TEMÁTICA PRINCIPAL:\n\n* La temática **NO es un input externo**.\n* El modelo debe **GENERAR una temática realmente aleatoria** en cada ejecución.\n* **Evita por completo**: cristales, gemas, brillo, bioluminiscencia, magia o fantasía.\n* La temática puede surgir de (elige una al azar):\n  • materiales cotidianos\n  • procesos físico‑químicos\n  • alimentos y texturas comestibles\n  • fluidos industriales o abstractos\n  • materiales orgánicos no brillantes\n  • fenómenos mecánicos suaves\n* La temática debe ser **ASMR visual**: ordenada, lenta, sin caos.\n* La temática debe reflejarse **en todos los conjuntos**.\n\n---\n\n### PARÁMETROS DE CADA CONJUNTO (OBLIGATORIOS):\n\nCada conjunto debe incluir **exactamente**:\n\n* `substance`\n* `liquid`\n* `reaction`\n* `transformation`\n* `art_style_reference`\n\n---\n\n### REGLAS CLAVE (SIMPLIFICADAS Y ESTRICTAS):\n\n* Genera **3 conjuntos** en total.\n* Debes **FIJAR EXACTAMENTE 2 PARÁMETROS**, idénticos en todos los conjuntos:\n\n  * `reaction`\n  * `transformation`\n* Los demás parámetros **varían suavemente**.\n\n---\n\n### ⚗️ REACTION — REACCIÓN QUÍMICA (PARÁMETRO FIJO):\n\n* `reaction` debe describir **una reacción química realista y controlada**.\n* Debe incluir:\n  • mezcla gradual de sustancias\n  • interacción físico‑química observable\n  • cambios visibles de textura, densidad o estado\n* La reacción debe ser:\n  • lenta\n  • silenciosa\n  • estable\n  • ASMR‑friendly\n* **Prohibido**: explosiones, chispas, brillo, efectos mágicos.\n\n---\n\n### 🧱 TRANSFORMATION — OBJETOS EN CRECIMIENTO (PARÁMETRO FIJO):\n\n* `transformation` debe describir **la formación y crecimiento progresivo de objetos físicos** derivados directamente de la reacción química.\n* Los objetos deben:\n  • emerger desde la reacción\n  • crecer en capas, volumen o estructura\n  • mantenerse materiales, tangibles y coherentes\n* El crecimiento debe sentirse:\n  • lento\n  • continuo\n  • acumulativo\n  • hipnótico\n* **Prohibido**: objetos mágicos, brillantes o irreales.\n\n---\n\n### COHERENCIA ASMR:\n\n* Evita patrones visuales repetidos.\n* Prioriza **texturas suaves, repetición y micro‑variación**.\n* Los conjuntos deben **fusionarse secuencialmente** en un solo video sin cortes visuales.\n* Todo debe transmitir **calma, control y satisfacción visual**.\n\n---\n\n### ROL DEL MODELO:\n\nEres un **director creativo de ASMR visual experimental**, especializado en reacciones químicas lentas y crecimiento de formas físicas controladas.\n\n---\n\n### OUTPUT FORMAT (JSON ESTRICTO):\n\nDevuelve **ÚNICAMENTE** un objeto JSON válido.\n\n```json\n{\n  \"theme\": \"string\",\n  \"video_title\": \"string\",\n  \"fixed_parameters\": {\n    \"reaction\": \"string\",\n    \"transformation\": \"string\"\n  },\n  \"sets\": [\n    {\n      \"substance\": \"string\",\n      \"liquid\": \"string\",\n      \"reaction\": \"string\",\n      \"transformation\": \"string\",\n      \"art_style_reference\": \"string\"\n    }\n  ]\n}\n```\n\n---\n\n### NOTAS FINALES:\n\n* Todo el texto debe estar en **ESPAÑOL**.\n* No mezcles idiomas.\n* Usa descripciones **cinematográficas, simples y ASMR‑friendly**.\n* El título debe ser **corto y evocador** (máx. 12 palabras).\n* `sets` debe contener **exactamente 3 objetos**.\n* Los valores de `reaction` y `transformation` deben ser **idénticos en todos los sets**.\n",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -768,
+        400
+      ],
+      "id": "76a07037-f024-458e-9240-4a3f93e34fcc",
+      "name": "Random Content Generator"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "gjadjGw9vSbT2kSx",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/gjadjGw9vSbT2kSx",
+          "cachedResultName": "YT  - FFmpeg - Combine Videos With Transitions"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "input_folder_id": "={{ $('Create Shorts To Merge Folder').item.json.id }}",
+            "output_folder_id": "={{ $('Create Shorts To Merge Folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "input_folder_id",
+              "displayName": "input_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        48
+      ],
+      "id": "bc6b12c0-04dc-4a39-85a1-a50a0eb756f9",
+      "name": "Combine Videos With Transitions"
+    },
+    {
+      "parameters": {
+        "content": "## 🧪 Flujo: AI Laboratory ASMR – Long Video\n\nEste flujo genera un **video ASMR largo** a partir de múltiples clips cortos, usando una temática de laboratorio creada automáticamente con IA.\n\nEl proceso combina **generación creativa**, **producción de Shorts**, y **unión final con transiciones**, todo de forma automática.\n\n### ⚙️ Configuración mínima\n\n* Configura las **credenciales de Google Gemini** (chat y generación de video).\n* Configura las **credenciales de Google Drive y Google Sheets**.\n* En el nodo **Config**, define la variable `google_sheet_id` para indicar qué **Google Sheet** se utilizará.\n* Verifica la carpeta base de Google Drive donde se crearán las carpetas de cada video largo.\n* Asegúrate de que los subflujos de **Short Video** y **FFmpeg Combine Videos** estén importados y activos.\n\n---\n\n🧠 **¿Qué hace este flujo?**\n\n* Genera una temática ASMR de laboratorio de forma aleatoria.\n* Crea varios **videos cortos** coherentes entre sí.\n* Agrupa los Shorts en una carpeta temporal.\n* Une los clips en un **video largo con transiciones suaves**.\n* Registra el resultado final en Google Sheets.\n\n---\n📺 **Guía paso a paso en el video:**\n👉 [Cómo configurar paso a paso](https://youtu.be/xxxxxx)\n\n🔔 **Más flujos, guías y automatizaciones** en el canal:\n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n\n💡 Este flujo puede extenderse fácilmente para:\n\n* Añadir más variaciones de Shorts\n* Cambiar la lógica creativa del generador\n* Crear otros estilos de videos ASMR largos reutilizando la misma estructura\n",
+        "height": 880,
+        "width": 688
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1568,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "12b4dae1-1c18-4410-bcde-f4af5e756a3a",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Random Content Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Random Content Generator",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Videos Params": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate Short Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Long Video Id": {
+      "main": [
+        [
+          {
+            "node": "Create Shorts To Merge Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Shorts To Merge Folder": {
+      "main": [
+        [
+          {
+            "node": "Random Content Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Combine Videos With Transitions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Short Video": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Get Long Video Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Random Content Generator": {
+      "main": [
+        [
+          {
+            "node": "Get Videos Params",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Videos With Transitions": {
+      "main": [
+        [
+          {
+            "node": "Add Long Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fee10f01-474a-4b07-a5d9-c840a52570ad",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "G1IlmmnVpYAlvV1g",
+  "tags": []
+}

@@ -1,0 +1,257 @@
+{
+  "name": "YT - Random ASRM Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -240,
+        -64
+      ],
+      "id": "d526fb3b-7838-4bfc-a987-ba57448f5b81",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = [];\n\nitems.push({\n    json: {\n      random_value: Math.floor(Math.random() * 2) + 1,\n    },\n  });\n\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -16,
+        -64
+      ],
+      "id": "476e7c8f-07a6-4caf-8cb8-386148c0ebe9",
+      "name": "Random Template"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.random_value }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    },
+                    "id": "b29c36f1-6ee7-48dd-a306-146d8bf49891"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "laboratory"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ff4e7cd1-40f0-4c28-9050-f8230276e5df",
+                    "leftValue": "={{ $json.random_value }}",
+                    "rightValue": "2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "fruit"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        -64
+      ],
+      "id": "02390f09-f08c-482c-b466-c6ae37becfa0",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "G1IlmmnVpYAlvV1g",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/G1IlmmnVpYAlvV1g",
+          "cachedResultName": "YT - AI Laboratory ASRM - Long Video"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        432,
+        -160
+      ],
+      "id": "ddd7918f-10dd-4fca-b29f-1e73a7495c26",
+      "name": "Call 'YT - AI Laboratory ASRM - Long Video'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "9UllfVkxEydFEaxJ",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/9UllfVkxEydFEaxJ",
+          "cachedResultName": "YT - AI Fruit ASRM - Long Video"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        432,
+        32
+      ],
+      "id": "d4cca3e2-26cd-4ae5-bb94-4cc49027d8a6",
+      "name": "Call 'YT - AI Fruit ASRM - Long Video'"
+    },
+    {
+      "parameters": {
+        "content": "## 🔀 Flujo: Random ASMR Generator\n\nEste flujo selecciona **de forma aleatoria** qué plantilla de video ASMR se ejecuta en cada ejecución.\n\n### ⚙️ Configuración mínima\n\n* Revisa que los **subflujos llamados** estén importados y activos.\n* Ajusta el **Schedule Trigger** si deseas ejecución automática.\n* Verifica que las **credenciales de IA** estén configuradas en los subflujos.\n* Puedes **extender este subflujo** fácilmente añadiendo nuevos subflujos y conectándolos al nodo **Switch**.\n\n---\n\n📺 **Guía paso a paso en el video:**\n👉 [Cómo configurar paso a paso](https://youtu.be/xxxxxx)\n\n🔔 **Más guías completas y automatizaciones** en el canal:\n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 496,
+        "width": 480
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -832,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "dac4cd0c-181e-452c-b03e-47971ae5ce76",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Randomizer",
+        "height": 496,
+        "width": 416,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -288,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "848cbdd4-518e-4b47-8157-a7fe34008d79",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Selector",
+        "height": 496,
+        "width": 464,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        160,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "99642c24-03e7-4862-b5a1-ac5876ef8f43",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Random Template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Random Template": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT - AI Laboratory ASRM - Long Video'",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call 'YT - AI Fruit ASRM - Long Video'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8aaece7e-d257-4561-98eb-daeba52bed17",
+  "meta": {
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "x76a2vyvXiFaKdDo",
+  "tags": []
+}
