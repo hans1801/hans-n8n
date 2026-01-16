@@ -103,7 +103,7 @@ que se define en el nodo **Config** de cada plantilla.
 ---
 
 📺 **Guía paso a paso completa en video:**
-👉 [Cómo configurar todo el sistema](https://youtu.be/xxxxxx)
+👉 [Cómo configurar todo el sistema](https://youtu.be/ueKsYtsoWGQ)
 
 🔔 **Más automatizaciones y flujos avanzados** en el canal:
 👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)

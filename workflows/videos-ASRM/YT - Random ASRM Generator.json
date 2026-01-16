@@ -155,7 +155,7 @@
     },
     {
       "parameters": {
-        "content": "## 🔀 Flujo: Random ASMR Generator\n\nEste flujo selecciona **de forma aleatoria** qué plantilla de video ASMR se ejecuta en cada ejecución.\n\n### ⚙️ Configuración mínima\n\n* Revisa que los **subflujos llamados** estén importados y activos.\n* Ajusta el **Schedule Trigger** si deseas ejecución automática.\n* Verifica que las **credenciales de IA** estén configuradas en los subflujos.\n* Puedes **extender este subflujo** fácilmente añadiendo nuevos subflujos y conectándolos al nodo **Switch**.\n\n---\n\n📺 **Guía paso a paso en el video:**\n👉 [Cómo configurar paso a paso](https://youtu.be/xxxxxx)\n\n🔔 **Más guías completas y automatizaciones** en el canal:\n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
+        "content": "## 🔀 Flujo: Random ASMR Generator\n\nEste flujo selecciona **de forma aleatoria** qué plantilla de video ASMR se ejecuta en cada ejecución.\n\n### ⚙️ Configuración mínima\n\n* Revisa que los **subflujos llamados** estén importados y activos.\n* Ajusta el **Schedule Trigger** si deseas ejecución automática.\n* Verifica que las **credenciales de IA** estén configuradas en los subflujos.\n* Puedes **extender este subflujo** fácilmente añadiendo nuevos subflujos y conectándolos al nodo **Switch**.\n\n---\n\n📺 **Guía paso a paso en el video:**\n👉 [Cómo configurar paso a paso](https://youtu.be/ueKsYtsoWGQ)\n\n🔔 **Más guías completas y automatizaciones** en el canal:\n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n",
         "height": 496,
         "width": 480
       },
