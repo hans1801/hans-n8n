@@ -1,0 +1,497 @@
+{
+  "name": "YT - Video from Image",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "prompt"
+            },
+            {
+              "name": "image_id"
+            },
+            {
+              "name": "filename_output"
+            },
+            {
+              "name": "folder_output_id"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -32,
+        -288
+      ],
+      "id": "51aa09e8-33b6-4cf6-b209-540107ffcb55",
+      "name": "Start"
+    },
+    {
+      "parameters": {
+        "jsCode": "const prompt = $('Start').first().json.prompt;\nconst aspect_ratio = $('Config').first().json.ascpect_ratio;\n\nconst imgData = $('Download Image').first();\nconst bin = imgData.binary?.data;\nif (!bin) throw new Error('No binary.data found');\n\nconst mimeType = bin.mimeType || 'image/png';\n\n// Lee el binario real aunque sea filesystem-v2\nconst buffer = await this.helpers.getBinaryDataBuffer(0, 'data');\nconst base64 = buffer.toString('base64');\n\nreturn [{\n  json: {\n    instances: [{\n      prompt: prompt,\n      image: {\n        bytesBase64Encoded: base64,\n        mimeType: mimeType\n      }\n    }],\n    parameters: {\n      resolution: \"720p\",\n      durationSeconds: 8,\n      aspectRatio: aspect_ratio,\n    }\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        368,
+        -288
+      ],
+      "id": "433e4e87-5ce6-4e4a-9d67-a05f8fc60801",
+      "name": "Generate Prompt"
+    },
+    {
+      "parameters": {
+        "content": "## Config",
+        "height": 224,
+        "width": 368,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -64,
+        -352
+      ],
+      "typeVersion": 1,
+      "id": "70828303-7d9c-4c75-9fb1-43c940d68c51",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Image Reference",
+        "height": 240,
+        "width": 368,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -64,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "c4c078df-a173-4789-93ce-020b6f4490bc",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Video with Image Reference",
+        "height": 480,
+        "width": 736,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        336,
+        -352
+      ],
+      "typeVersion": 1,
+      "id": "4de02fbf-d205-4fb4-bcd2-cdc7def5a978",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Load Generated Video",
+        "height": 480,
+        "width": 256,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1104,
+        -352
+      ],
+      "typeVersion": 1,
+      "id": "59ff25e5-7adb-4630-8e09-abe5cbb57b26",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "621fe449-f2f3-4154-b7ba-49f012726db4",
+              "name": "output",
+              "value": "={{ $('Load Generated Video').item.json }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1168,
+        -32
+      ],
+      "id": "83b3f0f0-2c27-4191-929f-bfc6d23d7180",
+      "name": "Output"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Start').item.json.image_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        160,
+        -32
+      ],
+      "id": "10e9d60b-49ac-43c8-8441-541fdfef4a19",
+      "name": "Download Image",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        -80
+      ],
+      "id": "59ccfa20-abe4-4d3e-b7c3-29fc891b6ece",
+      "name": "Wait",
+      "webhookId": "a68cb320-e304-4563-b4be-d4dcb97315c4"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/{{ $('Config').item.json.model }}:predictLongRunning",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $('Generate Prompt').item.json.toJsonString() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        560,
+        -288
+      ],
+      "id": "a8377b55-c66a-4147-acb5-ec3b7e1d5da4",
+      "name": "Generate Video - Veo3",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "nxHittWRCHWE4fKt",
+          "name": "Gemini Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://generativelanguage.googleapis.com/v1beta/{{ $('Generate Video - Veo3').item.json.name }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        592,
+        -80
+      ],
+      "id": "0c61adaa-e623-4b0e-83f9-6c29b5e3b745",
+      "name": "Get Generation Response",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "nxHittWRCHWE4fKt",
+          "name": "Gemini Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b3b2b430-6288-48ea-be2b-962f26021d57",
+              "leftValue": "={{ $('Get Generation Response').item.json.done }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        800,
+        -80
+      ],
+      "id": "6a9e76f8-41a9-452a-b3fb-f28bf1d18d0b",
+      "name": "Check Response"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Check Response').item.json.response.generateVideoResponse.generatedSamples[0].video.uri }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        944,
+        -288
+      ],
+      "id": "044097a3-b532-42f1-9e14-e6043a0e4436",
+      "name": "Download Video",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "nxHittWRCHWE4fKt",
+          "name": "Gemini Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6b24e57a-5d79-4655-8025-a1402f0829d3",
+              "name": "ascpect_ratio",
+              "value": "9:16",
+              "type": "string"
+            },
+            {
+              "id": "0f5a092a-3a7c-4f71-8ebe-b302ec28342c",
+              "name": "model",
+              "value": "veo-3.1-fast-generate-preview",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        160,
+        -288
+      ],
+      "id": "a4a40a80-f104-4fce-805c-b5e1225f16ce",
+      "name": "Config"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Start').item.json.filename_output }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Start').item.json.folder_output_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1168,
+        -288
+      ],
+      "id": "3d809876-f10f-4c31-ae9f-6079484c757c",
+      "name": "Load Generated Video",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 🎬 Flujo: Video from Image (IA)\n\nEste flujo genera un **video corto** a partir de **una imagen existente**, animándola con IA y manteniendo la composición visual original.\nEs ideal para transformar imágenes estáticas en **Shorts, Reels o clips narrativos** de forma automática.\n\n\n### ⚙️ Configuración mínima\n\n* Configura las **credenciales de Google Drive**.\n* Configura la **API Key de Google Gemini / Veo**.\n* En el nodo **Start**, define:\n  * `prompt` (instrucciones de animación, diálogo o acción)\n  * `image_id` (ID de la imagen base en Google Drive)\n  * `filename_output`\n  * `folder_output_id`\n* En el nodo **Config**, ajusta:\n  * `aspect_ratio` (ej: `9:16` para Shorts)\n  * Modelo de video (Veo)\n\n\n### 🧠 **¿Qué hace este flujo?**\n\n* Descarga una imagen desde Google Drive.\n* Usa la imagen como **referencia visual directa**.\n* Genera un **video animado corto** con IA.\n* Consulta el estado de generación automáticamente.\n* Descarga y guarda el video final en Google Drive.\n\n\n\n📺 **Guía paso a paso en el video:**\n👉 [Cómo configurar paso a paso](https://youtu.be/xxxxxx)\n\n🔔 **Más flujos, guías y automatizaciones** en el canal:\n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n\n\n\n### 💡 Este flujo puede extenderse fácilmente para:\n\n* Crear Shorts animados desde imágenes\n* Dar vida a personajes estáticos\n* Generar escenas para reels o storytelling visual\n* Integrarse con flujos de generación de imágenes\n",
+        "height": 992,
+        "width": 560
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -688,
+        -352
+      ],
+      "typeVersion": 1,
+      "id": "0e65ea68-c8d0-4000-85dc-b82e75d61fb9",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {
+    "Start": [
+      {
+        "json": {
+          "prompt": "{\"dialogue\":\"¡Ja! ¿Fibra? ¡Yo te doy la energía explosiva del potasio para todo el día!\",\"camera\":\"Toma media de ambos frutos.\",\"character_action\":\"El plátano se \\\"estira\\\" un poco mientras habla, sacudiendo ligeramente la punta, la manzana ladea la cabeza con un gesto de desaprobación.\",\"motion\":\"Plátano inclinándose hacia adelante con energía, boca animada. Manzana con parpadeo lento.\",\"effects\":\"Una pequeña \\\"explosión\\\" de energía visual alrededor del plátano al hablar.\",\"notes\":\"La imagen ya está generada; el video anima esa misma escena.\"}",
+          "image_id": "1RSxxLQXBjS7nHanc8cDKFH5LsY-orsIc",
+          "filename_output": "video_scene_2",
+          "folder_output_id": "1jV4ylhlQGFQf0qN89Q7ijg74an0r2Bko"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Generate Prompt": {
+      "main": [
+        [
+          {
+            "node": "Generate Video - Veo3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image": {
+      "main": [
+        [
+          {
+            "node": "Generate Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get Generation Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Video - Veo3": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Generation Response": {
+      "main": [
+        [
+          {
+            "node": "Check Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Response": {
+      "main": [
+        [
+          {
+            "node": "Download Video",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Video": {
+      "main": [
+        [
+          {
+            "node": "Load Generated Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Download Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Generated Video": {
+      "main": [
+        [
+          {
+            "node": "Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "048ba83f-b1ab-4cac-9fdb-8edf2fe94780",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "ThOe83bae2jvLI4f",
+  "tags": []
+}

@@ -1,0 +1,491 @@
+{
+  "name": "YT - Image Style Reference",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "image_prompt"
+            },
+            {
+              "name": "folder_reference_id"
+            },
+            {
+              "name": "filename_output"
+            },
+            {
+              "name": "folder_output_id"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        -640
+      ],
+      "id": "46257eca-1bdc-46c7-92c7-922920eab838",
+      "name": "Start"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "limit": "={{ $('Config').item.json.n_samples }}",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "={{ $('Start').item.json.folder_reference_id }}",
+            "mode": "id"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        464,
+        -640
+      ],
+      "id": "bd13a151-95c6-439a-adba-0be664668f6a",
+      "name": "Search Images Ref",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Search Images Ref').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        672,
+        -640
+      ],
+      "id": "fce96ed5-af38-4420-b69f-702108d456fe",
+      "name": "Download Images Ref",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {
+          "includeBinaries": true
+        }
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        896,
+        -640
+      ],
+      "id": "fb40ce1d-27c8-47d8-a72c-af4a18140259",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "jsCode": "const prompt_base = $('Config').first().json.prompt_base;\nconst image_prompt = $('Start').first().json.image_prompt;\n\nconst agg = $('Aggregate').first();\nconst bin = agg.binary;\nconst binaryKeys = Object.keys(bin).filter(k => bin[k]);\n\nif (!binaryKeys.length) {\n  throw new Error('No se encontraron binarios en Aggregate');\n}\n\n// Orden: data, data_1, data_2...\nbinaryKeys.sort((a, b) => {\n  if (a === 'data') return -1;\n  if (b === 'data') return 1;\n  const na = parseInt(a.split('_')[1] ?? '0', 10);\n  const nb = parseInt(b.split('_')[1] ?? '0', 10);\n  return na - nb;\n});\n\nconst parts = [\n  {\n    text: `${prompt_base}: ${image_prompt}`\n  }\n];\n\nfor (const key of binaryKeys) {\n  const mimeType = bin[key].mimeType || 'image/png';\n\n  // ✅ Esto lee el contenido REAL aunque data sea \"filesystem-v2\"\n  const buffer = await this.helpers.getBinaryDataBuffer(0, key);\n  const base64 = buffer.toString('base64');\n\n  parts.push({\n    inlineData: {\n      mimeType,\n      data: base64,\n    }\n  });\n}\n\nreturn [{\n  json: {\n    contents: [{ parts }]\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        -352
+      ],
+      "id": "64372bc5-e866-4b94-aede-9a357d18de57",
+      "name": "Generate Prompt"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e2574dd5-6b0e-4eee-a30d-b3c8ee3e5abd",
+              "name": "prompt_base",
+              "value": "=Genera una única imagen completamente original, utilizando exclusivamente las imágenes de referencia como guía de estilo visual (paleta de colores, trazo, iluminación, atmósfera y nivel de detalle).\n\nNo copies, reemplaces ni adaptes directamente ningún elemento, composición, personaje u objeto presente en las imágenes de referencia.\n\nLa escena debe ser creativa, única y coherente, respetando únicamente el lenguaje artístico y estético indicado por las referencias, sin reutilizar poses, encuadres ni formas reconocibles.\n\nEl resultado final debe sentirse como una nueva ilustración original, inspirada en el estilo general de las referencias, pero no derivada directamente de ellas.",
+              "type": "string"
+            },
+            {
+              "id": "33d77201-c7ae-4897-88e3-c3ff54d95c21",
+              "name": "model",
+              "value": "gemini-2.5-flash-image",
+              "type": "string"
+            },
+            {
+              "id": "71e817a6-1931-4a2b-b5f7-df0e9f619360",
+              "name": "n_samples",
+              "value": 6,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        -640
+      ],
+      "id": "a91f042e-3709-410f-aac9-27fec2dfb226",
+      "name": "Config"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/{{ $('Config').first().json.model }}:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $('Generate Prompt').item.json.toJsonString() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        208,
+        -352
+      ],
+      "id": "b75e43f6-298d-44b6-a363-990cb63417b7",
+      "name": "Generate Image - Gemini",
+      "credentials": {
+        "httpMultipleHeadersAuth": {
+          "id": "E3uuIBSc9vLHBueW",
+          "name": "Multiple Headers Auth account (BorrarO)"
+        },
+        "httpHeaderAuth": {
+          "id": "nxHittWRCHWE4fKt",
+          "name": "Gemini Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 📌 Examples\n\n### 🎃 Horror Style – Initial Input\n\nBelow is an example of the input structure used to generate an image with a horror-style theme:\n\n```json\n[\n  {\n    \"image_prompt\": \"Person similar to Cristiano Ronaldo on a soccer field, horror style\",\n    \"folder_reference_id\": \"1Fw2Ceg7xoyupQDUaRUkSmsKwLMK2HeQR\",\n    \"filename_output\": \"image-scene-001\",\n    \"folder_output_id\": \"1cUcjWBCVbYBEFrkj1ZT5lFbQqBRs5PB9\"\n  }\n]\n```\n\n### ⚽ Cartoon Objects – Example Input\n\nExample of a caricature-style object generation input:\n\n```json\n[\n  {\n    \"image_prompt\": \"A caricature soccer ball\",\n    \"folder_reference_id\": \"1w4SaZE7NYMlEnCvCRNOLtabQOO5X_EYb\",\n    \"filename_output\": \"image-scene-002\",\n    \"folder_output_id\": \"1cUcjWBCVbYBEFrkj1ZT5lFbQqBRs5PB9\"\n  }\n]\n```\n\n### 💪 Zack D Style – Anatomy Illustration Example\n\nExample of an illustration inspired by **Zack D–style**.\n\n```json\n[\n  {\n    \"image_prompt\": \"A dog barking at a man, where the man can see his muscle anatomy, Zack D style\",\n    \"folder_reference_id\": \"1Rdazb7BGBH16pxo6sjNOXZ6mjnYh10lr\",\n    \"filename_output\": \"image-scene-003\",\n    \"folder_output_id\": \"1cUcjWBCVbYBEFrkj1ZT5lFbQqBRs5PB9\"\n  }\n]\n```\n",
+        "height": 992,
+        "width": 608
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1536,
+        -720
+      ],
+      "typeVersion": 1,
+      "id": "9c0347e3-5f03-4ff8-9384-44bdddf2549d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Config",
+        "height": 240,
+        "width": 416,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -48,
+        -720
+      ],
+      "typeVersion": 1,
+      "id": "a87b7342-0bf6-4a1c-9075-4d47a9a0e14d",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Get Images Reference",
+        "height": 240,
+        "width": 624,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        416,
+        -720
+      ],
+      "typeVersion": 1,
+      "id": "cc7ea9b6-96a0-4610-94f8-4076031ea621",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Image with Stye Reference",
+        "height": 240,
+        "width": 624,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -48,
+        -432
+      ],
+      "typeVersion": 1,
+      "id": "94a0621d-632b-42f9-afc0-cac9356dec19",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Load Generated Image",
+        "height": 240,
+        "width": 432,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        608,
+        -432
+      ],
+      "typeVersion": 1,
+      "id": "a71cc6a0-d0a7-4371-92a9-26f39a3258fd",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Start').first().json.filename_output }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Start').first().json.folder_output_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        672,
+        -352
+      ],
+      "id": "0f446c28-d2ea-47c3-9587-f4ab3200973b",
+      "name": "Load Generated Image",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "621fe449-f2f3-4154-b7ba-49f012726db4",
+              "name": "output",
+              "value": "={{ $('Load Generated Image').item.json }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        912,
+        -352
+      ],
+      "id": "5ab49f7d-2bdd-4e9f-a196-c69fa3daa35a",
+      "name": "Output"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Reunir todos los parts de todos los candidates\nconst candidates = $('Generate Image - Gemini').first().json.candidates ?? [];\nconst parts = candidates.flatMap(c => c.content?.parts ?? []);\n\n// 2. Buscar el part que tenga inlineData.data (imagen)\nconst imagePart = parts.find(p => p.inlineData?.data);\n\nif (!imagePart) {\n  throw new Error('Gemini no devolvió ninguna imagen en esta ejecución');\n}\n\n// 3. Limpiar el base64 (CRÍTICO)\nconst base64 = imagePart.inlineData.data\n  .replace(/\\s/g, '')\n  .replace(/^data:image\\/\\w+;base64,/, '');\n\n// 4. Detectar mimeType (o fallback)\nconst mimeType = imagePart.inlineData.mimeType || 'image/png';\n\n// 5. Convertir base64 → buffer\nconst buffer = Buffer.from(base64, 'base64');\n\n// 6. Crear binary para n8n\nreturn [\n  {\n    json: {\n      mimeType: mimeType,\n      source: 'gemini'\n    },\n    binary: {\n      data: await this.helpers.prepareBinaryData(\n        buffer,\n        'gemini-image.png',\n        mimeType\n      ),\n    },\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        -352
+      ],
+      "id": "389a2c7e-5232-4139-a5d9-6bf83323bd90",
+      "name": "Base64 to Image"
+    },
+    {
+      "parameters": {
+        "content": "## 🎨 Flujo: Image Style Reference (IA)\n\nEste flujo genera **imágenes originales** copiando únicamente el **estilo visual** de un conjunto de imágenes de referencia.\n\nEstá pensado para **automatizar style references** y mantener una estética coherente en imágenes, videos o assets creativos.\n\n\n### ⚙️ Configuración mínima\n\n* Configura las **credenciales de Google Drive**.\n* Configura la **API Key de Google Gemini**.\n* En el nodo **Start**, define:\n  * `image_prompt`\n  * `folder_reference_id` (carpeta con imágenes de estilo)\n  * `filename_output`\n  * `folder_output_id`\n* Ajusta en el nodo **Config**:\n  * Modelo de Gemini\n  * Número de imágenes de referencia (`n_samples`)\n\n\n### 🧠 **¿Qué hace este flujo?**\n\n* Descarga múltiples imágenes de referencia.\n* Usa esas imágenes **solo como guía de estilo** (color, trazo, iluminación).\n* Genera **una imagen nueva y original** con IA.\n* Guarda automáticamente el resultado en Google Drive.\n\n\n\n📺 **Guía paso a paso en el video:**\n👉 [Cómo configurar paso a paso](https://youtu.be/xxxxxx)\n\n🔔 **Más flujos, guías y automatizaciones** en el canal:\n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n\n\n\n### 💡 Este flujo puede extenderse fácilmente para:\n\n* Crear personajes con el mismo estilo\n* Generar escenas coherentes para video\n* Reutilizar estilos artísticos en distintos proyectos\n",
+        "height": 992,
+        "width": 592
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -896,
+        -720
+      ],
+      "typeVersion": 1,
+      "id": "1eb417b2-3763-4ae6-b0c7-0b8f9d308d75",
+      "name": "Sticky Note5"
+    }
+  ],
+  "pinData": {
+    "Start": [
+      {
+        "json": {
+          "image_prompt": "Una moneda brillante y dorada cae lentamente hacia la ranura de una alcancía de cerámica con forma de cerdito, que tiene una ligera sonrisa en su hocico.",
+          "folder_reference_id": "1w4SaZE7NYMlEnCvCRNOLtabQOO5X_EYb",
+          "filename_output": "image_scene_1",
+          "folder_output_id": "1TspsIsRqgrkUj8yYiPGYvsz6rLn9eFdG"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      },
+      {
+        "json": {
+          "image_prompt": "Dentro de la alcancía, la moneda recién caída se asienta suavemente entre un montón creciente de otras monedas. La alcancía se ve más llena y satisfecha desde su perspectiva interior.",
+          "folder_reference_id": "1w4SaZE7NYMlEnCvCRNOLtabQOO5X_EYb",
+          "filename_output": "image_scene_2",
+          "folder_output_id": "1TspsIsRqgrkUj8yYiPGYvsz6rLn9eFdG"
+        },
+        "pairedItem": {
+          "item": 1
+        }
+      },
+      {
+        "json": {
+          "image_prompt": "La alcancía, ahora visiblemente llena y con una sonrisa más grande y un brillo de expectativa, se asienta en un estante de madera. A su lado hay un pequeño dibujo rudimentario que representa un objetivo futuro, como una casa pequeña o un árbol.",
+          "folder_reference_id": "1w4SaZE7NYMlEnCvCRNOLtabQOO5X_EYb",
+          "filename_output": "image_scene_3",
+          "folder_output_id": "1TspsIsRqgrkUj8yYiPGYvsz6rLn9eFdG"
+        },
+        "pairedItem": {
+          "item": 2
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Images Ref": {
+      "main": [
+        [
+          {
+            "node": "Download Images Ref",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Images Ref": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Generate Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Prompt": {
+      "main": [
+        [
+          {
+            "node": "Generate Image - Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Search Images Ref",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image - Gemini": {
+      "main": [
+        [
+          {
+            "node": "Base64 to Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Generated Image": {
+      "main": [
+        [
+          {
+            "node": "Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base64 to Image": {
+      "main": [
+        [
+          {
+            "node": "Load Generated Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a8f2bab9-e377-4490-a89f-833c2d32d239",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "zkESp5LqbDSNPWNx",
+  "tags": []
+}
