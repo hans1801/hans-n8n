@@ -2,7 +2,7 @@
 
 Colección de **plantillas de n8n** para crear **imágenes y videos automatizados con IA**, utilizando **style reference** para mantener coherencia visual en Shorts, Reels y videos verticales.
 
-Este repositorio reúne flujos listos para **copiar estilos artísticos**, **animar imágenes** y **generar historias completas con objetos animados**.
+Este repositorio reúne flujos listos para **copiar estilos artísticos** y **animar imágenes** 
 
 ---
 
@@ -11,12 +11,8 @@ Este repositorio reúne flujos listos para **copiar estilos artísticos**, **ani
 ### 🎨 Image Style Reference
 Genera **imágenes originales** usando imágenes de referencia **solo como guía de estilo visual**.
 
-### 🎬 Video from Image
+### 🎬 Video to Image
 Convierte una **imagen estática** en un **video corto animado**, manteniendo la estética original.
-
-### 🎭 Stories with Animated Objects
-Crea **historias cortas animadas** con objetos:
-storyboard → imágenes con style reference → videos → unión final automática.
 
 ---
 
@@ -24,8 +20,7 @@ storyboard → imágenes con style reference → videos → unión final automá
 
 - n8n (Cloud o Self-hosted)
 - Google Drive
-- Google Gemini (chat, imagen y video)
-- FFmpeg (para la unión final de videos)
+- Google Gemini (imagen y video)
 
 ---
 
