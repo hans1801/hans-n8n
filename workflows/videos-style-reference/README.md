@@ -25,7 +25,7 @@ Convierte una **imagen estática** en un **video corto animado**, manteniendo la
 ---
 
 📺 **Guía paso a paso completa en video:**
-👉 [Cómo configurar todo el sistema](https://youtu.be/ueKsYtsoWGQ)
+👉 [Cómo configurar todo el sistema](https://youtu.be/fMHL9J8MOyc)
 
 🔔 **Más automatizaciones y flujos avanzados** en el canal:
 👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)
