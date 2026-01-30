@@ -1,5 +1,5 @@
 {
-  "name": "YT - Video from Image",
+  "name": "YT - Image to Video",
   "nodes": [
     {
       "parameters": {
@@ -60,7 +60,7 @@
     },
     {
       "parameters": {
-        "content": "## Image Reference",
+        "content": "## Image Reference - First Frame",
         "height": 240,
         "width": 368,
         "color": 5
@@ -335,13 +335,13 @@
     },
     {
       "parameters": {
-        "content": "## 🎬 Flujo: Video from Image (IA)\n\nEste flujo genera un **video corto** a partir de **una imagen existente**, animándola con IA y manteniendo la composición visual original.\nEs ideal para transformar imágenes estáticas en **Shorts, Reels o clips narrativos** de forma automática.\n\n\n### ⚙️ Configuración mínima\n\n* Configura las **credenciales de Google Drive**.\n* Configura la **API Key de Google Gemini / Veo**.\n* En el nodo **Start**, define:\n  * `prompt` (instrucciones de animación, diálogo o acción)\n  * `image_id` (ID de la imagen base en Google Drive)\n  * `filename_output`\n  * `folder_output_id`\n* En el nodo **Config**, ajusta:\n  * `aspect_ratio` (ej: `9:16` para Shorts)\n  * Modelo de video (Veo)\n\n\n### 🧠 **¿Qué hace este flujo?**\n\n* Descarga una imagen desde Google Drive.\n* Usa la imagen como **referencia visual directa**.\n* Genera un **video animado corto** con IA.\n* Consulta el estado de generación automáticamente.\n* Descarga y guarda el video final en Google Drive.\n\n\n\n📺 **Guía paso a paso en el video:**\n👉 [Cómo configurar paso a paso](https://youtu.be/xxxxxx)\n\n🔔 **Más flujos, guías y automatizaciones** en el canal:\n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n\n\n\n### 💡 Este flujo puede extenderse fácilmente para:\n\n* Crear Shorts animados desde imágenes\n* Dar vida a personajes estáticos\n* Generar escenas para reels o storytelling visual\n* Integrarse con flujos de generación de imágenes\n",
+        "content": "## 🎬 Flujo: Image to Video (IA)\n\nEste flujo genera un **video corto** a partir de **una imagen existente**, animándola con IA y manteniendo la composición visual original.\nEs ideal para transformar imágenes estáticas en **Shorts, Reels o clips narrativos** de forma automática.\n\n\n### ⚙️ Configuración mínima\n\n* Configura las **credenciales de Google Drive**.\n* Configura la **API Key de Google Gemini / Veo**.\n* En el nodo **Start**, define:\n  * `prompt` (instrucciones de animación, diálogo o acción)\n  * `image_id` (ID de la imagen base en Google Drive)\n  * `filename_output`\n  * `folder_output_id`\n* En el nodo **Config**, ajusta:\n  * `aspect_ratio` (ej: `9:16` para Shorts)\n  * Modelo de video (Veo)\n\n\n### 🧠 **¿Qué hace este flujo?**\n\n* Descarga una imagen desde Google Drive.\n* Usa la imagen como **referencia visual directa**.\n* Genera un **video animado corto** con IA.\n* Consulta el estado de generación automáticamente.\n* Descarga y guarda el video final en Google Drive.\n\n\n\n📺 **Guía paso a paso en el video:**\n👉 [Cómo configurar paso a paso](https://youtu.be/xxxxxx)\n\n🔔 **Más flujos, guías y automatizaciones** en el canal:\n👉 [Hans Acha – Canal Oficial](https://www.youtube.com/@Hans-Acha)\n\n\n\n### 💡 Este flujo puede extenderse fácilmente para:\n\n* Crear Shorts animados desde imágenes\n* Dar vida a personajes estáticos\n* Generar escenas para reels o storytelling visual\n* Integrarse con flujos de generación de imágenes\n",
         "height": 992,
         "width": 560
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -688,
+        -672,
         -352
       ],
       "typeVersion": 1,
@@ -353,13 +353,10 @@
     "Start": [
       {
         "json": {
-          "prompt": "{\"dialogue\":\"¡Ja! ¿Fibra? ¡Yo te doy la energía explosiva del potasio para todo el día!\",\"camera\":\"Toma media de ambos frutos.\",\"character_action\":\"El plátano se \\\"estira\\\" un poco mientras habla, sacudiendo ligeramente la punta, la manzana ladea la cabeza con un gesto de desaprobación.\",\"motion\":\"Plátano inclinándose hacia adelante con energía, boca animada. Manzana con parpadeo lento.\",\"effects\":\"Una pequeña \\\"explosión\\\" de energía visual alrededor del plátano al hablar.\",\"notes\":\"La imagen ya está generada; el video anima esa misma escena.\"}",
-          "image_id": "1RSxxLQXBjS7nHanc8cDKFH5LsY-orsIc",
-          "filename_output": "video_scene_2",
-          "folder_output_id": "1jV4ylhlQGFQf0qN89Q7ijg74an0r2Bko"
-        },
-        "pairedItem": {
-          "item": 0
+          "prompt": "A soccer player running in field where behind appear zombies",
+          "image_id": "1AKH9UbcqltZDoqpitkmjU1STdsWKjVEO",
+          "filename_output": "video_scene_1",
+          "folder_output_id": "1cUcjWBCVbYBEFrkj1ZT5lFbQqBRs5PB9"
         }
       }
     ]
@@ -487,7 +484,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "048ba83f-b1ab-4cac-9fdb-8edf2fe94780",
+  "versionId": "30c853be-228b-473d-bcc8-d302847db997",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"

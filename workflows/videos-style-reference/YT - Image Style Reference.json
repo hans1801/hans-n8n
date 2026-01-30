@@ -184,7 +184,7 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -1536,
+        -1344,
         -720
       ],
       "typeVersion": 1,
@@ -225,7 +225,7 @@
     },
     {
       "parameters": {
-        "content": "## Generate Image with Stye Reference",
+        "content": "## Generate Image with Style Reference",
         "height": 240,
         "width": 624,
         "color": 4
@@ -331,7 +331,7 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -896,
+        -704,
         -720
       ],
       "typeVersion": 1,
@@ -343,35 +343,10 @@
     "Start": [
       {
         "json": {
-          "image_prompt": "Una moneda brillante y dorada cae lentamente hacia la ranura de una alcancía de cerámica con forma de cerdito, que tiene una ligera sonrisa en su hocico.",
-          "folder_reference_id": "1w4SaZE7NYMlEnCvCRNOLtabQOO5X_EYb",
-          "filename_output": "image_scene_1",
-          "folder_output_id": "1TspsIsRqgrkUj8yYiPGYvsz6rLn9eFdG"
-        },
-        "pairedItem": {
-          "item": 0
-        }
-      },
-      {
-        "json": {
-          "image_prompt": "Dentro de la alcancía, la moneda recién caída se asienta suavemente entre un montón creciente de otras monedas. La alcancía se ve más llena y satisfecha desde su perspectiva interior.",
-          "folder_reference_id": "1w4SaZE7NYMlEnCvCRNOLtabQOO5X_EYb",
-          "filename_output": "image_scene_2",
-          "folder_output_id": "1TspsIsRqgrkUj8yYiPGYvsz6rLn9eFdG"
-        },
-        "pairedItem": {
-          "item": 1
-        }
-      },
-      {
-        "json": {
-          "image_prompt": "La alcancía, ahora visiblemente llena y con una sonrisa más grande y un brillo de expectativa, se asienta en un estante de madera. A su lado hay un pequeño dibujo rudimentario que representa un objetivo futuro, como una casa pequeña o un árbol.",
-          "folder_reference_id": "1w4SaZE7NYMlEnCvCRNOLtabQOO5X_EYb",
-          "filename_output": "image_scene_3",
-          "folder_output_id": "1TspsIsRqgrkUj8yYiPGYvsz6rLn9eFdG"
-        },
-        "pairedItem": {
-          "item": 2
+          "image_prompt": "Person similar to Cristiano Ronaldo on a soccer field, horror style",
+          "folder_reference_id": "1Fw2Ceg7xoyupQDUaRUkSmsKwLMK2HeQR",
+          "filename_output": "image-scene-001",
+          "folder_output_id": "1cUcjWBCVbYBEFrkj1ZT5lFbQqBRs5PB9"
         }
       }
     ]
@@ -481,7 +456,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "a8f2bab9-e377-4490-a89f-833c2d32d239",
+  "versionId": "33dcaa94-3b4d-4bb0-83fd-b69b41953ae5",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"

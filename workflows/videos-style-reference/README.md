@@ -11,7 +11,7 @@ Este repositorio reúne flujos listos para **copiar estilos artísticos** y **an
 ### 🎨 Image Style Reference
 Genera **imágenes originales** usando imágenes de referencia **solo como guía de estilo visual**.
 
-### 🎬 Video to Image
+### 🎬 Image to Video
 Convierte una **imagen estática** en un **video corto animado**, manteniendo la estética original.
 
 ---
