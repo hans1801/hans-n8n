@@ -90,7 +90,7 @@ style_reference_images_folder_id: "ID carpeta estilo"
 
 ---
 
-📺 **Tutorial:** [youtu.be/xxxxxx](https://youtu.be/xxxxxx)  
+📺 **Tutorial:** [youtu.be/zV8SW8EIBdg](https://youtu.be/zV8SW8EIBdg)  
 🔔 **Canal:** [Hans Acha](https://www.youtube.com/@Hans-Acha)
 
 ---
