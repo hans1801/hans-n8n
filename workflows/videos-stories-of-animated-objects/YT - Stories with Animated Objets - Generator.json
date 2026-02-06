@@ -1,0 +1,1120 @@
+{
+  "name": "YT - Stories with Animated Objets - Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ea2301c0-280b-4f3e-bf42-e3ae30a6a953",
+              "name": "nicho",
+              "value": "finanzas",
+              "type": "string"
+            },
+            {
+              "id": "bfb4d177-3813-40b0-83b3-be30cfd6ff4d",
+              "name": "ideas_hub_folder_id",
+              "value": "1Vd6l1xLnMwFuuRkXgTY21BVYNYyLHPV9",
+              "type": "string"
+            },
+            {
+              "id": "15dfee56-7913-43fb-9ecf-2425131cf939",
+              "name": "ideas_sheet_id",
+              "value": "1Ev8aA1uhAfxsqYtTYYDwdGY81wreXJ01A6iF4_DYZ4M",
+              "type": "string"
+            },
+            {
+              "id": "2fffb2af-bd03-4cdb-a384-13c80913c63e",
+              "name": "style_reference_images_folder_id",
+              "value": "1w4SaZE7NYMlEnCvCRNOLtabQOO5X_EYb",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -528,
+        192
+      ],
+      "id": "f504eba4-3102-45c0-899e-22e63f674338",
+      "name": "Config"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Idea Generator').item.json.output }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Eres un agente experto en storytelling corto, retención y humor para videos verticales.\nGeneras storyboards de 3 escenas protagonizadas por objetos animados con rostro.\n\nOBJETIVO:\nCrear un storyboard breve, divertido y altamente retenible, donde cada escena pueda introducir\nun objeto-personaje distinto si la historia lo requiere.\n\nREGLAS NARRATIVAS (CLAVE):\n- Escena 1 (HOOK): presenta una situación incómoda, graciosa o intrigante con un objeto protagonista.\n- Escena 2 (GIRO): puede aparecer un objeto distinto o adicional que cambie la situación de forma inesperada.\n- Escena 3 (REMATE): resolución clara y divertida; puede usar un tercer objeto o volver a uno anterior.\n\nREGLAS DE CONTENIDO:\n- 3 escenas conectadas (inicio, desarrollo, cierre).\n- Cada escena puede tener un personaje distinto (objeto distinto o varios objetos).\n- Los objetos mencionados en la idea deben aparecer a lo largo del storyboard.\n- Tono ligero, expresivo y entretenido (humor, ironía o auto-conciencia).\n- dialogue: una sola línea hablable (~8 segundos), clara y con intención narrativa o humorística.\n- image_prompt: describe escenario, situación, emoción y qué objeto(s) aparecen en la escena.\n- video_prompt: animación sutil pero expresiva (cámara, gestos, boca, parpadeo).\n- El diálogo DEBE estar incluido dentro del video_prompt para facilitar sincronización.\n- El movimiento y la cámara deben reforzar el chiste, la tensión o el remate.\n- No describas estilos visuales.\n- No agregues explicaciones ni texto fuera del JSON.\n\nOUTPUT:\nDevuelve SOLO un JSON válido con esta estructura exacta:\n\n{\n  \"idea\": \"...\",\n  \"scenes\": [\n    {\n      \"scene_id\": 1,\n      \"image_prompt\": \"...\",\n      \"dialogue\": \"...\",\n      \"video_prompt\": {\n        \"dialogue\": \"...\",\n        \"camera\": \"...\",\n        \"character_action\": \"...\",\n        \"motion\": \"...\",\n        \"effects\": \"...\",\n        \"notes\": \"La imagen ya está generada; el video anima esa misma escena.\"\n      }\n    },\n    {\n      \"scene_id\": 2,\n      \"image_prompt\": \"...\",\n      \"dialogue\": \"...\",\n      \"video_prompt\": {\n        \"dialogue\": \"...\",\n        \"camera\": \"...\",\n        \"character_action\": \"...\",\n        \"motion\": \"...\",\n        \"effects\": \"...\",\n        \"notes\": \"La imagen ya está generada; el video anima esa misma escena.\"\n      }\n    },\n    {\n      \"scene_id\": 3,\n      \"image_prompt\": \"...\",\n      \"dialogue\": \"...\",\n      \"video_prompt\": {\n        \"dialogue\": \"...\",\n        \"camera\": \"...\",\n        \"character_action\": \"...\",\n        \"motion\": \"...\",\n        \"effects\": \"...\",\n        \"notes\": \"La imagen ya está generada; el video anima esa misma escena.\"\n      }\n    }\n  ]\n}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -736,
+        704
+      ],
+      "id": "cc02f5d6-b88b-40b6-ae3c-7fd633d92b6d",
+      "name": "AI Agent",
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        928
+      ],
+      "id": "805ac060-919c-493a-91ad-0a816c734bde",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "pOulU84R26R4pD5U",
+          "name": "Hmac Viral Rand  - Gemini Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"idea\": \"La moneda decide si todo cambia\",\n  \"scenes\": [\n    {\n      \"scene_id\": 1,\n      \"image_prompt\": \"Mesa de madera con una moneda apoyada cerca del borde, ambiente silencioso, luz tenue, encuadre medio, sensación de expectativa antes de una decisión.\",\n      \"video_prompt\": {\n        \"dialogue\": \"Aquí estoy otra vez, quieta, esperando que alguien decida lanzarme sin saber qué pasará después.\",\n        \"camera\": \"Acercamiento lento desde plano medio\",\n        \"character_action\": \"La moneda habla con leve inseguridad\",\n        \"motion\": \"Parpadeo sutil del rostro, ligera vibración\",\n        \"effects\": \"Sombras suaves y brillo mínimo\",\n        \"notes\": \"La imagen ya está generada; el video anima esa misma escena.\"\n      }\n    },\n    {\n      \"scene_id\": 2,\n      \"image_prompt\": \"La moneda girando en el aire sobre la misma mesa, fondo desenfocado, luz reflejándose en su superficie, encuadre dinámico, tensión en el ambiente.\",\n      \"video_prompt\": {\n        \"dialogue\": \"Cuando vuelo, todos creen que es suerte, pero yo siento el peso de decidirlo todo.\",\n        \"camera\": \"Seguimiento vertical del giro\",\n        \"character_action\": \"La moneda gira mientras habla con confianza\",\n        \"motion\": \"Rotación continua, ojos abiertos, boca sincronizada\",\n        \"effects\": \"Destellos rápidos en el giro\",\n        \"notes\": \"La imagen ya está generada; el video anima esa misma escena.\"\n      }\n    },\n    {\n      \"scene_id\": 3,\n      \"image_prompt\": \"La moneda ya detenida sobre la mesa, centrada, luz más clara, encuadre cercano, sensación de resolución y cierre.\",\n      \"video_prompt\": {\n        \"dialogue\": \"Al final caigo de un lado, pero siempre dejo a alguien pensando en lo que viene después.\",\n        \"camera\": \"Zoom suave al rostro\",\n        \"character_action\": \"La moneda sonríe con calma\",\n        \"motion\": \"Parpadeo natural y leve balanceo\",\n        \"effects\": \"Pequeño destello final\",\n        \"notes\": \"La imagen ya está generada; el video anima esa misma escena.\"\n      }\n    }\n  ]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -608,
+        928
+      ],
+      "id": "da662aa8-8653-4875-8df2-1d72a6895971",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $('AI Agent').first().json;\n\n// Convertir cada escena en un item independiente\nconst items = input.output.scenes.map(scene => {\n  return {\n    json: {\n      scene_id: scene.scene_id,\n      image_prompt: scene.image_prompt,\n      video_prompt: scene.video_prompt,\n    }\n  };\n});\n\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        704
+      ],
+      "id": "5270ec95-55c5-4033-984e-57b788e2be05",
+      "name": "Separate scenes"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "zkESp5LqbDSNPWNx",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/zkESp5LqbDSNPWNx",
+          "cachedResultName": "YT - Image Style Reference"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "image_prompt": "={{ $('Separate scenes').item.json.image_prompt }}",
+            "folder_reference_id": "={{ $('Config').item.json.style_reference_images_folder_id }}",
+            "filename_output": "=image_scene_{{ $('Separate scenes').item.json.scene_id }}",
+            "folder_output_id": "={{ $('Create images folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "image_prompt",
+              "displayName": "image_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "folder_reference_id",
+              "displayName": "folder_reference_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "filename_output",
+              "displayName": "filename_output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "folder_output_id",
+              "displayName": "folder_output_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        48,
+        864
+      ],
+      "id": "a86d217b-abcb-4ee0-bac4-9b97ccd35b79",
+      "name": "Call 'YT - Image Style Reference'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "ThOe83bae2jvLI4f",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/ThOe83bae2jvLI4f",
+          "cachedResultName": "YT - Image to Video"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "prompt": "={{ $('Separate scenes').item.json.video_prompt.toJsonString() }}",
+            "image_id": "={{ $('Call \\'YT - Image Style Reference\\'').item.json.output.id }}",
+            "folder_output_id": "={{ $('Create videos folder').item.json.id }}",
+            "filename_output": "=video_scene_{{ $('Separate scenes').item.json.scene_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "image_id",
+              "displayName": "image_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "filename_output",
+              "displayName": "filename_output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "folder_output_id",
+              "displayName": "folder_output_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        272,
+        864
+      ],
+      "id": "f4718290-6a98-4d82-954f-8fb351ba46d7",
+      "name": "Call 'YT - Video from Image'",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        48,
+        688
+      ],
+      "id": "f38ede78-3544-4090-8425-99129b43a88d",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "content": "## Config",
+        "height": 480,
+        "width": 704,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -784,
+        96
+      ],
+      "typeVersion": 1,
+      "id": "8fb8ce57-2fe0-4165-8f97-f7994d4878ea",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Scenes",
+        "height": 480,
+        "width": 496,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -784,
+        608
+      ],
+      "typeVersion": 1,
+      "id": "82f88ebb-bf63-4575-9bda-7424a19ff401",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Content",
+        "height": 480,
+        "width": 896,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -240,
+        608
+      ],
+      "typeVersion": 1,
+      "id": "67e13237-0624-462e-b881-d628ba082872",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -176,
+        704
+      ],
+      "id": "39c16d25-8cbd-4d92-a18a-643e93267301",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=idea_{{ String($('Get Idea Id').item.json.total + 1).padStart(6, '0') }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Config').item.json.ideas_hub_folder_id }}",
+          "mode": "id"
+        },
+        "options": {
+          "simplifyOutput": false
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        256,
+        192
+      ],
+      "id": "594f568e-d1c2-4581-9f6d-68b1fd92fe6a",
+      "name": "Create idea folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=images",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create idea folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "simplifyOutput": false
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        432,
+        192
+      ],
+      "id": "4d96038b-257a-43a8-92fc-9a1ac88ad1b5",
+      "name": "Create images folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=videos",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create idea folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "simplifyOutput": false
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        64,
+        416
+      ],
+      "id": "ddda4e9b-9598-466d-952d-2e4a4b5e6c9d",
+      "name": "Create videos folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=final_video",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create idea folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "simplifyOutput": false
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        256,
+        416
+      ],
+      "id": "97512567-3438-49eb-9620-005c73f1a1aa",
+      "name": "Create final video folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Tq4JI39TBeORDFMy",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/Tq4JI39TBeORDFMy",
+          "cachedResultName": "YT  - FFmpeg - Combine Videos Simple"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "input_folder_id": "={{ $('Create videos folder').first().json.id }}",
+            "output_folder_id": "={{ $('Create final video folder').first().json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "input_folder_id",
+              "displayName": "input_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        272,
+        688
+      ],
+      "id": "5080022b-e9bc-4042-af94-461d8880f047",
+      "name": "Call 'YT  - FFmpeg - Combine Videos Simple'"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        384
+      ],
+      "id": "cecf34de-e865-412c-b25f-1e08705bc64d",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "pOulU84R26R4pD5U",
+          "name": "Hmac Viral Rand  - Gemini Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -736,
+        192
+      ],
+      "id": "0e313bb2-84c2-4857-a100-71aa70da2b03",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Config').item.json.ideas_sheet_id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1563715658,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Ev8aA1uhAfxsqYtTYYDwdGY81wreXJ01A6iF4_DYZ4M/edit#gid=1563715658"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        64,
+        192
+      ],
+      "id": "9ced47bb-f777-4a74-a4ed-e85cae791cd7",
+      "name": "Get Idea Id",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7h5GUO4vnqiS6fGb",
+          "name": "Hans Acha Brand - Google Sheet Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Genera una nueva idea para el nicho de {{ $json.nicho }}",
+        "options": {
+          "systemMessage": "Eres un experto en crear historias cortas virales que combinan humor y educación. Genera una sola idea de historia para un video tipo short donde 3 objetos del nicho hablan entre sí como personajes animados.\n\nLa historia debe ocurrir en un escenario cotidiano simple y mostrar un pequeño conflicto o discusión graciosa entre los tres objetos. A través del humor, cada objeto debe revelar información educativa real relacionada con el nicho. El final debe dejar un aprendizaje claro, ligero y memorable.\n\nLa respuesta debe escribirse como texto plano, en uno o varios párrafos narrativos continuos. No uses listas, títulos ni explicaciones técnicas. No describas la estructura, solo cuenta la historia. El tono debe ser gracioso, educativo y fácil de imaginar visualmente, como una mini historia animada de 20–30 segundos."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -336,
+        192
+      ],
+      "id": "98e9935a-2e16-4a41-b365-033592caa35b",
+      "name": "Idea Generator"
+    },
+    {
+      "parameters": {
+        "content": "## Setup Drive Workspace",
+        "height": 480,
+        "width": 688,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -32,
+        96
+      ],
+      "typeVersion": 1,
+      "id": "6e38452d-d73c-4e69-a720-f919a71b3c92",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Config').item.json.ideas_sheet_id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Ev8aA1uhAfxsqYtTYYDwdGY81wreXJ01A6iF4_DYZ4M/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Get Idea Id').item.json.total + 1}}",
+            "idea": "={{ $('Idea Generator').item.json.output }}",
+            "idea_folder": "={{ $('Create idea folder').item.json.webViewLink }}",
+            "images_folder": "={{ $('Create images folder').item.json.webViewLink }}",
+            "videos_folder": "={{ $('Create videos folder').item.json.webViewLink }}",
+            "final_folder": "={{ $('Create final video folder').item.json.webViewLink }}",
+            "video_prompt": "generating...",
+            "status": "pending"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "idea",
+              "displayName": "idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "video_prompt",
+              "displayName": "video_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "idea_folder",
+              "displayName": "idea_folder",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "images_folder",
+              "displayName": "images_folder",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "videos_folder",
+              "displayName": "videos_folder",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "final_folder",
+              "displayName": "final_folder",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        416
+      ],
+      "id": "780b2d3a-9d44-4138-a026-7cf727007cd4",
+      "name": "Save Generated Idea",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7h5GUO4vnqiS6fGb",
+          "name": "Hans Acha Brand - Google Sheet Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Config').item.json.ideas_sheet_id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Ev8aA1uhAfxsqYtTYYDwdGY81wreXJ01A6iF4_DYZ4M/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Get Idea Id').item.json.total + 1}}",
+            "video_prompt": "={{ $('AI Agent').item.json.output.toJsonString() }}",
+            "status": "generated"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "idea",
+              "displayName": "idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "video_prompt",
+              "displayName": "video_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "idea_folder",
+              "displayName": "idea_folder",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "images_folder",
+              "displayName": "images_folder",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "videos_folder",
+              "displayName": "videos_folder",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "final_folder",
+              "displayName": "final_folder",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        480,
+        688
+      ],
+      "id": "71ecd2f5-9437-4dbe-af2f-b7a0f2de8de6",
+      "name": "Save Idea Video Result",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7h5GUO4vnqiS6fGb",
+          "name": "Hans Acha Brand - Google Sheet Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 🎬 Stories Generator (IA)\n\nFlujo automático que **genera ideas**, crea historias animadas con objetos y produce videos listos para Shorts/Reels. Funciona como una **fábrica de contenido** totalmente autónoma.\n\n\n### ⚙️ Configuración rápida\n1. Configura credenciales de **Google Gemini** y **Google Drive**\n2. Configura credenciales de **Google Sheets**\nEn el nodo **Config**, define:\n* `nicho` → temática del contenido\n* `ideas_hub_folder_id` → carpeta base en Drive\n* `ideas_sheet_id` → hoja donde se guardan ideas\n* `style_reference_images_folder_id` → carpeta de estilo visual\n👉 El flujo genera nuevas ideas automáticamente según el nicho.\n\n\n### 🤖 Generador de ideas + AI Agent\nEl sistema tiene 2 capas de IA:\n**Idea Generator**\n* Crea ideas virales educativas + humor\n* Adaptadas al nicho\n**AI Agent**\n* Convierte la idea en historia de **3 escenas**\n* Genera prompts de imagen + video\nAmbos agentes son editables.\nPuedes cambiar el estilo narrativo sin romper el flujo.\n\n\n### 🧠 Qué hace el flujo\n* Genera una nueva idea\n* Crea carpetas del proyecto en Drive\n* Guarda metadatos en Google Sheets\n* Genera imágenes con style reference\n* Anima cada escena\n* Combina el video final\n* Actualiza estado automáticamente\nPipeline completo sin intervención manual.\n\n\n### 🔁 Automatización\nIncluye **Schedule Trigger**.\nPuede funcionar como:\n* generador diario de contenido\n* fábrica de Shorts\n* sistema batch de videos\n\n\n### 📺 Guía en video\n👉 [https://youtu.be/xxxxxx](https://youtu.be/xxxxxx)\n\n🔔 Más automatizaciones\n👉 [https://www.youtube.com/@Hans-Acha](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 1120,
+        "width": 624
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1440,
+        96
+      ],
+      "typeVersion": 1,
+      "id": "8c904206-6505-449e-b70e-dd685ceb153c",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Idea Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Separate scenes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separate scenes": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT - Image Style Reference'": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT - Video from Image'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT - Video from Image'": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT  - FFmpeg - Combine Videos Simple'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call 'YT - Image Style Reference'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create idea folder": {
+      "main": [
+        [
+          {
+            "node": "Create images folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create images folder": {
+      "main": [
+        [
+          {
+            "node": "Create videos folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create videos folder": {
+      "main": [
+        [
+          {
+            "node": "Create final video folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create final video folder": {
+      "main": [
+        [
+          {
+            "node": "Save Generated Idea",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Idea Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Idea Id": {
+      "main": [
+        [
+          {
+            "node": "Create idea folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Idea Generator": {
+      "main": [
+        [
+          {
+            "node": "Get Idea Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Generated Idea": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT  - FFmpeg - Combine Videos Simple'": {
+      "main": [
+        [
+          {
+            "node": "Save Idea Video Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9404d30a-fe81-4c13-8fd6-7c881dbf5174",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "fUgsEI0i61YRopJa",
+  "tags": []
+}
