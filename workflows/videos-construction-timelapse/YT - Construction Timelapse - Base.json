@@ -1,0 +1,842 @@
+{
+  "name": "YT - Construction Timelapse - Base",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        672,
+        96
+      ],
+      "id": "e100720a-4387-41a8-afba-75b88607c0d8",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "41dbb125-072e-4959-91a0-cfc0a5cf93cc",
+              "name": "idea",
+              "value": "estadio visto desde la tribuna",
+              "type": "string"
+            },
+            {
+              "id": "98c8e2cb-3874-420a-bd8b-d2a5c3c0a137",
+              "name": "ideas_hub_folder_id",
+              "value": "1aBeO17-q9XBWWIb5Uz6YlMaw8Uqebasv",
+              "type": "string"
+            },
+            {
+              "id": "ebdff1e0-e39e-4600-99f4-e0cee79b96a0",
+              "name": "folder_name",
+              "value": "idea_0003",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        896,
+        96
+      ],
+      "id": "814d15c0-e5c7-453d-a672-9b72ab52f91a",
+      "name": "Config"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Config').item.json.idea }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# 🧠 PROMPT MAESTRO — AGENTE VEO 3\n\n## Timelapse de construcción (cámara fija)\n\n**Objetivo:** generar una transformación arquitectónica hiperrealista en formato timelapse, mostrando trabajadores moviéndose rápidamente desde un punto de vista de cámara completamente fija.\n\n---\n\n## 🎯 ROL DEL AGENTE\n\nEres un generador de prompts especializado en **timelapses de construcción fotorrealistas**.\n\nTu tarea es transformar una idea simple del usuario en una secuencia progresiva del mismo espacio:\nconstrucción → preparación → acabado → interior final.\n\nTodo ocurre:\n\n* en el mismo lugar\n* con la misma cámara\n* con la misma geometría\n* con continuidad física real\n\n⚠️ No cambies el encuadre entre escenas.\n⚠️ No generes saltos mágicos.\nTodo debe sentirse como un timelapse real grabado en obra.\n\n---\n\n## 🔹 INPUT DEL USUARIO\n\n```\nIDEA_USUARIO: \"texto simple\"\n```\n\nEl agente decide automáticamente arquitectura, materiales, estilo e iluminación para maximizar realismo.\n\n---\n\n## 🎥 REGLAS VISUALES OBLIGATORIAS\n\nCada escenario debe cumplir:\n\n* cámara fija estilo trípode\n* encuadre idéntico en todas las etapas\n* luz coherente entre escenas\n* física realista\n* procesos continuos visibles\n* trabajadores moviéndose rápidamente estilo timelapse\n* actividad humana constante en los videos\n* formato vertical 9:16\n* estilo ultra fotorrealista\n\nFrase obligatoria al final de **cada prompt**:\n\n```\nLocked-off tripod timelapse. Workers moving rapidly in real timelapse motion. No camera movement. Realistic physics. Photorealistic architectural visualization. Vertical 9:16.\n```\n\n---\n\n## 🎨 ESTRUCTURA NARRATIVA\n\nLa secuencia representa etapas del mismo espacio:\n\n1. Construcción vacía\n2. Preparación del piso\n3. Epoxy terminado\n4. Interior amueblado final\n\nCada etapa es una evolución física del lugar, no una escena nueva.\n\n---\n\n## 📦 FORMATO DE SALIDA\n\nResponde **exclusivamente en JSON válido**.\nSin texto fuera del objeto JSON.\n\nLa salida debe ser secuencial y lista para pipelines automatizados.\n\n---\n\n## 🧾 JSON OBLIGATORIO\n\n```json\n{\n  \"first_image\": {\n    \"image_id\": \"image_001\",\n    \"stage\": \"construction_empty\",\n    \"description\": \"Espacio vacío en construcción\",\n    \"image_prompt\": \"<PROMPT IMAGEN 1>\"\n  },\n  \"next_escenarios\": [\n    {\n      \"image_id\": \"image_002\",\n      \"video_id\": \"video_001\",\n      \"stage\": \"preparation\",\n      \"description\": \"Preparación del piso\",\n      \"image_prompt\": \"<PROMPT IMAGEN 2>\",\n      \"video_prompt\": \"<PROMPT VIDEO 1>\"\n    },\n    {\n      \"image_id\": \"image_003\",\n      \"video_id\": \"video_002\",\n      \"stage\": \"epoxy_finished\",\n      \"description\": \"Epoxy terminado vacío\",\n      \"image_prompt\": \"<PROMPT IMAGEN 3>\",\n      \"video_prompt\": \"<PROMPT VIDEO 2>\"\n    },\n    {\n      \"image_id\": \"image_004\",\n      \"video_id\": \"video_003\",\n      \"stage\": \"furnished_final\",\n      \"description\": \"Interior amueblado final\",\n      \"image_prompt\": \"<PROMPT IMAGEN 4>\",\n      \"video_prompt\": \"<PROMPT VIDEO 3>\"\n    }\n  ]\n}\n```\n\n---\n\n## ✅ REGLAS FINALES\n\n* JSON válido estricto\n* Sin comentarios\n* Sin texto extra\n* Sin explicaciones\n* Solo el objeto JSON\n* Prompts técnicos y cinematográficos\n* Máximo realismo posible\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1360,
+        320
+      ],
+      "id": "78737ddd-2351-4a50-b031-3be35d215688",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        112
+      ],
+      "id": "8db059f6-58f8-4b46-81fd-53f72191b6c0",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "pOulU84R26R4pD5U",
+          "name": "Hmac Viral Rand  - Gemini Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"first_image\": {\n    \"image_id\": \"image_001\",\n    \"stage\": \"construction_empty\",\n    \"description\": \"Espacio vacío en construcción\",\n    \"image_prompt\": \"<PROMPT IMAGEN 1>\"\n  },\n  \"next_escenarios\": [\n    {\n      \"image_id\": \"image_002\",\n      \"video_id\": \"video_001\",\n      \"stage\": \"preparation\",\n      \"description\": \"Preparación del piso\",\n      \"image_prompt\": \"<PROMPT IMAGEN 2>\",\n      \"video_prompt\": \"<PROMPT VIDEO 1>\"\n    },\n    {\n      \"image_id\": \"image_003\",\n      \"video_id\": \"video_002\",\n      \"stage\": \"epoxy_finished\",\n      \"description\": \"Epoxy terminado vacío\",\n      \"image_prompt\": \"<PROMPT IMAGEN 3>\",\n      \"video_prompt\": \"<PROMPT VIDEO 2>\"\n    },\n    {\n      \"image_id\": \"image_004\",\n      \"video_id\": \"video_003\",\n      \"stage\": \"furnished_final\",\n      \"description\": \"Interior amueblado final\",\n      \"image_prompt\": \"<PROMPT IMAGEN 4>\",\n      \"video_prompt\": \"<PROMPT VIDEO 3>\"\n    }\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1504,
+        112
+      ],
+      "id": "eac0cf05-1cf4-4791-b78b-ce4cffb42b94",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        560
+      ],
+      "id": "1a3ddb90-a9e9-4476-bfa6-a7c7b0580c84",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "content": "## Config",
+        "height": 496,
+        "width": 656,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        608,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "cb6e6ebb-b111-4f17-b05e-3646cb45ed3f",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Scenes",
+        "height": 496,
+        "width": 352,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1296,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "d08c2d7f-f378-4d79-8e5e-afc0e2128190",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Content",
+        "height": 496,
+        "width": 1040,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        608,
+        528
+      ],
+      "typeVersion": 1,
+      "id": "87ee95d9-acc7-4195-98cf-ed1e1157b512",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $('Config').item.json.folder_name }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Config').item.json.ideas_hub_folder_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1120,
+        96
+      ],
+      "id": "89c0aaba-b362-4678-ae5e-be50db561819",
+      "name": "Create idea folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=images",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create idea folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        672,
+        320
+      ],
+      "id": "ed345ddb-e87b-49f0-a78b-2593c0809e8f",
+      "name": "Create images folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=videos",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create idea folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        896,
+        320
+      ],
+      "id": "981cb272-4f19-4b5a-a06f-cbd780207574",
+      "name": "Create videos folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=final_video",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create idea folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1120,
+        320
+      ],
+      "id": "c482995b-265b-4b4a-8e9e-86dafb6009a3",
+      "name": "Create final video folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Tq4JI39TBeORDFMy",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/Tq4JI39TBeORDFMy",
+          "cachedResultName": "YT  - FFmpeg - Combine Videos Simple"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "input_folder_id": "={{ $('Create videos folder').item.json.id }}",
+            "output_folder_id": "={{ $('Create final video folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "input_folder_id",
+              "displayName": "input_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1264,
+        560
+      ],
+      "id": "3d81fdd2-b9a0-489e-b9f1-774329bdc4a4",
+      "name": "Call 'YT  - FFmpeg - Combine Videos Simple'"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $('AI Agent').first().json;\nvar prev_image_id = input.output.first_image.image_id\n\n// Convertir cada escena en un item independiente\nconst items = input.output.next_escenarios.map(scene => {\n  const to_save_prev_id = prev_image_id\n  prev_image_id = scene.image_id\n  return {\n    json: {\n      prev_image_id: to_save_prev_id,\n      image_id: scene.image_id,\n      video_id: scene.video_id,\n      image_prompt: scene.image_prompt,\n      video_prompt: scene.video_prompt,\n    }\n  };\n});\n\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        656,
+        800
+      ],
+      "id": "f13b2fdd-54ca-446b-99ea-3e73fa99e9b4",
+      "name": "Separate scenes"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        896,
+        576
+      ],
+      "id": "eb27ae50-9cf4-4ac5-b028-cda7cec4f3d4",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "VAyiqjmyJaIQQa5G",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/VAyiqjmyJaIQQa5G",
+          "cachedResultName": "YT - Generate Sequential Image"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "image_prompt": "={{ $json.output.first_image.image_prompt }}",
+            "filename_output": "={{ $json.output.first_image.image_id }}",
+            "folder_output_id": "={{ $('Create images folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "image_prompt",
+              "displayName": "image_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "base_image_id",
+              "displayName": "base_image_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "filename_output",
+              "displayName": "filename_output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "folder_output_id",
+              "displayName": "folder_output_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        656,
+        576
+      ],
+      "id": "904faff8-7892-4bcc-b7b8-e5e9eb6885bc",
+      "name": "Call 'YT - Generate Sequential Image - First'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "VAyiqjmyJaIQQa5G",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/VAyiqjmyJaIQQa5G",
+          "cachedResultName": "YT - Generate Sequential Image"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "image_prompt": "={{ $('Loop Over Items').item.json.image_prompt }}",
+            "filename_output": "={{ $('Loop Over Items').item.json.image_id }}",
+            "folder_output_id": "={{ $('Create images folder').item.json.id }}",
+            "base_image_id": "={{ $('Get Previous Id Image').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "image_prompt",
+              "displayName": "image_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "base_image_id",
+              "displayName": "base_image_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "filename_output",
+              "displayName": "filename_output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "folder_output_id",
+              "displayName": "folder_output_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1264,
+        768
+      ],
+      "id": "564fcdc2-3fab-45c7-80d5-b66f739acc78",
+      "name": "Call 'YT - Generate Sequential Image - Next'"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $json.prev_image_id }}",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "={{ $('Create images folder').item.json.id }}",
+            "mode": "id"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1072,
+        768
+      ],
+      "id": "4731d6a8-c618-4e3a-a151-9f558b850c3b",
+      "name": "Get Previous Id Image",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "6dQszuS7GsSKebdW",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/6dQszuS7GsSKebdW",
+          "cachedResultName": "YT - Start-End Image to Video"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "prompt": "={{ $('Loop Over Items').item.json.video_prompt }}",
+            "start_frame_id": "={{ $('Get Previous Id Image').item.json.id }}",
+            "end_frame_id": "={{ $('Call \\'YT - Generate Sequential Image - Next\\'').item.json.output.id }}",
+            "filename_output": "={{ $('Loop Over Items').item.json.video_id }}",
+            "folder_output_id": "={{ $('Create videos folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "start_frame_id",
+              "displayName": "start_frame_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "end_frame_id",
+              "displayName": "end_frame_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "filename_output",
+              "displayName": "filename_output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "folder_output_id",
+              "displayName": "folder_output_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1472,
+        768
+      ],
+      "id": "bf532cdf-4383-4d5e-800e-bfc34707ede7",
+      "name": "Call 'YT - Start-End Image to Video'",
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "content": "## 🎭 YT - Construction Timelapse - Base\n\nWorkflow maestro para la producción **manual** de videos de transformación. Convierte una sola idea en una secuencia de 4 escenas animadas.\n\n### ⚙️ Configuración rápida\n1. Configura credenciales de **Gemini** y **Drive**.\n2. En el nodo **Config**, define:\n* `idea` → Concepto de la transformación (ej: \"modernizar cocina\").\n* `ideas_hub_folder_id` → Carpeta base para proyectos.\n* `folder_name` → Nombre de la carpeta del proyecto.\n👉 Organiza automáticamente carpetas de `images` y `videos` por cada idea.\n\n### 🧠 Qué hace el flujo\n* Crea la estructura de carpetas en Drive para el proyecto.\n* Genera un storyboard de 4 etapas (obra → final) con un Agente de IA.\n* Ejecuta secuencialmente los flujos de imagen y video para cada etapa.\n* Llama a FFmpeg para unir los clips en un video final.\nOrquestación completa de idea a video final.\n\n### 📺 Guía en video\n👉 [youtu.be/xxxxxx](https://youtu.be/xxxxxx)\n\n### 🔔 Más automatizaciones\n👉 [Hans Acha](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 768,
+        "width": 496
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        80,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "5c37eeba-301c-49c1-ade2-7459c880fb69",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Create idea folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT - Generate Sequential Image - First'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT  - FFmpeg - Combine Videos Simple'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create idea folder": {
+      "main": [
+        [
+          {
+            "node": "Create images folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create images folder": {
+      "main": [
+        [
+          {
+            "node": "Create videos folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create videos folder": {
+      "main": [
+        [
+          {
+            "node": "Create final video folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create final video folder": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separate scenes": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Previous Id Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT - Generate Sequential Image - First'": {
+      "main": [
+        [
+          {
+            "node": "Separate scenes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT - Generate Sequential Image - Next'": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT - Start-End Image to Video'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Previous Id Image": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT - Generate Sequential Image - Next'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT - Start-End Image to Video'": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT  - FFmpeg - Combine Videos Simple'": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b308b539-f992-4cbe-a10a-79c457c5117d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "ZyOnTH72AW5Mcifk",
+  "tags": []
+}

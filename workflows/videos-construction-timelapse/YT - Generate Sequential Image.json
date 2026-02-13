@@ -1,0 +1,478 @@
+{
+  "name": "YT - Generate Sequential Image",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "image_prompt"
+            },
+            {
+              "name": "base_image_id"
+            },
+            {
+              "name": "filename_output"
+            },
+            {
+              "name": "folder_output_id"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        752,
+        -64
+      ],
+      "id": "8d25f9f4-ee5f-4928-ad10-e1fac60da994",
+      "name": "Start"
+    },
+    {
+      "parameters": {
+        "content": "## Config",
+        "height": 240,
+        "width": 416,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        704,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "9ffa3171-6d35-4cba-9199-18c90ef85d45",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Image",
+        "height": 640,
+        "width": 656,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1168,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "4a6ebb27-81dc-4961-bad1-d42331ac87b0",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Load Generated Image",
+        "height": 240,
+        "width": 432,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1872,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "a73753ee-5905-4618-8c1b-28ca4c0d1235",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Start').first().json.filename_output }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Start').first().json.folder_output_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1920,
+        -64
+      ],
+      "id": "8c12d5c7-2019-4987-a3f2-bd8b5c54ecff",
+      "name": "Load Generated Image",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "621fe449-f2f3-4154-b7ba-49f012726db4",
+              "name": "output",
+              "value": "={{ $('Load Generated Image').item.json }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2144,
+        -64
+      ],
+      "id": "01f89ef1-641e-445c-bad7-eb2046b63075",
+      "name": "Output"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6d493003-e42d-4783-9e72-10979f166c33",
+              "leftValue": "={{ $('Start').item.json.base_image_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1216,
+        -64
+      ],
+      "id": "a7b60c7a-16e2-4e14-9b87-ded745fbf53c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/{{ $('Config').first().json.model }}:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $('Final Generate JSON Body').item.json.output.toJsonString() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1440,
+        320
+      ],
+      "id": "d6020953-12f2-428b-af90-bcda60e3ce24",
+      "name": "Generate Image - Gemini",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "credentials": {
+        "httpMultipleHeadersAuth": {
+          "id": "E3uuIBSc9vLHBueW",
+          "name": "Multiple Headers Auth account (BorrarO)"
+        },
+        "httpHeaderAuth": {
+          "id": "nxHittWRCHWE4fKt",
+          "name": "Gemini Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Reunir todos los parts de todos los candidates\nconst candidates = $('Generate Image - Gemini').first().json.candidates ?? [];\nconst parts = candidates.flatMap(c => c.content?.parts ?? []);\n\n// 2. Buscar el part que tenga inlineData.data (imagen)\nconst imagePart = parts.find(p => p.inlineData?.data);\n\nif (!imagePart) {\n  throw new Error('Gemini no devolvió ninguna imagen en esta ejecución');\n}\n\n// 3. Limpiar el base64 (CRÍTICO)\nconst base64 = imagePart.inlineData.data\n  .replace(/\\s/g, '')\n  .replace(/^data:image\\/\\w+;base64,/, '');\n\n// 4. Detectar mimeType (o fallback)\nconst mimeType = imagePart.inlineData.mimeType || 'image/png';\n\n// 5. Convertir base64 → buffer\nconst buffer = Buffer.from(base64, 'base64');\n\n// 6. Crear binary para n8n\nreturn [\n  {\n    json: {\n      mimeType: mimeType,\n      source: 'gemini'\n    },\n    binary: {\n      data: await this.helpers.prepareBinaryData(\n        buffer,\n        'gemini-image.png',\n        mimeType\n      ),\n    },\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1664,
+        320
+      ],
+      "id": "039a5436-bc10-449d-b26f-60dda46ebf89",
+      "name": "Base64 to Image"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "04cea191-7daf-4003-b663-6bbe63b258c9",
+              "name": "aspect_ratio",
+              "value": "9:16",
+              "type": "string"
+            },
+            {
+              "id": "33d77201-c7ae-4897-88e3-c3ff54d95c21",
+              "name": "model",
+              "value": "gemini-2.5-flash-image",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        976,
+        -64
+      ],
+      "id": "fc4ec343-5ceb-43c7-8c78-6a9f2eb79948",
+      "name": "Config"
+    },
+    {
+      "parameters": {
+        "jsCode": "const image_prompt = $('Start').first().json.image_prompt;\nconst aspect_ratio = $('Config').first().json.aspect_ratio;\n\nconst parts = [\n  {\n    text: `${image_prompt}`\n  }\n];\n\nreturn [{\n  json: {\n    contents: [{ parts }],\n    generationConfig: {\n      responseModalities: [\"TEXT\", \"IMAGE\"],\n      imageConfig: {\n        aspectRatio: `${aspect_ratio}`\n      }\n    }\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1664,
+        112
+      ],
+      "id": "ab04e38d-d388-444b-9a16-2726dda628a8",
+      "name": "Generate JSON Body - No base Image"
+    },
+    {
+      "parameters": {
+        "jsCode": "const image_prompt = $('Start').first().json.image_prompt;\nconst aspect_ratio = $('Config').first().json.aspect_ratio;\n\nconst image = $('Download Image').first();\nconst binary = image.binary?.data;\nconst mimeType = binary.mimeType || 'image/png';\nconst buffer = await this.helpers.getBinaryDataBuffer(0, 'data');\nconst base64 = buffer.toString('base64');\n\nconst parts = [\n  {\n    text: `${image_prompt}`\n  },\n  {\n    inlineData: {\n      mimeType,\n      data: base64,\n    }\n  }\n];\n\n\nreturn [{\n  json: {\n    contents: [{ parts }],\n    generationConfig: {\n      responseModalities: [\"TEXT\", \"IMAGE\"],\n      imageConfig: {\n        aspectRatio: `${aspect_ratio}`\n      }\n    }\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1664,
+        -80
+      ],
+      "id": "04ecdc75-f42a-409e-938d-a889cd5fbf69",
+      "name": "Generate JSON Body - Base Image"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Start').item.json.base_image_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1440,
+        -80
+      ],
+      "id": "ad7b4776-b40b-4b1c-b2ef-a9cb82a530a9",
+      "name": "Download Image",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "506b7667-b883-42e4-b19c-32660707eb29",
+              "name": "output",
+              "value": "={{ $json.toJsonString() }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1232,
+        320
+      ],
+      "id": "31ed880d-0bed-4938-91df-1ca88555f623",
+      "name": "Final Generate JSON Body"
+    },
+    {
+      "parameters": {
+        "content": "## 🖼️ YT - Generate Sequential Image\n\nWorkflow especializado en generar imágenes secuenciales con **Google Gemini**, diseñado para mantener coherencia visual en timelapses arquitectónicos.\n\n### ⚙️ Configuración rápida\n1. Configura credenciales de **Google Gemini** y **Google Drive**.\n2. Los parámetros de entrada esperados son:\n* `image_prompt` → Descripción visual de la escena.\n* `base_image_id` → ID de la imagen anterior (opcional para coherencia).\n* `folder_output_id` → Carpeta de Drive para el resultado.\n👉 El flujo detecta automáticamente si hay una imagen base para usarla como referencia.\n\n### 🧠 Qué hace el flujo\n* Recibe el prompt y la imagen de referencia.\n* Genera la nueva imagen usando el modelo `gemini-2.5-flash-image`.\n* Procesa la respuesta binaria y limpia el Base64.\n* Guarda el archivo final en Google Drive.\nGeneración de imágenes técnica y automatizada.\n\n### 📺 Guía en video\n👉 [youtu.be/xxxxxx](https://youtu.be/xxxxxx)\n\n### 🔔 Más automatizaciones\n👉 [Hans Acha](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 656,
+        "width": 576
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        80,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "c35ac394-b6c0-4679-882c-7481c6707149",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {
+    "Start": [
+      {
+        "json": {
+          "image_prompt": "Wide shot of an empty master bedroom during rough construction, showing exposed concrete walls with rebar, visible electrical conduits, raw unfinished ceiling with exposed ducts, and a rough concrete subfloor. A large, frameless window on the far wall reveals a blurred natural outdoor light source. Debris and construction tools scattered lightly on the floor. Overcast daylight from the window. Utilitarian, industrial aesthetic. Locked-off tripod timelapse. No camera movement. Realistic physics. Photorealistic architectural visualization. Vertical 9:16.",
+          "base_image_id": null,
+          "filename_output": "image_001",
+          "folder_output_id": "1Fr1HJdqgmRjDThBZKpvLCDZVc5wEaVKy"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Generated Image": {
+      "main": [
+        [
+          {
+            "node": "Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Download Image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate JSON Body - No base Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image - Gemini": {
+      "main": [
+        [
+          {
+            "node": "Base64 to Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base64 to Image": {
+      "main": [
+        [
+          {
+            "node": "Load Generated Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate JSON Body - No base Image": {
+      "main": [
+        [
+          {
+            "node": "Final Generate JSON Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image": {
+      "main": [
+        [
+          {
+            "node": "Generate JSON Body - Base Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate JSON Body - Base Image": {
+      "main": [
+        [
+          {
+            "node": "Final Generate JSON Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Final Generate JSON Body": {
+      "main": [
+        [
+          {
+            "node": "Generate Image - Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4ebf8f7f-520b-4218-998f-38c5b41cca98",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "VAyiqjmyJaIQQa5G",
+  "tags": []
+}
