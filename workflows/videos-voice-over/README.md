@@ -78,7 +78,7 @@ Flujo maestro que orquesta la producción masiva de partes de un video.
 
 ---
 
-📺 **Tutorial:** [youtu.be/xxxxxx](https://youtu.be/xxxxxx)  
+📺 **Tutorial:** [youtu.be/uApH9_CyVjw](https://youtu.be/uApH9_CyVjw)  
 🔔 **Canal:** [Hans Acha](https://www.youtube.com/@Hans-Acha)
 
 ---
