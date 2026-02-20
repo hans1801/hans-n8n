@@ -1,0 +1,427 @@
+{
+  "name": "YT - Automate Video Voice",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        464,
+        0
+      ],
+      "id": "24b4857b-353d-40ef-a74f-fed75a128380",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "4TJ1NM8KpVofeds0",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/4TJ1NM8KpVofeds0",
+          "cachedResultName": "YT - Text to Voice"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "text": "={{ $('Start').item.json.text }}",
+            "file_name": "=audio_{{ $('Start').item.json.part }}",
+            "output_folder_id": "={{ $('Edit Fields').item.json.voices_folder_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "file_name",
+              "displayName": "file_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        736,
+        96
+      ],
+      "id": "23ce78b4-470b-41b8-8ed6-010500c01cb1",
+      "name": "Call 'YT - Text to Voice'"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a5a5ee64-0c84-4ff5-892a-3a618d5a8793",
+              "name": "voices_folder_id",
+              "value": "1oUmBse0WVDmmPBshDCq33v3kyv2Jb3EA",
+              "type": "string"
+            },
+            {
+              "id": "5361deb8-8176-4a54-8d12-0f588b58ac65",
+              "name": "video_voice_folder_id",
+              "value": "1_IaweNlD15ExXdWfkJ_7AR7ALCRxR4F2",
+              "type": "string"
+            },
+            {
+              "id": "3c34e4ca-2280-4d99-b509-6059fb5ab292",
+              "name": "final_video_folder_id",
+              "value": "1qNC1AtmnCOh23HLaMZYGifxiUL2eJPCA",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "8b367c36-1288-4357-a452-234e0fd792f6",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "text"
+            },
+            {
+              "name": "part"
+            },
+            {
+              "name": "video_id"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "60422ef1-7e3d-4312-b838-39d74548ca15",
+      "name": "Start"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "5LAIj4dExJGd4iPQ",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/5LAIj4dExJGd4iPQ",
+          "cachedResultName": "YT - Combine Video With Voice"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "video_id": "={{ $('Start').item.json.video_id }}",
+            "voice_id": "={{ $('Call \\'YT - Text to Voice\\'').item.json.id }}",
+            "output_folder_id": "={{ $('Edit Fields').item.json.video_voice_folder_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "video_id",
+              "displayName": "video_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "voice_id",
+              "displayName": "voice_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        944,
+        96
+      ],
+      "id": "735d0218-a20e-4838-89eb-4d41b4813ae7",
+      "name": "Call 'YT - Combine Video With Voice'"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        672,
+        -96
+      ],
+      "id": "4b49617f-314a-48ab-b9d4-b83995de7def",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Tq4JI39TBeORDFMy",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/Tq4JI39TBeORDFMy",
+          "cachedResultName": "YT  - FFmpeg - Combine Videos Simple"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "input_folder_id": "={{ $('Edit Fields').first().json.video_voice_folder_id }}",
+            "output_folder_id": "={{ $('Edit Fields').first().json.final_video_folder_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "input_folder_id",
+              "displayName": "input_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        880,
+        -96
+      ],
+      "id": "1033eaeb-ac89-4d1e-b94e-25b23ad03aed",
+      "name": "Call 'YT  - FFmpeg - Combine Videos Simple'"
+    },
+    {
+      "parameters": {
+        "content": "## Config\n",
+        "height": 416,
+        "width": 416,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -48,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "466b6ce2-0c5f-4a23-995d-a299cf9715ac",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Video\n",
+        "height": 416,
+        "width": 720,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        400,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "2779124a-e712-4be6-8c87-70cf4da7ec3e",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## 🔄 YT - Automate Video Voice\n\nFlujo orquestador que automatiza la creación completa de contenido narrado, integrando locución y video de forma secuencial.\n\n### ⚙️ Configuración rápida\n1. Importa el archivo `.json` en n8n.\n2. Nodo **Edit Fields** (Config):\n* `voices_folder_id` → Carpeta para guardar locuciones de ElevenLabs.\n* `video_voice_folder_id` → Carpeta para clips de video con voz integrada.\n* `final_video_folder_id` → Carpeta donde se guardará el video completo final.\n👉 Asegúrate de tener importados los flujos `YT - Text to Voice` y `YT - Combine Video With Voice`.\n\n### 🧠 Qué hace el flujo\n* Itera sobre una lista de escenas con texto y IDs de video (Loop Over Items).\n* Llama al subflujo de locución para generar los audios necesarios.\n* Ejecuta la combinación de cada video con su audio correspondiente.\n* Agrega todos los clips procesados y llama a un subflujo de FFmpeg para unirlos en un solo video final.\n\n### 📺 Guía en video\n👉 [youtu.be/xxxxxx](https://youtu.be/xxxxxx)\n\n### 🔔 Más automatizaciones\n👉 [Hans Acha](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 768,
+        "width": 432
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -512,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "4f825040-988d-4e87-8b09-4cf605eb3733",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {
+    "Start": [
+      {
+        "json": {
+          "text": "Donde antes hubo solo tierra... ...hoy se levanta una leyenda. El futuro del fútbol está aquí.",
+          "part": "001",
+          "video_id": "1cNF0fdE-2EOsFQXXkGFVqR73JDvcuwdv"
+        }
+      },
+      {
+        "json": {
+          "text": "El sueño toma forma... ...y el verde esperanza cobra vida. ¡Un estado listo para la gloria!",
+          "part": "002",
+          "video_id": "1gRqwEUzayIYmso9M7ZwAR5oGh5mep4Iq"
+        }
+      },
+      {
+        "json": {
+          "text": "La espera ha terminado... ...se encienden las luces del escenario más grande.",
+          "part": "003",
+          "video_id": "17mkU1jcrgaH3o8SG4M7v2F5RwlCfi7_a"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call 'YT - Text to Voice'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT - Text to Voice'": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT - Combine Video With Voice'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT - Combine Video With Voice'": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT  - FFmpeg - Combine Videos Simple'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "16025306-4fae-49d2-8afc-5cc92667dc26",
+  "meta": {
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "a7Ldjkny0OBko2MS",
+  "tags": []
+}

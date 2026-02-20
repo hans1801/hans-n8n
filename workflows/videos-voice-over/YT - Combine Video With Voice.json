@@ -1,0 +1,510 @@
+{
+  "name": "YT - Combine Video With Voice",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "video_id"
+            },
+            {
+              "name": "voice_id"
+            },
+            {
+              "name": "output_folder_id"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -512,
+        32
+      ],
+      "id": "20742db8-eac5-4f25-9b23-d76832f8a86b",
+      "name": "Start"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "51e6ccac-6a9f-459f-8ba6-4b70438648f9",
+              "name": "path",
+              "value": "./.n8n-files/ffmpeg-temp/combine-video-voice",
+              "type": "string"
+            },
+            {
+              "id": "f65100ae-e591-4487-b6d2-5663192e1b35",
+              "name": "video_file",
+              "value": "video_with_voice",
+              "type": "string"
+            },
+            {
+              "id": "659217f5-3b9f-4e56-a372-ce93c6cdf702",
+              "name": "video_vol",
+              "value": "0",
+              "type": "string"
+            },
+            {
+              "id": "b6193555-9535-4d89-9992-c39b6117f160",
+              "name": "video_extension",
+              "value": "mp4",
+              "type": "string"
+            },
+            {
+              "id": "da865327-958e-43f6-b9c7-17e90e5577ba",
+              "name": "audio_extension",
+              "value": "mp3",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -352,
+        32
+      ],
+      "id": "1b9e6f3f-aa69-443b-b7ba-6f13ab4939f0",
+      "name": "Config"
+    },
+    {
+      "parameters": {
+        "command": "=mkdir -p {{ $('Config').item.json.path }}"
+      },
+      "id": "6fef8b03-9b16-41f3-8558-cdc63802ee5a",
+      "name": "Temporary workspace",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ $('Config').item.json.path }}/video_to_merge_{{ $('Download Video').item.binary.data.fileName }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        304
+      ],
+      "id": "43483ed5-a934-43ad-839f-6c9693fadfe0",
+      "name": "Save Videos Locally"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Start').item.json.video_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -352,
+        304
+      ],
+      "id": "530671e8-0a27-4857-9c30-2387468595e6",
+      "name": "Download Video",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Start').item.json.voice_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -336,
+        576
+      ],
+      "id": "52b35524-a90b-4a4c-a6fa-a3781219b5e6",
+      "name": "Download Voice",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ $('Config').item.json.path }}/audio_to_merge.{{ $('Config').item.json.audio_extension }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        576
+      ],
+      "id": "49fe5739-93a7-4a0a-a915-89b8449e2ed8",
+      "name": "Save Voice Locally"
+    },
+    {
+      "parameters": {
+        "command": "=rm -rf {{ $('Config').item.json.path }}/*"
+      },
+      "id": "ef47c893-67c0-48c8-98b9-40e481cdb3ab",
+      "name": "Cleanup workspace",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        96,
+        576
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## FFmpeg - Combine Video & Voice",
+        "height": 224,
+        "width": 448,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        32,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "61443aa2-7223-4150-863f-9890355dd71a",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Upload",
+        "height": 240,
+        "width": 448
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        32,
+        240
+      ],
+      "typeVersion": 1,
+      "id": "853d8fd1-7ab2-48e2-adb5-dd9cb5a3e0f3",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Cleanup",
+        "height": 224,
+        "width": 448,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        32,
+        512
+      ],
+      "typeVersion": 1,
+      "id": "5758767b-3500-455d-ba50-65072411547b",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "459d815a-b99c-4c56-b1fc-8bf62eaaa8b3",
+              "name": "output",
+              "value": "={{ $('Upload Combined Video').item.json }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        576
+      ],
+      "id": "2fc4cbd8-1e85-4c7d-84a3-ddfd8e1c9304",
+      "name": "Output"
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "=cd {{ $('Config').item.json.path }} &&\n\nffmpeg -i video_to_merge_{{ $('Download Video').item.binary.data.fileName }} -i audio_to_merge.{{ $('Config').item.json.audio_extension }} \\\n-filter_complex \"\\\n[0:a]volume=$(echo \"{{ $('Config').item.json.video_vol }}/100\" | bc -l)[va]; \\\n[va][1:a]amix=inputs=2:duration=shortest:dropout_transition=2[a]\" \\\n-map 0:v:0 -map \"[a]\" \\\n-c:v copy -c:a aac -shortest \\\n{{ $('Config').item.json.video_file }}_{{ $('Download Video').item.binary.data.fileName }}"
+      },
+      "id": "af769d2d-6245-479e-bc79-011783da32e6",
+      "name": "FFmpeg - Combine Audio & Video",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        96,
+        32
+      ],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $('Config').item.json.path }}/{{ $('Config').item.json.video_file }}_{{ $('Download Video').item.binary.data.fileName }}",
+        "options": {
+          "fileExtension": "={{ $('Config').item.json.video_extension }}",
+          "mimeType": "=video/{{ $('Config').item.json.video_extension }}"
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        96,
+        304
+      ],
+      "id": "54e9d452-64fe-4a32-9ff5-ca28c1b2135e",
+      "name": "Get Combined Local Video"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Get Combined Local Video').item.json.fileName }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Start').item.json.output_folder_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        320,
+        304
+      ],
+      "id": "390406ff-449a-4a8a-8820-72397a0ca3e1",
+      "name": "Upload Combined Video",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Setup",
+        "height": 224,
+        "width": 560,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -560,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "3721486a-3345-4079-9604-6dafec0f1cca",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Donwload",
+        "height": 496,
+        "width": 560,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -560,
+        240
+      ],
+      "typeVersion": 1,
+      "id": "e84148dc-b9d8-4d22-bfb4-9d10ca0200ad",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## 🎬 YT - Combine Video With Voice\n\nUtiliza el poder de FFmpeg para fusionar clips de video con sus respectivas pistas de audio de forma automatizada.\n\n### ⚙️ Configuración rápida\n1. Importa el archivo `.json` en n8n.\n2. Nodo **Config**:\n* `path` → Ruta temporal local para procesar archivos (ej: `./.n8n-files/...`).\n* `video_file` → Nombre del video final.\n* `video_vol` → Volumen del audio original del video (0 para silenciar).\n* `video_extension` / `audio_extension` → Formatos de entrada (mp4/mp3).\n👉 Requiere tener **FFmpeg** instalado en el entorno donde corre n8n.\n\n### 🧠 Qué hace el flujo\n* Descarga el video y la voz desde **Google Drive** usando sus IDs.\n* Crea un espacio de trabajo temporal y guarda los archivos localmente.\n* Ejecuta un comando de **FFmpeg** para mezclar el audio (amix) y mapear los canales correctamente.\n* Sube el video final combinado a la carpeta de salida en Drive y limpia el espacio de trabajo.\n\n### 📺 Guía en video\n👉 [youtu.be/xxxxxx](https://youtu.be/xxxxxx)\n\n### 🔔 Más automatizaciones\n👉 [Hans Acha](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 768,
+        "width": 448
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1072,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "ab00206e-3b6b-4c40-b5ae-4d1eddadc263",
+      "name": "Sticky Note5"
+    }
+  ],
+  "pinData": {
+    "Start": [
+      {
+        "json": {
+          "video_id": "17mkU1jcrgaH3o8SG4M7v2F5RwlCfi7_a",
+          "voice_id": "1UNCfJd3xAdozbzZ20-wWzp8SgVrFq3b2",
+          "output_folder_id": "1_IaweNlD15ExXdWfkJ_7AR7ALCRxR4F2"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Temporary workspace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Video": {
+      "main": [
+        [
+          {
+            "node": "Save Videos Locally",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Temporary workspace": {
+      "main": [
+        [
+          {
+            "node": "Download Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Voice": {
+      "main": [
+        [
+          {
+            "node": "Save Voice Locally",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Videos Locally": {
+      "main": [
+        [
+          {
+            "node": "Download Voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cleanup workspace": {
+      "main": [
+        [
+          {
+            "node": "Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FFmpeg - Combine Audio & Video": {
+      "main": [
+        [
+          {
+            "node": "Get Combined Local Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Combined Local Video": {
+      "main": [
+        [
+          {
+            "node": "Upload Combined Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Combined Video": {
+      "main": [
+        [
+          {
+            "node": "Cleanup workspace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Voice Locally": {
+      "main": [
+        [
+          {
+            "node": "FFmpeg - Combine Audio & Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "06bb373f-be42-4f00-9fa3-8a7370fc3c4e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "5LAIj4dExJGd4iPQ",
+  "tags": []
+}

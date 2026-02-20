@@ -1,0 +1,197 @@
+{
+  "name": "YT - Text to Voice",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "text"
+            },
+            {
+              "name": "file_name"
+            },
+            {
+              "name": "output_folder_id"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e36717fe-2925-4d2e-8b25-848a7387d61e",
+      "name": "Start"
+    },
+    {
+      "parameters": {
+        "resource": "speech",
+        "voice": {
+          "__rl": true,
+          "value": "8mBRP99B2Ng2QwsJMFQl",
+          "mode": "list",
+          "cachedResultName": "El Faraon - Full, Clear, Mellow"
+        },
+        "text": "={{ $('Start').item.json.text }}",
+        "additionalOptions": {},
+        "requestOptions": {}
+      },
+      "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "af67440b-bcd8-400f-bbb8-c117256a58ec",
+      "name": "Convert text to speech",
+      "credentials": {
+        "elevenLabsApi": {
+          "id": "r9Pt3ArzXEYmxesl",
+          "name": "ElevenLabs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Start').item.json.file_name }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Start').item.json.output_folder_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        400,
+        0
+      ],
+      "id": "174ddf96-9dee-4e5e-a8ca-04480e45bdb0",
+      "name": "Upload Audio",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o9FsD2lBiUwRPODM",
+          "name": "Hans Acha Brand - Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Config\n",
+        "height": 240,
+        "width": 176,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -32,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "da402917-42a0-46bd-beb7-f98db3dc5f34",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Voice",
+        "height": 240,
+        "width": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        160,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "4b704c1e-d785-4913-ba0b-279d8128999c",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Upload",
+        "height": 240,
+        "width": 176,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        368,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "df7fef59-04e5-44c9-a2dd-a396ed56343e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## 🗣️ YT - Text to Voice\n\nConvierte texto en locuciones profesionales de alta calidad utilizando la inteligencia artificial de ElevenLabs.\n\n### ⚙️ Configuración rápida\n1. Importa el archivo `.json` en n8n.\n2. Nodo **Start** (Execute Workflow Trigger):\n* `text` → El texto que será narrado.\n* `file_name` → Nombre del archivo de audio resultante (sin extensión).\n* `output_folder_id` → ID de la carpeta en Google Drive donde se guardará el audio.\n👉 Asegúrate de tener conectada tu cuenta de ElevenLabs en el nodo de conversión.\n\n### 🧠 Qué hace el flujo\n* Recibe instrucciones de texto y destino mediante un Trigger.\n* Procesa el texto usando **ElevenLabs** con una voz configurada (ej: El Faraon).\n* Sube automáticamente el archivo binario generado a **Google Drive**.\n\n### 📺 Guía en video\n👉 [youtu.be/xxxxxx](https://youtu.be/xxxxxx)\n\n### 🔔 Más automatizaciones\n👉 [Hans Acha](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 736,
+        "width": 400
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -480,
+        -288
+      ],
+      "typeVersion": 1,
+      "id": "e0b5d069-0059-48b5-9cbd-75280f35b350",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {
+    "Start": [
+      {
+        "json": {
+          "text": "Donde antes hubo solo tierra.. ...hoy se levanta una leyenda. El futuro del fútbol está aquí.",
+          "file_name": "audio_001",
+          "output_folder_id": "1yRkTZymwHIJfWDScqGuAkK7oW0on5hrn"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Convert text to speech",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert text to speech": {
+      "main": [
+        [
+          {
+            "node": "Upload Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "49dda927-983c-4c87-97fb-5d881cd597f2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "4TJ1NM8KpVofeds0",
+  "tags": []
+}
