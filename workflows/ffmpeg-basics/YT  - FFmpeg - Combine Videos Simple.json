@@ -92,7 +92,7 @@
     },
     {
       "parameters": {
-        "command": "=mkdir -p {{ $('Config').item.json.path }}"
+        "command": "=mkdir -p {{ $('Config').item.json.path }} &&\nrm -rf {{ $('Config').item.json.path }}/*"
       },
       "id": "c88e8c3b-6fee-4fb1-89ef-97aefe5c44db",
       "name": "Temporary workspace",
@@ -337,7 +337,7 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -432,
+        -448,
         0
       ],
       "typeVersion": 1,
@@ -349,8 +349,8 @@
     "Input": [
       {
         "json": {
-          "input_folder_id": "1wtAUSYoOBWYmwXgjxY8ggFhgkeP-E48R",
-          "output_folder_id": "194owQp_WsQQhrVJxDul3JYROh6-U8cTT"
+          "input_folder_id": "1gqc1HLhOrIQyNqehZfAhHC7JtFzkUVqL",
+          "output_folder_id": "1WJ5qoqZmYZ4cnE8SjXakpjkQxPQpFqzK"
         },
         "pairedItem": {
           "item": 0
@@ -485,7 +485,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "efaff4bd-f992-48ab-8a67-2381c2d4f012",
+  "versionId": "e12e07b1-67b0-4faf-b5e8-564787fd48dd",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"

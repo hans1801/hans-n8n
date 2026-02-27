@@ -75,7 +75,7 @@
     },
     {
       "parameters": {
-        "command": "=mkdir -p {{ $('Config').item.json.path }}"
+        "command": "=mkdir -p {{ $('Config').item.json.path }} &&\nrm -rf {{ $('Config').item.json.path }}/*"
       },
       "id": "6fef8b03-9b16-41f3-8558-cdc63802ee5a",
       "name": "Temporary workspace",
@@ -89,7 +89,7 @@
     {
       "parameters": {
         "operation": "write",
-        "fileName": "={{ $('Config').item.json.path }}/video_to_merge_{{ $('Download Video').item.binary.data.fileName }}",
+        "fileName": "={{ $('Config').item.json.path }}/video_to_merge_{{ $('Download Video').item.binary.data.fileName }}.{{ $('Config').item.json.video_extension }}",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
@@ -252,7 +252,7 @@
     {
       "parameters": {
         "executeOnce": false,
-        "command": "=cd {{ $('Config').item.json.path }} &&\n\nffmpeg -i video_to_merge_{{ $('Download Video').item.binary.data.fileName }} -i audio_to_merge.{{ $('Config').item.json.audio_extension }} \\\n-filter_complex \"\\\n[0:a]volume=$(echo \"{{ $('Config').item.json.video_vol }}/100\" | bc -l)[va]; \\\n[va][1:a]amix=inputs=2:duration=shortest:dropout_transition=2[a]\" \\\n-map 0:v:0 -map \"[a]\" \\\n-c:v copy -c:a aac -shortest \\\n{{ $('Config').item.json.video_file }}_{{ $('Download Video').item.binary.data.fileName }}"
+        "command": "=cd {{ $('Config').item.json.path }} &&\n\nVIDEO_VOL={{ $('Config').item.json.video_vol }}\n\nVDUR=$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 video_to_merge_{{ $('Download Video').item.binary.data.fileName }}.{{ $('Config').item.json.video_extension }})\nADUR=$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 audio_to_merge.{{ $('Config').item.json.audio_extension }})\n\nFACTOR=$(awk -v a=\"$ADUR\" -v v=\"$VDUR\" 'BEGIN{ if(v==0) print 1; else printf \"%.10f\", a/v }')\n\nffmpeg -i video_to_merge_{{ $('Download Video').item.binary.data.fileName }}.{{ $('Config').item.json.video_extension }} -i audio_to_merge.{{ $('Config').item.json.audio_extension }} \\\n-filter_complex \"\\\n[0:v]setpts=PTS*${FACTOR}[v]; \\\n[0:a]volume=$(awk -v x=\"$VIDEO_VOL\" 'BEGIN{ printf \"%.6f\", x/100 }')[va]; \\\n[va][1:a]amix=inputs=2:duration=longest:dropout_transition=2[a]\" \\\n-map \"[v]\" -map \"[a]\" \\\n-c:v libx264 -preset veryfast -crf 20 \\\n-c:a aac \\\n-shortest \\\n{{ $('Config').item.json.video_file }}_{{ $('Download Video').item.binary.data.fileName }}.{{ $('Config').item.json.video_extension }}"
       },
       "id": "af769d2d-6245-479e-bc79-011783da32e6",
       "name": "FFmpeg - Combine Audio & Video",
@@ -266,7 +266,7 @@
     },
     {
       "parameters": {
-        "fileSelector": "={{ $('Config').item.json.path }}/{{ $('Config').item.json.video_file }}_{{ $('Download Video').item.binary.data.fileName }}",
+        "fileSelector": "={{ $('Config').item.json.path }}/{{ $('Config').item.json.video_file }}_{{ $('Download Video').item.binary.data.fileName }}.{{ $('Config').item.json.video_extension }}",
         "options": {
           "fileExtension": "={{ $('Config').item.json.video_extension }}",
           "mimeType": "=video/{{ $('Config').item.json.video_extension }}"
@@ -363,9 +363,9 @@
     "Start": [
       {
         "json": {
-          "video_id": "17mkU1jcrgaH3o8SG4M7v2F5RwlCfi7_a",
-          "voice_id": "1UNCfJd3xAdozbzZ20-wWzp8SgVrFq3b2",
-          "output_folder_id": "1_IaweNlD15ExXdWfkJ_7AR7ALCRxR4F2"
+          "video_id": "1VS-mmU71GuMGdmZ8ZrrFCGy6Jn5HQoDX",
+          "voice_id": "12W46gGUpa1ozlYBxvQ_AFA1P4_GPtTzD",
+          "output_folder_id": "1gqc1HLhOrIQyNqehZfAhHC7JtFzkUVqL"
         },
         "pairedItem": {
           "item": 0
@@ -500,7 +500,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "06bb373f-be42-4f00-9fa3-8a7370fc3c4e",
+  "versionId": "12bb0bd7-c182-482d-94fc-9e2d2b8749d4",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
