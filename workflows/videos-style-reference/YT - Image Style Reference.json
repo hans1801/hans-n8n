@@ -100,7 +100,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const prompt_base = $('Config').first().json.prompt_base;\nconst image_prompt = $('Start').first().json.image_prompt;\n\nconst agg = $('Aggregate').first();\nconst bin = agg.binary;\nconst binaryKeys = Object.keys(bin).filter(k => bin[k]);\n\nif (!binaryKeys.length) {\n  throw new Error('No se encontraron binarios en Aggregate');\n}\n\n// Orden: data, data_1, data_2...\nbinaryKeys.sort((a, b) => {\n  if (a === 'data') return -1;\n  if (b === 'data') return 1;\n  const na = parseInt(a.split('_')[1] ?? '0', 10);\n  const nb = parseInt(b.split('_')[1] ?? '0', 10);\n  return na - nb;\n});\n\nconst parts = [\n  {\n    text: `${prompt_base}: ${image_prompt}`\n  }\n];\n\nfor (const key of binaryKeys) {\n  const mimeType = bin[key].mimeType || 'image/png';\n\n  // ✅ Esto lee el contenido REAL aunque data sea \"filesystem-v2\"\n  const buffer = await this.helpers.getBinaryDataBuffer(0, key);\n  const base64 = buffer.toString('base64');\n\n  parts.push({\n    inlineData: {\n      mimeType,\n      data: base64,\n    }\n  });\n}\n\nreturn [{\n  json: {\n    contents: [{ parts }]\n  }\n}];\n"
+        "jsCode": "const prompt_base = $('Config').first().json.prompt_base;\nconst image_prompt = $('Start').first().json.image_prompt;\n\nconst agg = $('Aggregate').first();\nconst bin = agg.binary;\nconst binaryKeys = Object.keys(bin).filter(k => bin[k]);\n\nif (!binaryKeys.length) {\n  throw new Error('No se encontraron binarios en Aggregate');\n}\n\n// Orden: data, data_1, data_2...\nbinaryKeys.sort((a, b) => {\n  if (a === 'data') return -1;\n  if (b === 'data') return 1;\n  const na = parseInt(a.split('_')[1] ?? '0', 10);\n  const nb = parseInt(b.split('_')[1] ?? '0', 10);\n  return na - nb;\n});\n\nconst parts = [\n  {\n    text: `${prompt_base}: ${image_prompt}`\n  }\n];\n\nfor (const key of binaryKeys) {\n  const mimeType = bin[key].mimeType || 'image/png';\n\n  // ✅ Esto lee el contenido REAL aunque data sea \"filesystem-v2\"\n  const buffer = await this.helpers.getBinaryDataBuffer(0, key);\n  const base64 = buffer.toString('base64');\n\n  parts.push({\n    inlineData: {\n      mimeType,\n      data: base64,\n    }\n  });\n}\n\nreturn [{\n  json: {\n    contents: [{ parts }],\n    generationConfig: {\n      responseModalities: [\"TEXT\", \"IMAGE\"],\n      imageConfig: {\n        aspectRatio: \"9:16\",\n        imageSize: \"1K\"\n      }\n    }\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -172,7 +172,7 @@
         },
         "httpHeaderAuth": {
           "id": "nxHittWRCHWE4fKt",
-          "name": "Gemini Header Auth"
+          "name": "Gemini Header Auth - Rel Account"
         }
       }
     },
@@ -184,7 +184,7 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -1344,
+        -1328,
         -720
       ],
       "typeVersion": 1,
@@ -331,7 +331,7 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -704,
+        -688,
         -720
       ],
       "typeVersion": 1,
@@ -343,10 +343,13 @@
     "Start": [
       {
         "json": {
-          "image_prompt": "Person similar to Cristiano Ronaldo on a soccer field, horror style",
-          "folder_reference_id": "1Fw2Ceg7xoyupQDUaRUkSmsKwLMK2HeQR",
-          "filename_output": "image-scene-001",
-          "folder_output_id": "1cUcjWBCVbYBEFrkj1ZT5lFbQqBRs5PB9"
+          "image_prompt": "{\"subject_detail\":\"Primer plano de las rodillas, ahora visiblemente inmóviles, como una sola estructura ósea rígida. La figura intenta dar un paso y colapsa hacia adelante con rigidez.\",\"environment_context\":\"Superficie irregular y áspera, sin identificar.\",\"optics\":\"Primer plano extremo, enfocado en el detalle de la fusión ósea.\",\"lighting\":\"Oscuridad total, un haz de luz cenital dramático revela el detalle de las rodillas.\",\"style\":\"Horror corporal, impactante, revelador.\"}",
+          "folder_reference_id": "1Bg_EoCFumavatZ8zIHAKAE_ZP9GqKlqm",
+          "filename_output": "image_step4",
+          "folder_output_id": "1b3UBPc3GS6w_4g2kwjMAbCrZpZ3EJ-zQ"
+        },
+        "pairedItem": {
+          "item": 0
         }
       }
     ]
@@ -456,7 +459,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "33dcaa94-3b4d-4bb0-83fd-b69b41953ae5",
+  "versionId": "a00489e2-d05e-4aed-88a5-5b68d5924c9c",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
