@@ -78,7 +78,7 @@ Versión 100% autónoma que utiliza un agente de IA para "soñar" ideas virales 
 
 ---
 
-📺 **Tutorial:** [youtu.be/xxxxxx](https://youtu.be/xxxxxx)  
+📺 **Tutorial:** [youtu.be/TbN-A0eXN8U](https://youtu.be/TbN-A0eXN8U)  
 🔔 **Canal:** [Hans Acha](https://www.youtube.com/@Hans-Acha)
 
 ---
