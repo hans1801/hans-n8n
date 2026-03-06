@@ -40,7 +40,7 @@ Abre el nodo llamado **Config** y completa los siguientes campos:
 | :--- | :--- |
 | 💡 `idea` | El concepto central o premisa de la historia (ej: "Recibir una llamada de mi propio número"). |
 | 📁 `folder_name` | Nombre para la carpeta del proyecto que se creará en Drive. |
-| 🎵 `bg_music_id` | ID del archivo de música de fondo (wav/mp3) en Google Drive. |
+| 🎵 `bg_music_id` | ID del archivo de música de fondo .wav en Google Drive. |
 | 🏗️ `ideas_hub_folder_id` | ID de la carpeta raíz donde se organizará todo el contenido. |
 | 🖼️ `reference_folder_id` | ID de la carpeta con imágenes de referencia para mantener el estilo visual. |
 
@@ -56,7 +56,7 @@ Versión avanzada que incluye un agente para la generación autónoma de ideas y
     | Parámetro | Descripción |
     | :--- | :--- |
     | 📁 `folder_name` | Nombre dinámico para la carpeta del proyecto (autogenerado por defecto). |
-    | 🎵 `bg_music_id` | ID del archivo de música de fondo (wav/mp3) en Google Drive. |
+    | 🎵 `bg_music_id` | ID del archivo de música de fondo .wav en Google Drive. |
     | 🏗️ `ideas_hub_folder_id` | ID de la carpeta raíz donde se organizará todo el contenido. |
     | 🖼️ `reference_folder_id` | ID de la carpeta con imágenes de referencia para mantener el estilo visual. |
 
