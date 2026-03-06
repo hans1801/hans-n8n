@@ -76,7 +76,7 @@ Versión avanzada que incluye un agente para la generación autónoma de ideas y
 
 ---
 
-📺 **Tutorial:** [youtu.be/xxxxxx](https://youtu.be/xxxxxx)  
+📺 **Tutorial:** [youtu.be/TbN-A0eXN8U](https://youtu.be/TbN-A0eXN8U)  
 🔔 **Canal:** [Hans Acha](https://www.youtube.com/@Hans-Acha)
 
 ---
