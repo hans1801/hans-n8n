@@ -26,7 +26,7 @@ n8n_project/
 Ejecuta este comando en la raíz de tu proyecto para crear la carpeta `whisper/` y sus archivos necesarios automáticamente:
 
 ```bash
-mkdir -p whisper && cat <<'EOF' > whisper/Dockerfile
+sudo mkdir -p whisper && cat <<'EOF' | sudo tee whisper/Dockerfile > /dev/null
 FROM python:3.11-slim
 
 WORKDIR /app
@@ -48,7 +48,7 @@ EXPOSE 8000
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
 EOF
 
-cat <<'EOF' > whisper/app.py
+cat <<'EOF' | sudo tee whisper/app.py > /dev/null
 from fastapi import FastAPI, UploadFile, File, Form  # Añadimos Form
 import whisper
 from whisper.utils import get_writer
