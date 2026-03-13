@@ -6,6 +6,25 @@ Guía para añadir **Whisper** a n8n.
 
 ---
 
+## ⚙️ Configuración de docker-compose.yml
+
+Añade el servicio de **Whisper** a tu archivo `docker-compose.yml` actual:
+
+```yaml
+services:
+  # ... otros servicios (n8n, postgres, redis)
+
+  whisper:
+    build: ./whisper
+    container_name: whisper
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./shared_data:/data
+```
+
+---
+
 ## 📂 Estructura del proyecto
 
 Para habilitar Whisper junto a la instalación de [n8n-ffmpeg](../n8n-ffmpeg), la estructura debe incluir la carpeta `whisper`:
@@ -122,25 +141,6 @@ async def transcribe(
         if os.path.exists(file_location):
             os.remove(file_location)
 EOF
-```
-
----
-
-## ⚙️ Configuración de docker-compose.yml
-
-Añade el servicio de **Whisper** a tu archivo `docker-compose.yml` actual:
-
-```yaml
-services:
-  # ... otros servicios (n8n, postgres, redis)
-
-  whisper:
-    build: ./whisper
-    container_name: whisper
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./shared_data:/data
 ```
 
 ---
