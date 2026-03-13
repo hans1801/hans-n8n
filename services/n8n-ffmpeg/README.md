@@ -83,16 +83,16 @@ n8n_project/
 En el servicio `n8n`, **reemplaza**:
 
 ```yaml
-image: n8nio/n8n:stable
+    image: n8nio/n8n:stable
 ```
 
 por:
 
 ```yaml
-build:
-  context: .
-  dockerfile: Dockerfile
-image: n8n-with-ffmpeg
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: n8n-with-ffmpeg
 ```
 
 🔹 No modifiques ningún otro parámetro del servicio (`ports`, `env`, `volumes`, etc.).
@@ -130,7 +130,7 @@ USER node
 
 ```bash
 sudo docker compose down
-sudo docker compose build --no-cache n8n
+sudo docker compose build n8n
 sudo docker compose up -d
 ```
 
