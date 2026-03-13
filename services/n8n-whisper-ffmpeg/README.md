@@ -88,34 +88,39 @@ async def transcribe(
     max_line_count: int = Form(1),  # Parámetro opcional con default 1
 ):
     file_location = f"/tmp/{file.filename}"
-    with open(file_location, "wb") as f:
-        shutil.copyfileobj(file.file, f)
+    try:
+        with open(file_location, "wb") as f:
+            shutil.copyfileobj(file.file, f)
 
-    result = model.transcribe(file_location, word_timestamps=True, verbose=False)
+        result = model.transcribe(file_location, word_timestamps=True, verbose=False)
 
-    output_dir = "/tmp"
-    # Pasamos los parámetros a la función de salida
-    srt_content = get_whisper_output(
-        result, "srt", output_dir, max_line_width, max_line_count
-    )
-    vtt_content = get_whisper_output(
-        result, "vtt", output_dir, max_line_width, max_line_count
-    )
-    txt_content = result["text"]
+        output_dir = "/tmp"
+        # Pasamos los parámetros a la función de salida
+        srt_content = get_whisper_output(
+            result, "srt", output_dir, max_line_width, max_line_count
+        )
+        vtt_content = get_whisper_output(
+            result, "vtt", output_dir, max_line_width, max_line_count
+        )
+        txt_content = result["text"]
 
-    os.remove(file_location)
+        os.remove(file_location)
 
-    return {
-        "filename": file.filename,
-        "text_plain": txt_content,
-        "srt": srt_content,
-        "vtt": vtt_content,
-        "language": result.get("language"),
-        "settings": {
-            "max_line_width": max_line_width,
-            "max_line_count": max_line_count,
-        },
-    }
+        return {
+            "filename": file.filename,
+            "text_plain": txt_content,
+            "srt": srt_content,
+            "vtt": vtt_content,
+            "language": result.get("language"),
+            "settings": {
+                "max_line_width": max_line_width,
+                "max_line_count": max_line_count,
+            },
+        }
+    finally:
+        # ESTO SE EJECUTA SIEMPRE, aunque haya un error arriba
+        if os.path.exists(file_location):
+            os.remove(file_location)
 EOF
 ```
 
