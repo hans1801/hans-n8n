@@ -145,8 +145,9 @@ services:
 Para aplicar los cambios y levantar el nuevo servicio de Whisper:
 
 ```bash
-sudo docker compose down --remove-orphans
-sudo docker compose build --no-cache whisper
+sudo docker compose down
+sudo docker compose build n8n
+sudo docker compose build whisper
 sudo docker compose up -d
 ```
 
