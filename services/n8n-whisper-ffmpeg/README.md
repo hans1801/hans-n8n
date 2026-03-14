@@ -156,6 +156,13 @@ sudo docker compose build whisper
 sudo docker compose up -d
 ```
 
+Para levantar solo whisper
+
+```bash
+sudo docker compose build whisper
+sudo docker compose up -d
+```
+
 ---
 
 ### Verificación
