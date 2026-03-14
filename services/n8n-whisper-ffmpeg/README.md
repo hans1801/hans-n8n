@@ -175,8 +175,35 @@ curl http://localhost:8000/docs
 
 ---
 
+## 🔄 Flujos de n8n incluidos
+
+En este directorio encontrarás dos flujos de n8n (`.json`) listos para importar que demuestran el uso de esta integración:
+
+### 🎙️ YT - Check Whisper
+**Archivo:** `YT - Check Whisper.json`
+
+Flujo de verificación en 3 pasos para asegurar que la API Whisper corre de manera correcta y rápida en tu instancia de n8n.
+* **Qué hace el flujo:** Emplea un trigger manual, acude a Google Drive por un archivo de audio de prueba y realiza una petición `POST` a la ruta `/transcribe` de Whisper para generar los subtítulos (incluyendo opciones como `max_line_width` y `max_line_count`).
+* **Configuración:** Solo necesitas añadir tu cuenta de Google Drive y proporcionar el ID del archivo de audio en el nodo de descarga.
+
+### 📝 YT - Add Subtitles to video
+**Archivo:** `YT - Add Subtitles to video.json`
+
+Extrae el audio, genera subtítulos con IA (Whisper) y los incrusta en el archivo de video final de manera completamente automática usando FFmpeg.
+* **Qué hace el flujo:** Descarga el video, utiliza FFmpeg para extraer el audio, lo envía a Whisper, obtiene el `.srt` generado y vuelve a usar FFmpeg para incrustar ("quemar") el texto en cada segmento de video. Finalmente, sube el producto final a tu Google Drive.
+* **Configuración:** Cuenta con un nodo de **Config** para definir rutas temporales, formatos, y límites del texto. El estilo de los subtítulos (fuente, colores, posición) se puede personalizar directamente en el comando FFmpeg del nodo de incrustación.
+
+---
+
 ## ✅ Resumen
 
 * **FFmpeg**: Debe existir **dentro del contenedor de n8n** para ser ejecutado por nodos.
 * **Whisper**: Se ejecuta como un **servicio independiente** en el puerto 8000.
 * Este setup permite transcribir audios y añadir subtítulos a videos de forma automatizada.
+
+---
+
+📺 **Tutorial:** [https://youtu.be/cFYV-726mBo](https://youtu.be/cFYV-726mBo)
+🔔 **Canal:** [Hans Acha](https://www.youtube.com/@Hans-Acha)
+
+---

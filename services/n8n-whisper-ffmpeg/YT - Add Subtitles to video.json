@@ -2,17 +2,6 @@
   "name": "YT - Add Subtitles to video",
   "nodes": [
     {
-      "parameters": {},
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
-      "position": [
-        48,
-        448
-      ],
-      "id": "ce9656f7-6750-436d-9731-25134d972017",
-      "name": "When clicking ‘Execute workflow’"
-    },
-    {
       "parameters": {
         "assignments": {
           "assignments": [
@@ -35,9 +24,15 @@
               "type": "string"
             },
             {
-              "id": "39f24cb8-3c0f-4683-9e52-91c85a9389a4",
-              "name": "file_id",
-              "value": "1EzC_TRm0NP7n2BA8udy5GZz7PxWnQAEL",
+              "id": "4e66aefc-ad8c-4f90-874a-ef320dc1b80a",
+              "name": "max_line_width",
+              "value": "15",
+              "type": "string"
+            },
+            {
+              "id": "58b450c7-4532-44f2-8cdd-a19079b87eac",
+              "name": "max_line_count",
+              "value": "1",
               "type": "string"
             }
           ]
@@ -47,24 +42,166 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        272,
-        448
+        224,
+        -288
       ],
-      "id": "56738ade-b87e-4b8e-a845-1ee19fab7b39",
+      "id": "22e78fb0-3703-4c24-b300-f8a775079c10",
       "name": "Config"
     },
     {
       "parameters": {
         "command": "=rm -rf {{ $('Config').item.json.path }}/* \nmkdir -p {{ $('Config').item.json.path }}"
       },
-      "id": "336c7090-b02e-4b2b-8087-e600c23588cc",
+      "id": "115ca0ec-04e9-411c-a338-a51b4a6c2842",
       "name": "Temporary workspace",
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        480,
-        448
+        432,
+        -288
       ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Start').item.json.video_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        16,
+        -32
+      ],
+      "id": "53e91f47-898a-4bfd-91ab-c918a74a4732",
+      "name": "Download video",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "3sq5fqrZEu7wWjPN",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "=cd {{ $('Config').item.json.path }} &&\n\nffmpeg -y -i video.{{ $('Config').item.json.video_extension }} \\\n  -map 0:v -c:v copy video_copy.{{ $('Config').item.json.video_extension }} \\\n  -map 0:a -c:a libmp3lame -b:a 192k audio.mp3\n"
+      },
+      "id": "638794bf-b140-4e69-b9c1-34e478e1ac58",
+      "name": "FFmpeg - Separate Audio & Video",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        432,
+        -32
+      ],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "content": "## Setup",
+        "height": 240,
+        "width": 688,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -96,
+        -352
+      ],
+      "typeVersion": 1,
+      "id": "a63e4e53-99fe-4e1d-8c7d-93b3193120af",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Download Video",
+        "height": 224,
+        "width": 688,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -96,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "48f7b5e2-1443-4d62-8658-bf227e12faa3",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Subtitles",
+        "height": 240,
+        "width": 688,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -96,
+        176
+      ],
+      "typeVersion": 1,
+      "id": "92eeb914-f49b-4e21-b466-fdb79d769fdc",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Add Subtitles to Video",
+        "height": 224,
+        "width": 464,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        672,
+        -352
+      ],
+      "typeVersion": 1,
+      "id": "a1027b3a-ee3d-4b00-b7f3-b48642462dc3",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Upload to drive",
+        "height": 208,
+        "width": 464,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        672,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "b91232a7-2961-478b-8ce2-b033da832a77",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "video_id"
+            },
+            {
+              "name": "output_folder_id"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        16,
+        -288
+      ],
+      "id": "70697c8e-6e4f-41a4-98f9-0b62748f60b0",
+      "name": "Start"
     },
     {
       "parameters": {
@@ -75,51 +212,25 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        880,
-        448
+        224,
+        -32
       ],
-      "id": "ac9c46df-a8fa-49fe-add0-15ef3a8bd4e9",
-      "name": "Save Videos Locally"
+      "id": "d867d214-1981-42d6-bdac-07d38732605f",
+      "name": "Save Video Locally"
     },
     {
       "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "={{ $('Config').item.json.file_id }}",
-          "mode": "id"
-        },
+        "fileSelector": "={{ $('Config').item.json.path }}/audio.mp3",
         "options": {}
       },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        672,
-        448
-      ],
-      "id": "dab001bc-8df5-4f14-bd1d-c9d5ea6722a6",
-      "name": "Download video",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "u9of3Sw1VSlRYg25",
-          "name": "Google Drive account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "executeOnce": false,
-        "command": "=cd {{ $('Config').item.json.path }} &&\n\nffmpeg -y -i video.{{ $('Config').item.json.video_extension }} \\\n  -map 0:v -c:v copy video_copy.{{ $('Config').item.json.video_extension }} \\\n  -map 0:a -c:a libmp3lame -b:a 192k audio.mp3\n"
-      },
-      "id": "9f49a8b0-d446-4bcf-9cc8-b59ce8d359c6",
-      "name": "FFmpeg - Separate Audio & Video",
-      "type": "n8n-nodes-base.executeCommand",
+      "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        1056,
-        448
+        16,
+        240
       ],
-      "alwaysOutputData": false
+      "id": "b2d1d1d6-4b6a-47ac-a84a-f1c954744413",
+      "name": "Get Audio Locally"
     },
     {
       "parameters": {
@@ -136,11 +247,11 @@
             },
             {
               "name": "max_line_width",
-              "value": "15"
+              "value": "={{ $('Config').item.json.max_line_width }}"
             },
             {
               "name": "max_line_count",
-              "value": "1"
+              "value": "={{ $('Config').item.json.max_line_count }}"
             }
           ]
         },
@@ -149,25 +260,11 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        1520,
-        448
+        224,
+        240
       ],
-      "id": "a5b271b3-7266-4938-bd9d-e91ac4a53bfd",
-      "name": "HTTP Request1"
-    },
-    {
-      "parameters": {
-        "fileSelector": "={{ $('Config').item.json.path }}/audio.mp3",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.readWriteFile",
-      "typeVersion": 1,
-      "position": [
-        1280,
-        448
-      ],
-      "id": "9fd3bef7-e246-45d5-8866-d86550777c14",
-      "name": "Get Only Local Audio"
+      "id": "bcb0adea-f83c-4b36-a7c0-7bb3d79ee1b6",
+      "name": "Generate Subtitles with Whisper"
     },
     {
       "parameters": {
@@ -181,11 +278,11 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1728,
-        448
+        432,
+        240
       ],
-      "id": "d402db4b-09b7-4b67-8000-d40b4b548fd0",
-      "name": "Convert to File"
+      "id": "266111d4-9da2-4871-9e1e-a9ded341665f",
+      "name": "Get srt file"
     },
     {
       "parameters": {
@@ -194,26 +291,11 @@
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        2128,
-        448
+        960,
+        -288
       ],
-      "id": "5946a183-0928-45c6-a300-910efcddc8be",
-      "name": "Execute Command"
-    },
-    {
-      "parameters": {
-        "operation": "write",
-        "fileName": "={{ $('Config').item.json.path }}/{{ $('Convert to File').item.binary.data.fileName }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.readWriteFile",
-      "typeVersion": 1,
-      "position": [
-        1904,
-        448
-      ],
-      "id": "78d51e52-a3db-4ead-9259-b9aea919a949",
-      "name": "Save Videos Locally1"
+      "id": "4c6e5f7b-23d4-4a3d-8d49-bbd12ea6f37a",
+      "name": "Add subtitles to Video"
     },
     {
       "parameters": {
@@ -223,26 +305,84 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        2336,
-        448
+        736,
+        -32
       ],
-      "id": "a4c0d3cc-fb4f-4b08-841a-c4fa5c9d3eab",
-      "name": "Get Only Local Audio1"
+      "id": "e7b5bb17-5ca1-4dfc-91a4-4d8d67ede2a6",
+      "name": "Get final video"
+    },
+    {
+      "parameters": {
+        "name": "subtitled_video.mp4",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Start').item.json.output_folder_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        960,
+        -32
+      ],
+      "id": "f047c843-18b0-4975-9f2a-edf6c00b4f2e",
+      "name": "Upload final video",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "3sq5fqrZEu7wWjPN",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ $('Config').item.json.path }}/{{ $('Get srt file').item.binary.data.fileName }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        736,
+        -288
+      ],
+      "id": "cf356d33-4c98-417c-8c70-8695b4d10024",
+      "name": "Save srt file locally"
+    },
+    {
+      "parameters": {
+        "content": "## 📝 Añadir Subtítulos a Video\n\nExtrae el audio, genera subtítulos con IA (Whisper) y los incrusta en el archivo de video final de manera completamente automática usando FFmpeg.\n\n### ⚙️ Configuración rápida\n1. Conecta tu nodo de Google Drive.\n2. Nodo **Config**:\n* `path` → Ubicación temporal de los archivos en disco.\n* `video_extension` → Extensión del formato contenedor (ej. mp4).\n* `max_line_width` → Ancho máximo en caracteres de cada línea.\n* `max_line_count` → Número máximo de líneas por pantalla de texto.\n👉 El comando FFmpeg en el nodo incluye personalización de la fuente que requerirás ajustar manualmente para cambiar su presentación (tipo de fuente, colores, etc).\n\n### 🧠 Qué hace el flujo\n* Descarga el video original y utiliza FFmpeg para extraer su pista de audio.\n* Envía este audio a un microservicio local Whisper enviando las opciones de texto como datos form.\n* Extrae el `.srt` generado y, usando un comando FFmpeg más complejo, compendia fuentes y alinea el texto en cada segmento de video.\n* Sube el producto final subtitulado de nuevo a tu Google Drive en el destino proporcionado desde el nodo `Start`.\n\n### 📺 Guía en video\n👉 [https://youtu.be/cFYV-726mBo](https://youtu.be/cFYV-726mBo)\n\n### 🔔 Más automatizaciones\n👉 [Hans Acha](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 768,
+        "width": 544
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -688,
+        -352
+      ],
+      "typeVersion": 1,
+      "id": "7680bee1-3108-4e07-80f4-7717848eaac8",
+      "name": "Sticky Note5"
     }
   ],
-  "pinData": {},
+  "pinData": {
+    "Start": [
+      {
+        "json": {
+          "video_id": "1rfPIuA7o8HCuGEynPCGZ-oldFaTx048z",
+          "output_folder_id": "1r2kdmPWAmO3CekdoL827XS_fRdjqi2JN"
+        }
+      }
+    ]
+  },
   "connections": {
-    "When clicking ‘Execute workflow’": {
-      "main": [
-        [
-          {
-            "node": "Config",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Config": {
       "main": [
         [
@@ -269,18 +409,7 @@
       "main": [
         [
           {
-            "node": "Save Videos Locally",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Save Videos Locally": {
-      "main": [
-        [
-          {
-            "node": "FFmpeg - Separate Audio & Video",
+            "node": "Save Video Locally",
             "type": "main",
             "index": 0
           }
@@ -291,62 +420,95 @@
       "main": [
         [
           {
-            "node": "Get Only Local Audio",
+            "node": "Get Audio Locally",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get Only Local Audio": {
+    "Start": {
       "main": [
         [
           {
-            "node": "HTTP Request1",
+            "node": "Config",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "HTTP Request1": {
+    "Save Video Locally": {
       "main": [
         [
           {
-            "node": "Convert to File",
+            "node": "FFmpeg - Separate Audio & Video",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Convert to File": {
+    "Get Audio Locally": {
       "main": [
         [
           {
-            "node": "Save Videos Locally1",
+            "node": "Generate Subtitles with Whisper",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Save Videos Locally1": {
+    "Generate Subtitles with Whisper": {
       "main": [
         [
           {
-            "node": "Execute Command",
+            "node": "Get srt file",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Execute Command": {
+    "Get srt file": {
       "main": [
         [
           {
-            "node": "Get Only Local Audio1",
+            "node": "Save srt file locally",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add subtitles to Video": {
+      "main": [
+        [
+          {
+            "node": "Get final video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get final video": {
+      "main": [
+        [
+          {
+            "node": "Upload final video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save srt file locally": {
+      "main": [
+        [
+          {
+            "node": "Add subtitles to Video",
             "type": "main",
             "index": 0
           }
@@ -360,11 +522,11 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "1d32f347-d0ee-47ab-adde-d00a295046a7",
+  "versionId": "c46b68e9-5ff9-4094-aac8-61e71b568e43",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
   },
-  "id": "gkaKxk7pFKfKkeXD",
+  "id": "sbbDf83QQIM5IvtY",
   "tags": []
 }
