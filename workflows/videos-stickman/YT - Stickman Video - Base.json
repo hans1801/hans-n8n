@@ -1,0 +1,1117 @@
+{
+  "name": "YT - Stickman Video - Base",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        736,
+        80
+      ],
+      "id": "8c3f5c8a-b7e9-4ef1-8c9e-b34f2fbd8051",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "41dbb125-072e-4959-91a0-cfc0a5cf93cc",
+              "name": "idea",
+              "value": "Tu salario no te hará rico",
+              "type": "string"
+            },
+            {
+              "id": "ebdff1e0-e39e-4600-99f4-e0cee79b96a0",
+              "name": "folder_name",
+              "value": "idea_0003",
+              "type": "string"
+            },
+            {
+              "id": "f029eebc-2f5b-44ac-8429-ec80d9e3ebf5",
+              "name": "bg_music_id",
+              "value": "1y2LLALP5IXLs9ldd6QbKVtTS5VHlFjOV",
+              "type": "string"
+            },
+            {
+              "id": "98c8e2cb-3874-420a-bd8b-d2a5c3c0a137",
+              "name": "ideas_hub_folder_id",
+              "value": "1hOc4TOJNJKiBjPOOy05zNAeSJDczLg7w",
+              "type": "string"
+            },
+            {
+              "id": "d975a375-9dc2-4ed6-a2c2-629bbd5f4d16",
+              "name": "reference_folder_id",
+              "value": "1yGIZpDnXI1oPpkqkCuCOnkfomZpVpV0n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        912,
+        80
+      ],
+      "id": "12168d19-cc8f-4c26-b820-06a8ae997758",
+      "name": "Config"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Config').item.json.idea }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# 🧠 PROMPT MAESTRO — GENERADOR DE MOTIVACIÓN DISRUPTIVA (ESTILO STICKMAN)\n\n---\n\n# 🎯 ROL DEL AGENTE\n\nEres una unidad narrativa experta en **psicología motivacional**, **storytelling viral** y **minimalismo visual**.\n\nTu misión es transformar la **IDEA_USUARIO** (Finanzas, Fitness, Propósito, Trabajo) en una **historia corta de alto impacto** protagonizada por un **stickman**.\n\nEstas historias están diseñadas para:\n\n* YouTube Shorts\n* TikTok\n* Instagram Reels\n\nObjetivo del contenido:\n\n* romper la resistencia mental del espectador\n* generar identificación inmediata\n* provocar acción o reflexión profunda\n\nEl espectador debe sentir que:\n\n* **el stickman es él**\n* la historia describe **su vida actual**\n* el cambio presentado es **difícil pero posible**\n\n---\n\n# 🚨 PRINCIPIO CLAVE — IDENTIFICACIÓN\n\nLa narración debe hablar **directamente al espectador**.\n\nEl stickman representa al espectador, por lo que el **voice over debe usar segunda persona (\"tú\")**.\n\nEl espectador debe sentir:\n\n* que la historia habla de **su situación**\n* que el problema le ocurre **a él**\n* que la transformación también puede ocurrirle\n\n---\n\n# 🧩 ESTRUCTURA NARRATIVA PROFESIONAL (4 ESCENAS)\n\nCada historia debe seguir esta progresión psicológica:\n\n```\nCuriosidad\n↓\nIdentificación\n↓\nContraste\n↓\nResultado inevitable\n```\n\n---\n\n## 1️⃣ Escena 1 — Hook interrogativo (Curiosity Hook)\n\nLa historia debe iniciar con **una pregunta directa al espectador**.\n\nObjetivo:\n\n* romper el patrón mental\n* generar curiosidad inmediata\n* introducir el tema\n\nReglas:\n\n* pregunta corta\n* dirigida al espectador\n* problema reconocible\n\nEjemplo:\n\n¿Crees que más salario te hará libre?\n\n---\n\n## 2️⃣ Escena 2 — Realidad común (Mass Behavior)\n\nDescribe el comportamiento típico de **la mayoría de personas**.\n\nObjetivo:\n\n* crear identificación\n* mostrar el patrón equivocado\n\nAquí se introduce **la masa**.\n\nEjemplo:\n\nPor eso trabajas más horas, esperando que el siguiente aumento cambie tu vida.\n\n---\n\n## 3️⃣ Escena 3 — Acción contraria (Contrarian Action)\n\nAquí ocurre el **cambio mental del protagonista**.\n\nSe introduce un contraste claro entre:\n\n* la masa\n* el protagonista\n\nUsar conectores como:\n\n* Pero\n* En cambio\n* Mientras\n* Entonces\n\nEjemplo:\n\nPero decides algo distinto: mientras otros gastan, tú empiezas a invertir.\n\n---\n\n## 4️⃣ Escena 4 — Resultado inevitable (Inevitable Outcome)\n\nEl final debe mostrar el **resultado natural e inevitable** de la acción anterior.\n\nDebe sentirse como **destino**.\n\nUsar estructuras como:\n\n* Y llegará el día…\n* Y un día ocurre…\n* Entonces sucede algo inevitable…\n\nEjemplo:\n\nY llegará el día: tu dinero trabajará por ti… mientras ellos siguen vendiendo su tiempo.\n\n---\n\n# 🎙️ REGLAS DEL VOICE OVER\n\nLa narración debe ser:\n\n* directa\n* natural\n* provocadora\n* emocionalmente clara\n\nRestricciones:\n\n* máximo **15 palabras por escena**\n* usar **segunda persona**\n* mantener **continuidad narrativa**\n\nLas escenas deben sentirse como **una única historia continua**, no frases separadas.\n\nUsar conectores naturales cuando sea necesario:\n\n* Pero\n* Por eso\n* Mientras\n* En cambio\n* Entonces\n* Y un día\n\nEvitar:\n\n* frases genéricas\n* lenguaje demasiado filosófico\n* ideas desconectadas entre escenas\n\n---\n\n# 🔥 REGLA DEL CIERRE (PUNCHLINE FINAL)\n\nEl cierre es la frase más importante del short.\n\nDebe ser:\n\n* corto\n* memorable\n* contundente\n\nCaracterísticas:\n\n* máximo **12 palabras**\n* mostrar contraste con la masa\n* proyectarse hacia el futuro\n\nFórmulas recomendadas:\n\n### Contraste\n\n```\nEllos siguen ___.\nTú ahora ___ .\n```\n\nEjemplo:\n\nEllos siguen vendiendo su tiempo. Tu dinero ahora trabaja por ti.\n\n---\n\n### Destino inevitable\n\n```\nY llegará el día: ___\n```\n\nEjemplo:\n\nY llegará el día: tu dinero trabajará por ti.\n\n---\n\nEvitar:\n\n* frases largas\n* lenguaje abstracto\n* palabras genéricas como \"poder absoluto\"\n\nEl cierre debe sentirse como **una verdad simple e inevitable**.\n\n---\n\n# 🎨 COHERENCIA VISUAL (ESTILO STICKMAN)\n\nEstilo visual:\n\n* stickman minimalista\n* líneas negras\n* fondo blanco o negro\n\nSolo **un elemento puede tener color** para dirigir la atención.\n\nEjemplos:\n\n| Color  | Significado |\n| ------ | ----------- |\n| verde  | dinero      |\n| rojo   | esfuerzo    |\n| dorado | éxito       |\n| azul   | claridad    |\n\n---\n\n# 🎬 NARRACIÓN VISUAL\n\nLos prompts visuales deben **representar literalmente el voice over**.\n\nLos campos `image_prompt` y `video_prompt` deben:\n\n* mostrar la acción descrita\n* ser simples y claros\n* mantener el estilo stickman minimalista\n\nFormato vertical obligatorio:\n\nVertical 9:16\n\n---\n\n# 📦 FORMATO DE SALIDA — JSON ESTRICTO\n\nResponde **exclusivamente** con el siguiente formato JSON:\n\n```json\n{\n  \"categoria_short\": \"motivacion_stickman\",\n  \"premisa_viral\": \"Hook narrativo principal\",\n  \"narrative_arc\": [\n    {\n      \"step\": 1,\n      \"label\": \"Hook interrogativo\",\n      \"voice_over\": \"\",\n      \"image_prompt\": {},\n      \"video_prompt\": {}\n    },\n    {\n      \"step\": 2,\n      \"label\": \"Realidad común\",\n      \"voice_over\": \"\",\n      \"image_prompt\": {},\n      \"video_prompt\": {}\n    },\n    {\n      \"step\": 3,\n      \"label\": \"Acción contraria\",\n      \"voice_over\": \"\",\n      \"image_prompt\": {},\n      \"video_prompt\": {}\n    },\n    {\n      \"step\": 4,\n      \"label\": \"Resultado inevitable\",\n      \"voice_over\": \"\",\n      \"image_prompt\": {},\n      \"video_prompt\": {}\n    }\n  ]\n}\n```\n\n---\n\n💡 **Uso del prompt**\n\nEntrada esperada:\n\n```\nIDEA_USUARIO: \"Tu salario no te hará rico\"\n```\n\nEl sistema debe transformar esa idea en una narrativa completa siguiendo las reglas anteriores.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1744,
+        288
+      ],
+      "id": "2afdbbe0-9d50-422c-b674-b33ea8e7f8e3",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1744,
+        80
+      ],
+      "id": "09fbd23e-4c17-4993-b078-67737fe1aa86",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "mDtapFDqnTOJgTtY",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"categoria_short\": \"terror_creepypasta\",\n  \"premisa_viral\": \"Hook narrativo creepypasta (ej: 'Esto le pasó a alguien…', 'Nunca hagas esto…', 'Pensé que estaba solo…').\",\n  \"narrative_arc\": [\n    {\n      \"step\": 1,\n      \"label\": \"The Hook\",\n      \"voice_over\": \"\",\n      \"image_prompt\": {\n        \"subject\": \"[Humanoid skeleton character, pose, clothing or objects relevant to the scene]\",\n        \"environment\": \"[Environment and atmosphere consistent with the scene]\",\n        \"technical_specs\": \"Vertical 9:16 framing.\"\n      },\n      \"video_prompt\": {\n        \"action\": \"[Physical movement interacting with environment]\",\n        \"acting\": \"[Bone inertia, subtle hesitation, human-like intention]\",\n        \"physics_vfx\": \"[Particles, dust, fluids, collision simulation]\",\n        \"camera\": \"[Dynamic cinematic camera path]\",\n        \"technical_specs\": \"Vertical 9:16 framing.\"\n      }\n    },\n    {\n      \"step\": 2,\n      \"label\": \"The Escalation\",\n      \"voice_over\": \"\",\n      \"image_prompt\": {\n        \"subject\": \"\",\n        \"environment\": \"\",\n        \"technical_specs\": \"Vertical 9:16 framing.\"\n      },\n      \"video_prompt\": {\n        \"action\": \"\",\n        \"acting\": \"\",\n        \"physics_vfx\": \"\",\n        \"camera\": \"\",\n        \"technical_specs\": \"Vertical 9:16 framing.\"\n      }\n    },\n    {\n      \"step\": 3,\n      \"label\": \"The Chaos\",\n      \"voice_over\": \"\",\n      \"image_prompt\": {\n        \"subject\": \"\",\n        \"environment\": \"\",\n        \"technical_specs\": \"Vertical 9:16 framing.\"\n      },\n      \"video_prompt\": {\n        \"action\": \"\",\n        \"acting\": \"\",\n        \"physics_vfx\": \"\",\n        \"camera\": \"\",\n        \"technical_specs\": \"Vertical 9:16 framing.\"\n      }\n    },\n    {\n      \"step\": 4,\n      \"label\": \"The Conclusion\",\n      \"voice_over\": \"\",\n      \"image_prompt\": {\n        \"subject\": \"\",\n        \"environment\": \"\",\n        \"technical_specs\": \"Vertical 9:16 framing.\"\n      },\n      \"video_prompt\": {\n        \"action\": \"\",\n        \"acting\": \"\",\n        \"physics_vfx\": \"\",\n        \"camera\": \"\",\n        \"technical_specs\": \"Vertical 9:16 framing.\"\n      }\n    }\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1888,
+        80
+      ],
+      "id": "0e963c69-9eab-45c6-8ef0-7f9d0d24027a",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        944,
+        576
+      ],
+      "id": "eb5f48e1-28e8-43e6-b523-6b3ac3da1ad9",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "content": "## Drive Setup",
+        "height": 464,
+        "width": 608,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1056,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "e2177088-bc92-490d-b7f0-0e96a1b9cee8",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Scenes Generator",
+        "height": 464,
+        "width": 512,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1680,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "765bb910-1703-47db-8eb2-112c2f4ac54a",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Content",
+        "height": 496,
+        "width": 960,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        704,
+        496
+      ],
+      "typeVersion": 1,
+      "id": "968c1191-e1cd-4964-a058-4c41c6981ea3",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $('Config').item.json.folder_name }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Config').item.json.ideas_hub_folder_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1104,
+        80
+      ],
+      "id": "74db1684-3b07-4917-ad79-1b7585642a5b",
+      "name": "Create idea folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "rA5OS4Y4vXIpUefh",
+          "name": "Google Drive Brand account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=images",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create idea folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1312,
+        80
+      ],
+      "id": "5b9a1432-7fed-46c2-960e-0fb9703ea017",
+      "name": "Create images folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "rA5OS4Y4vXIpUefh",
+          "name": "Google Drive Brand account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=videos",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create idea folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1104,
+        288
+      ],
+      "id": "1d84bb22-eb27-4006-ba23-17e65e57a407",
+      "name": "Create videos folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "rA5OS4Y4vXIpUefh",
+          "name": "Google Drive Brand account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "MmxG7ueMnFYm3X9l",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/MmxG7ueMnFYm3X9l",
+          "cachedResultName": "YT  - FFmpeg - Combine Videos Simple"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "input_folder_id": "={{ $('Create narrated videos folder').item.json.id }}",
+            "output_folder_id": "={{ $('Create merged video folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "input_folder_id",
+              "displayName": "input_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1136,
+        576
+      ],
+      "id": "e1533f54-f871-4f7a-bc92-d1a02a45fbb1",
+      "name": "Call 'YT  - FFmpeg - Combine Videos Simple'",
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $('AI Agent').first().json;\n\n// Mapeamos el arco narrativo para que n8n cree 4 ejecuciones independientes\nreturn input.output.narrative_arc.map((scene, index) => {\n  const step = index + 1;\n\n  return {\n    json: {\n      image_id: `image_step${step}`,\n      // Enviamos el objeto image_prompt completo convertido a String JSON\n      image_prompt: JSON.stringify(scene.image_prompt),\n      \n      audio_id: `audio_step${step}`,\n      // El prompt de audio suele ser el texto del Voice Over\n      audio_prompt: scene.voice_over, \n      \n      video_id: `video_step${step}`,\n      // Enviamos el objeto video_prompt completo convertido a String JSON\n      video_prompt: JSON.stringify(scene.video_prompt),\n    }\n  };\n});\n\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2048,
+        288
+      ],
+      "id": "dffe86ae-aab2-4ec9-946b-944f7243c391",
+      "name": "Separate scenes"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        752,
+        592
+      ],
+      "id": "97e8d4f5-a1e7-4536-bc3d-f7a6ae9cef46",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "BA8qLY4Q0aRh0eVm",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/BA8qLY4Q0aRh0eVm",
+          "cachedResultName": "YT - Image Style Reference"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "image_prompt": "={{ $('Loop Over Items').item.json.image_prompt }}",
+            "folder_reference_id": "={{ $('Config').item.json.reference_folder_id }}",
+            "filename_output": "={{ $('Loop Over Items').item.json.image_id }}",
+            "folder_output_id": "={{ $('Create images folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "image_prompt",
+              "displayName": "image_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "folder_reference_id",
+              "displayName": "folder_reference_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "filename_output",
+              "displayName": "filename_output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "folder_output_id",
+              "displayName": "folder_output_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        944,
+        800
+      ],
+      "id": "038e7ac0-e7f4-4e58-9deb-2ffa64e0eb30",
+      "name": "Call 'YT - Image Style Reference'",
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "WSdWnyLgaprmVEu1",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/WSdWnyLgaprmVEu1",
+          "cachedResultName": "YT - Text to Voice"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "text": "={{ $('Loop Over Items').item.json.audio_prompt }}",
+            "file_name": "={{ $('Loop Over Items').item.json.audio_id }}",
+            "output_folder_id": "={{ $('Create audios folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "file_name",
+              "displayName": "file_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1136,
+        800
+      ],
+      "id": "539263e9-08ff-4763-9c91-ff620730b06a",
+      "name": "Call 'YT - Text to Voice'",
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=audios",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create idea folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1520,
+        80
+      ],
+      "id": "502aeafb-07e0-4d6d-bdd8-36dd8794a0d1",
+      "name": "Create audios folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "rA5OS4Y4vXIpUefh",
+          "name": "Google Drive Brand account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=merged_video",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create idea folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1520,
+        288
+      ],
+      "id": "89e58bb5-a897-438e-86a9-f5908ef4ba39",
+      "name": "Create merged video folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "rA5OS4Y4vXIpUefh",
+          "name": "Google Drive Brand account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "cNAMtJnxYddr7Gn8",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/cNAMtJnxYddr7Gn8",
+          "cachedResultName": "YT - Image to Video"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "prompt": "={{ $('Loop Over Items').item.json.video_prompt }}",
+            "image_id": "={{ $('Call \\'YT - Image Style Reference\\'').item.json.output.id }}",
+            "filename_output": "={{ $('Loop Over Items').item.json.video_id }}",
+            "folder_output_id": "={{ $('Create videos folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "image_id",
+              "displayName": "image_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "filename_output",
+              "displayName": "filename_output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "folder_output_id",
+              "displayName": "folder_output_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1328,
+        800
+      ],
+      "id": "652aad08-75b3-4a02-93c5-21e0712b11bb",
+      "name": "Call 'YT - Image to Video'",
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "E3aaKA52kFTXr1nl",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/E3aaKA52kFTXr1nl",
+          "cachedResultName": "YT - Combine Video With Voice"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "video_id": "={{ $json.output.id }}",
+            "voice_id": "={{ $('Call \\'YT - Text to Voice\\'').item.json.id }}",
+            "output_folder_id": "={{ $('Create narrated videos folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "video_id",
+              "displayName": "video_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "voice_id",
+              "displayName": "voice_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1520,
+        800
+      ],
+      "id": "a7222a7b-e7f2-4bce-aefa-2992ab36fd74",
+      "name": "Call 'YT - Combine Video With Voice'",
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=narrated_video",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create idea folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1312,
+        288
+      ],
+      "id": "68af89c1-9771-4e34-a36e-0935689ca6a3",
+      "name": "Create narrated videos folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "rA5OS4Y4vXIpUefh",
+          "name": "Google Drive Brand account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Config",
+        "height": 464,
+        "width": 336,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        704,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "57ab1f31-c7b2-4632-8dd3-3d0bf909e0ad",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "y8pMzerSEFQ6WXkK",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/y8pMzerSEFQ6WXkK",
+          "cachedResultName": "YT  - FFmpeg - Mix Video & Audio"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "input_video_id": "={{ $('Call \\'YT  - FFmpeg - Combine Videos Simple\\'').item.json.output.id }}",
+            "output_folder_id": "={{ $('Create merged video folder').item.json.id }}",
+            "input_audio_id": "={{ $('Config').item.json.bg_music_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "input_video_id",
+              "displayName": "input_video_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "input_audio_id",
+              "displayName": "input_audio_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1328,
+        576
+      ],
+      "id": "078e3961-31dd-4920-899a-8f77c908dcea",
+      "name": "Call 'YT  - FFmpeg - Mix Video & Audio'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "L0HgrXuPbyRzh43w",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/L0HgrXuPbyRzh43w",
+          "cachedResultName": "YT - Add Subtitles to video"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "video_id": "={{ $('Call \\'YT  - FFmpeg - Mix Video & Audio\\'').item.json.output.id }}",
+            "output_folder_id": "={{ $('Create merged video folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "video_id",
+              "displayName": "video_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1520,
+        576
+      ],
+      "id": "3a32e3bf-833f-4260-81d5-08d03b3ae6b1",
+      "name": "Call 'YT - Add Subtitles to video'"
+    },
+    {
+      "parameters": {
+        "content": "## 🎬 YT - Stickman Video - Base\n\nFlujo semi-automático para crear vídeos minimalistas de stickman a partir de una idea personalizada.\n\n### ⚙️ Configuración rápida\n1. Importa los flujos de soporte (Image Style, Text to Voice, Video Assembly).\n2. Nodo **Config**:\n* `idea` → El concepto central del video (ej: \"Tu salario no te hará rico\").\n* `folder_name` → Nombre de la carpeta en Google Drive.\n* `bg_music_id` → ID del archivo de música de fondo en Google Drive.\n* `ideas_hub_folder_id` → ID de la carpeta donde se crearán los proyectos.\n* `reference_folder_id` → ID de la carpeta que contiene las imágenes de referencia de estilo.\n👉 Asegúrate de tener las credenciales de Gemini y Drive activas.\n\n### 🧠 Qué hace el flujo\n* Transforma una idea en un arco narrativo de 4 escenas mediante un AI Agent.\n* Genera assets (imágenes, voz, video) en paralelo para cada escena.\n* Ensambla el contenido final con música de fondo en una carpeta organizada.\n\n### 📺 Guía en video\n👉 [youtu.be/xxxxxx](https://youtu.be/xxxxxx)\n\n### 🔔 Más automatizaciones\n👉 [Hans Acha](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 992,
+        "width": 544
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        64,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "cee6de15-f514-4da6-9db0-96bfe0b3a287",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {},
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Create idea folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Separate scenes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT  - FFmpeg - Combine Videos Simple'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create idea folder": {
+      "main": [
+        [
+          {
+            "node": "Create images folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create images folder": {
+      "main": [
+        [
+          {
+            "node": "Create audios folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create videos folder": {
+      "main": [
+        [
+          {
+            "node": "Create narrated videos folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separate scenes": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call 'YT - Image Style Reference'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT - Image Style Reference'": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT - Text to Voice'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create audios folder": {
+      "main": [
+        [
+          {
+            "node": "Create videos folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create merged video folder": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT - Text to Voice'": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT - Image to Video'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT - Image to Video'": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT - Combine Video With Voice'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create narrated videos folder": {
+      "main": [
+        [
+          {
+            "node": "Create merged video folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT - Combine Video With Voice'": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT  - FFmpeg - Combine Videos Simple'": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT  - FFmpeg - Mix Video & Audio'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT  - FFmpeg - Mix Video & Audio'": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT - Add Subtitles to video'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "8246dd1e-339f-42c4-bad7-db49269a4dea",
+  "meta": {
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "tJMLs79J1Kw404Uq",
+  "tags": []
+}
