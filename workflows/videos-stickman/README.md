@@ -75,7 +75,7 @@ Versión automatizada con integración de subtítulos dinámicos. Este flujo est
 
 ---
 
-📺 **Tutorial:** [youtu.be/xxxxxx](https://youtu.be/xxxxxx)  
+📺 **Tutorial:** [youtu.be/WTDUC0dgPjY](https://youtu.be/WTDUC0dgPjY)  
 🔔 **Canal:** [Hans Acha](https://www.youtube.com/@Hans-Acha)
 
 ---
