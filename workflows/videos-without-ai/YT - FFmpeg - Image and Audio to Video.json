@@ -1,0 +1,453 @@
+{
+  "name": "YT - FFmpeg - Image and Audio to Video",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "input_audio_id"
+            },
+            {
+              "name": "input_image_id"
+            },
+            {
+              "name": "output_folder_id"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -208,
+        -96
+      ],
+      "id": "cf1e78d2-60cc-4452-99e6-ed998a6fe8db",
+      "name": "Start"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "51e6ccac-6a9f-459f-8ba6-4b70438648f9",
+              "name": "path",
+              "value": "./.n8n-files/ffmpeg-temp/image-to-video",
+              "type": "string"
+            },
+            {
+              "id": "f65100ae-e591-4487-b6d2-5663192e1b35",
+              "name": "filename_prefix",
+              "value": "image_to_video_",
+              "type": "string"
+            },
+            {
+              "id": "b6193555-9535-4d89-9992-c39b6117f160",
+              "name": "video_extension",
+              "value": "mp4",
+              "type": "string"
+            },
+            {
+              "id": "1dd176d3-4fc0-4099-901c-6bd954373bbc",
+              "name": "zoom_in",
+              "value": "0.2",
+              "type": "string"
+            },
+            {
+              "id": "78d1379c-b1ae-4ac4-821c-9b6824feb3db",
+              "name": "zoom_out",
+              "value": "0.2",
+              "type": "string"
+            },
+            {
+              "id": "38ae08a9-55ac-4d9b-bb28-05e3282e460e",
+              "name": "fps",
+              "value": "30",
+              "type": "string"
+            },
+            {
+              "id": "2a97e60e-e687-40a1-91ac-0db81f08543d",
+              "name": "zoom_amount",
+              "value": "0.2",
+              "type": "string"
+            },
+            {
+              "id": "abd41f48-77be-469e-a46d-c3a1ced23a2d",
+              "name": "rotation_deg",
+              "value": "1",
+              "type": "string"
+            },
+            {
+              "id": "ed8d20d3-9c76-4636-9978-b7b66ba6ee0a",
+              "name": "rotation_speed",
+              "value": "3",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        16,
+        -96
+      ],
+      "id": "a286e34c-f476-4507-a1cf-6bb6c8741c38",
+      "name": "Config"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Start').item.json.input_audio_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        32,
+        400
+      ],
+      "id": "88bc98af-24cd-40bf-b56c-0d919132b3c5",
+      "name": "Download Audio",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "3KBOJ1La4MtGkVbB",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Start').item.json.input_image_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        32,
+        176
+      ],
+      "id": "975d932e-992e-4bd3-a59a-eea1a86a2d8c",
+      "name": "Download Image",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "3KBOJ1La4MtGkVbB",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ $('Config').item.json.path }}/{{ $('Download Image').item.binary.data.fileName }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        240,
+        176
+      ],
+      "id": "8890c644-af32-4953-b6ca-5f03095fd28f",
+      "name": "Save Image Locally"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ $('Config').item.json.path }}/{{ $('Download Audio').item.binary.data.fileName }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        240,
+        400
+      ],
+      "id": "ded770aa-47e9-49a6-9223-3f3040a5a072",
+      "name": "Save Audio Locally"
+    },
+    {
+      "parameters": {
+        "command": "=cd {{ $('Config').item.json.path }} &&\n\nIMAGE=\"{{ $('Download Image').item.binary.data.fileName }}\"\nAUDIO=\"{{ $('Download Audio').item.binary.data.fileName }}\"\nOUTPUT=\"{{ $('Config').item.json.filename_prefix }}${IMAGE}.{{ $('Config').item.json.video_extension }}\"\n\nZI={{ $('Config').item.json.zoom_in }}\nZO={{ $('Config').item.json.zoom_out }}\nZOOM={{ $('Config').item.json.zoom_amount }}\nFPS={{ $('Config').item.json.fps }}\nROT={{ $('Config').item.json.rotation_deg }}\nROT_SPEED={{ $('Config').item.json.rotation_speed }}\n\nSIZE=$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 \"$IMAGE\")\n\nDUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 \"$AUDIO\")\n\nTOTAL_FRAMES=$(printf \"%.0f\" $(echo \"$DUR*$FPS\" | bc))\nF_IN=$(printf \"%.0f\" $(echo \"$TOTAL_FRAMES*$ZI\" | bc))\nF_OUT=$(printf \"%.0f\" $(echo \"$TOTAL_FRAMES*(1-$ZO)\" | bc))\n\nffmpeg -y -loop 1 \\\n-i \"$IMAGE\" \\\n-i \"$AUDIO\" \\\n-vf \"zoompan=z='if(lt(on,$F_IN),1+$ZOOM*(on/$F_IN),if(lt(on,$F_OUT),1+$ZOOM,(1+$ZOOM)-$ZOOM*((on-$F_OUT)/($TOTAL_FRAMES-$F_OUT))))':d=1:fps=$FPS:s=$SIZE:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)',rotate='$ROT*PI/180*sin(2*PI*t/$ROT_SPEED)':fillcolor=black,format=yuv420p\" \\\n-shortest \\\n-c:v libx264 -c:a aac -pix_fmt yuv420p \\\n\"$OUTPUT\""
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        496,
+        -96
+      ],
+      "id": "152da989-5e53-404b-b569-794145ee937d",
+      "name": "Generate Video"
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $('Config').item.json.path }}/{{ $('Config').item.json.filename_prefix }}{{ $('Download Image').item.binary.data.fileName }}.{{ $('Config').item.json.video_extension }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        704,
+        -96
+      ],
+      "id": "27cd1d26-84f4-4f72-baec-cf516e547962",
+      "name": "Get final video"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Config').item.json.filename_prefix }}{{ $('Download Image').item.binary.data.fileName }}.{{ $('Config').item.json.video_extension }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Start').item.json.output_folder_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        704,
+        160
+      ],
+      "id": "e57c999b-81a6-4400-97e7-d58ffd02000c",
+      "name": "Upload final video",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "3KBOJ1La4MtGkVbB",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Setup",
+        "height": 224,
+        "width": 672,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -272,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "bce8f169-22ac-4fc7-90fb-15b35211cfdc",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Download",
+        "height": 448,
+        "width": 672,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -272,
+        112
+      ],
+      "typeVersion": 1,
+      "id": "54a23326-ba73-4701-83be-befd559bec5a",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "command": "=rm -rf {{ $('Config').item.json.path }}/* \nmkdir -p {{ $('Config').item.json.path }}"
+      },
+      "id": "0dfb3179-3806-40cb-876b-42f3a60228a4",
+      "name": "Temporary workspace",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -96
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Generate Video",
+        "height": 224,
+        "width": 432,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        432,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "02d2bb4d-ebbe-4cbb-8f91-9e6a7d7acf97",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Upload Video",
+        "height": 208,
+        "width": 432,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        432,
+        112
+      ],
+      "typeVersion": 1,
+      "id": "968b743c-e711-412e-89d9-6ed8ccdac4c6",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## 🎙️ Image and Audio to Video\n\nEste flujo permite generar un video completo a partir de una única imagen y un archivo de audio, aplicando un efecto de movimiento cinemático (Ken Burns) sincronizado con la duración del audio.\n\n### ⚙️ Configuración rápida\n1. Importa el archivo JSON en n8n.\n2. Nodo **Config**:\n* `path` → Carpeta local para descargar y procesar archivos (ej. `./.n8n-files/temp`).\n* `filename_prefix` → Prefijo para los archivos generados.\n* `video_extension` → Extensión del video (ej. `mp4`).\n* `fps` → Frames por segundo (recomendado: 30).\n* `zoom_in` → Porcentaje inicial del tiempo destinado a zoom in (0.0 a 1.0).\n* `zoom_out` → Porcentaje final del tiempo destinado a zoom out (0.0 a 1.0).\n* `zoom_amount` → Intensidad del acercamiento (ej. `0.2`).\n* `rotation_deg` → Grado de oscilación para el efecto de movimiento.\n* `rotation_speed` → Velocidad de la oscilación en segundos.\n👉 Este flujo requiere que el audio y la imagen estén en Google Drive y se le pasen sus IDs.\n\n### 🧠 Qué hace el flujo\n* **Descarga Dual**: Obtiene tanto la imagen como el audio desde Google Drive de forma asíncrona.\n* **Cálculo Dinámico**: Usa `ffprobe` para medir la duración exacta del audio y calcular cuántos frames de video se necesitan.\n* **Renderizado FFmpeg**: Aplica una fórmula matemática de `zoompan` para acercar y alejar la cámara gradualmente, junto con una rotación sinusoidal.\n* **Subida**: Una vez generado el video, lo sube automáticamente a la carpeta de destino en Google Drive.\n\n### 📺 Guía en video\n👉 [youtu.be/xxxxxx](https://youtu.be/xxxxxx)\n\n### 🔔 Más automatizaciones\n👉 [Hans Acha](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 944,
+        "width": 528
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -832,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "46f63e93-b4f4-4480-b98c-53347d0d85e9",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {
+    "Start": [
+      {
+        "json": {
+          "input_audio_id": "1eu5IEdSG2_9fT0L-NlYxRHBLTXYGV7cV",
+          "input_image_id": "17gSNcr25Bt-HRmw-FE4-Vi12xcQGh6pS",
+          "output_folder_id": "1mmRDhx6R6NEbIyY3cPf_nIWklvqjzB6I"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Temporary workspace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Audio": {
+      "main": [
+        [
+          {
+            "node": "Save Audio Locally",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image": {
+      "main": [
+        [
+          {
+            "node": "Save Image Locally",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Image Locally": {
+      "main": [
+        [
+          {
+            "node": "Download Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Audio Locally": {
+      "main": [
+        [
+          {
+            "node": "Generate Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get final video": {
+      "main": [
+        [
+          {
+            "node": "Upload final video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Video": {
+      "main": [
+        [
+          {
+            "node": "Get final video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Temporary workspace": {
+      "main": [
+        [
+          {
+            "node": "Download Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "4d7d7f5e-4e1e-412a-8db3-5b38041a5589",
+  "meta": {
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "rAd1Lm9M0x0CphLd",
+  "tags": []
+}

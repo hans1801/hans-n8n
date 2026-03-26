@@ -1,0 +1,1095 @@
+{
+  "name": "YT - Skeleton Video - Base",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        32,
+        80
+      ],
+      "id": "744ed3cc-1bd4-4af3-84bd-10f9a99bf2b7",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "41dbb125-072e-4959-91a0-cfc0a5cf93cc",
+              "name": "idea",
+              "value": "Qué pasaría si corres sin parar por 100 días?",
+              "type": "string"
+            },
+            {
+              "id": "98c8e2cb-3874-420a-bd8b-d2a5c3c0a137",
+              "name": "ideas_hub_folder_id",
+              "value": "11xtDZm_oDX-x86Gx7imQIx4k7v2Sihcl",
+              "type": "string"
+            },
+            {
+              "id": "ebdff1e0-e39e-4600-99f4-e0cee79b96a0",
+              "name": "folder_name",
+              "value": "idea_00007",
+              "type": "string"
+            },
+            {
+              "id": "d975a375-9dc2-4ed6-a2c2-629bbd5f4d16",
+              "name": "reference_folder_id",
+              "value": "1Bg_EoCFumavatZ8zIHAKAE_ZP9GqKlqm",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        80
+      ],
+      "id": "299331ed-219b-4991-a4ff-74215d7424cf",
+      "name": "Config"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Config').item.json.idea }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# 🧠 PROMPT MAESTRO — SISTEMA CINEMATOGRÁFICO VEO 3 (SKELETON POV HUMAN NARRATION)\n\n---\n\n## 🎯 ROL DEL AGENTE\n\nEres una **unidad cinematográfica coordinada** por tres especialistas.\n\nTu misión es transformar la **IDEA_USUARIO** en una historia viral bajo la premisa:\n\n👉 **\"¿Qué pasaría si...?\"**\n\n⚠️ **Regla conceptual crítica:**\n\n* El **personaje visible SIEMPRE es un esqueleto**.\n* La **narración está dirigida a una persona real (el espectador)**.\n* Nunca describas al esqueleto en la narración.\n* El esqueleto representa visualmente al humano.\n\nEl espectador debe sentir:\n\n> *“Eso soy yo.”*\n\n---\n\n# 🚨 REGLA CRÍTICA NUEVA — COHERENCIA TOTAL DEL FINAL\n\nEl **final inesperado (escena 4)** debe ser una **consecuencia directa, lógica y acumulativa de la IDEA_USUARIO planteada en el hook**.\n\n❌ El giro NO puede ser:\n\n* filosófico\n* abstracto\n* moralista\n* desconectado del experimento inicial\n* un \"cambio de tema\"\n\n✅ El giro DEBE:\n\n* derivar físicamente de la acción extrema planteada\n* sentirse inevitable al mirar atrás\n* amplificar la premisa inicial\n* cerrar el experimento, no abrir otro\n\n### Fórmula obligatoria del final:\n\n**Hook extremo → consecuencia progresiva → falsa estabilidad → consecuencia REAL más profunda del mismo experimento**\n\nEl final debe responder implícitamente:\n\n> \"Ah… el verdadero peligro no era lo que parecía al inicio.\"\n\nPero SIEMPRE relacionado con la misma acción.\n\nEjemplo estructural (conceptual):\n\nIdea: \"100 litros de café\"\n\n* ❌ Final incorrecto: \"Y descubres que la vida es corta.\" (desconectado)\n* ✅ Final correcto: \"Tu corazón no explota… simplemente se detiene.\" (misma premisa, consecuencia real)\n\n---\n\n## 🎙️ REGLA 1 — AGENTE DE GUIÓN (VERSIÓN VIRAL DIRECTA PARA SHORTS)\n\n### ⚠️ REGLA PRINCIPAL\n\nLa narración debe sonar como:\n\n* título viral de YouTube Shorts\n* experimento extremo\n* pregunta científica absurda\n* curiosidad inmediata\n\n❌ NO filosofía\n❌ NO metáforas\n❌ NO lenguaje poético\n❌ NO reflexiones existenciales\n\n---\n\n### 📌 FORMATO OBLIGATORIO DEL HOOK\n\nDebe empezar con:\n\n* **¿Qué pasa si...?**\n* **¿Qué ocurre si...?**\n* **¿Qué pasaría si...?**\n\nSiempre usando:\n\n👉 acción concreta + cantidad extrema o consecuencia directa\n\n---\n\n## 🧩 ESTRUCTURA NARRATIVA OBLIGATORIA (4 ESCENAS)\n\n1. **Hook** — experimento extremo claro.\n2. **Consecuencia inmediata** — reacción física directa.\n3. **Calma engañosa** — aparente adaptación o estabilización.\n4. **Final inesperado** — consecuencia REAL más grave del MISMO experimento.\n\n⚠️ Regla psicológica:\nLa escena 3 debe bajar tensión.\nLa escena 4 debe demostrar que la amenaza seguía creciendo.\n\n---\n\n## 📏 REGLAS TÉCNICAS DE GUIÓN\n\n* Máximo **12 palabras por escena**.\n* Segunda persona (TÚ implícito).\n* Nunca mencionar esqueleto, huesos ni personaje.\n* Cada frase debe generar:\n\n> \"Tengo que ver qué pasa.\"\n\n---\n\n# 📸 REGLA 2 — SECUENCIALIDAD VISUAL OBLIGATORIA\n\nLas imágenes deben sentirse como una sola secuencia progresiva.\n\nEl deterioro visual debe:\n\n* acumularse\n* no reiniciarse\n* no exagerarse\n* mantenerse reconocible\n\nEl impacto final debe venir del giro narrativo, no de destruir al personaje.\n\n---\n\n# 🧬 REGLA GLOBAL DE COHERENCIA\n\nEl sistema debe verificar antes de generar el resultado:\n\n### ✅ Checklist obligatorio:\n\n1. ¿El final deriva directamente de la IDEA_USUARIO?\n2. ¿La consecuencia final es una evolución del mismo experimento?\n3. ¿La escena 3 crea falsa seguridad real?\n4. ¿Si elimino la IDEA_USUARIO, el final pierde sentido? (Si no pierde sentido → está mal construido)\n\n---\n\n## 📦 FORMATO DE SALIDA — JSON ESTRICTO\n\n(Se mantiene igual al original)\n\nEl sistema NO debe generar explicación adicional fuera del JSON.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1040,
+        288
+      ],
+      "id": "ae9b639d-9412-4aaa-923a-19e86bd9a9f8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        80
+      ],
+      "id": "860b1f72-b4f9-4bfd-9013-66bf7ad542c1",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "DY9eunBbIenrdjl7",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"hook_narrativo\": \"Esto es lo que pasa si un esqueleto intenta vivir en el núcleo de la Tierra...\",\n  \"global_settings\": {\n    \"character_assets\": \"Anatomically correct humanoid skeleton, 4K calcium textures, porous bone micro-detail, glowing amber eye-lights.\",\n    \"aspect_ratio\": \"9:16\",\n    \"rendering_engine\": \"Unreal Engine 5.4 / Path Tracing\"\n  },\n  \"narrative_arc\": [\n    {\n      \"step\": 1,\n      \"label\": \"The Hook\",\n      \"voice_over\": \"¿Alguna vez te has preguntado si tus huesos aguantarían el centro del planeta? Hoy bajaremos seis mil kilómetros para descubrirlo.\",\n      \"image_prompt\": {\n        \"subject_detail\": \"Skeleton wearing a high-tech chrome heat-suit, visor open showing the skull, bone texture showing realistic calcium pits.\",\n        \"environment_context\": \"Metallic elevator descending rapidly through layers of glowing metamorphic rock and crystalline structures.\",\n        \"optics\": \"24mm wide-angle lens, deep depth of field, sharp focus on the skull's frontal bone.\",\n        \"lighting\": \"Cool industrial cyan lighting inside the elevator contrasting with orange heat glow from outside.\",\n        \"style\": \"Hyper-realistic 3D CGI, cinematic sci-fi aesthetic, vertical 9:16.\"\n      },\n      \"video_prompt\": {\n        \"motion_sequence\": \"The skeleton looks at a digital thermometer rising rapidly, its bony fingers tapping the glass nervously.\",\n        \"character_acting\": \"Subtle rattling of the jaw, expressive eye-lights flickering, looking down through a floor window.\",\n        \"camera_movement\": \"Jittery handheld camera effect to simulate high-speed descent vibration.\",\n        \"vfx_dynamics\": \"Heat haze distortion appearing at the edges of the frame, sparks from the elevator cables.\",\n        \"physics\": \"High-velocity gravity simulation affecting the skeleton's posture.\"\n      }\n    },\n    {\n      \"step\": 2,\n      \"label\": \"The Escalation\",\n      \"voice_over\": \"A mitad de camino, la presión es de dos millones de atmósferas. Tus costillas empezarían a crujir como ramas secas bajo un camión.\",\n      \"image_prompt\": {\n        \"subject_detail\": \"Skeleton struggling to stand, hairline fractures appearing on the humerus and ribs, chrome suit starting to warp.\",\n        \"environment_context\": \"The elevator walls glowing cherry red, molten iron seeping through the door seals.\",\n        \"optics\": \"35mm anamorphic lens, slight chromatic aberration at the edges to simulate intense pressure.\",\n        \"lighting\": \"Harsh red incandescent glow, flickering emergency lights, heavy shadows.\",\n        \"style\": \"Ray-traced reflections on molten metal, photorealistic textures, vertical 9:16.\"\n      },\n      \"video_prompt\": {\n        \"motion_sequence\": \"The skeleton falls to its knees as the ceiling of the elevator begins to sag under extreme pressure.\",\n        \"character_acting\": \"Clenched teeth, hands desperately grasping the railing, trembling movements.\",\n        \"camera_movement\": \"Low-angle tilt up to emphasize the crushing weight of the environment.\",\n        \"vfx_dynamics\": \"Molten metal droplets floating in mid-air due to magnetic interference, heavy steam.\",\n        \"physics\": \"Rigid body destruction simulation on the elevator panels.\"\n      }\n    },\n    {\n      \"step\": 3,\n      \"label\": \"The Chaos\",\n      \"voice_over\": \"¡Llegamos al núcleo! Aquí el hierro es líquido y está a seis mil grados. Básicamente, te convertirías en sopa de calcio instantánea.\",\n      \"image_prompt\": {\n        \"subject_detail\": \"Skeleton completely engulfed in white-hot liquid metal, bones becoming incandescent and translucent.\",\n        \"environment_context\": \"A vast ocean of swirling liquid iron, massive magnetic solar-like flares in the background.\",\n        \"optics\": \"50mm macro lens focusing on the skull dissolving into liquid gold-like droplets.\",\n        \"lighting\": \"Extreme volumetric fire lighting, overexposed highlights, lens flares.\",\n        \"style\": \"High-end fluid simulation, 8k resolution, explosive visual impact, vertical 9:16.\"\n      },\n      \"video_prompt\": {\n        \"motion_sequence\": \"The skeleton disintegrates as it floats in the liquid core, bones melting into glowing white particles.\",\n        \"character_acting\": \"A final reach toward the camera before the arm dissolves into a spray of sparks.\",\n        \"camera_movement\": \"Fast-paced orbital rotation around the dissolving character.\",\n        \"vfx_dynamics\": \"Large scale SPH fluid simulation, plasma-like particle effects, white-hot embers.\",\n        \"physics\": \"Melting simulation with high viscosity fluid dynamics.\"\n      }\n    },\n    {\n      \"step\": 4,\n      \"label\": \"The Conclusion\",\n      \"voice_over\": \"Al final, solo serías un diamante muy caro en el centro de la Tierra. ¿Aún quieres mudarte aquí o prefieres el aire gratis?\",\n      \"image_prompt\": {\n        \"subject_detail\": \"A single, skull-shaped diamond resting on a bed of cooled, black obsidian rock.\",\n        \"environment_context\": \"Dark, quiet cave in the inner core, subtle glints of light reflecting off the diamond surfaces.\",\n        \"optics\": \"100mm macro lens, extremely shallow depth of field, focus on the diamond skull's eye.\",\n        \"lighting\": \"Single spotlight 'moonlight' effect, ethereal blue glow, sharp caustic reflections.\",\n        \"style\": \"Product-shot quality, elegant and ironic, 8k render, vertical 9:16.\"\n      },\n      \"video_prompt\": {\n        \"motion_sequence\": \"The camera slowly pulls back from the diamond skull as a single wisp of smoke rises from it.\",\n        \"character_acting\": \"Static object but with a 'twinkle' in the diamond eye socket.\",\n        \"camera_movement\": \"Very slow pull-out (reverse dolly) to reveal the emptiness of the core.\",\n        \"vfx_dynamics\": \"Floating dust motes catching the light, subtle heat distortion in the background.\",\n        \"physics\": \"Ray-traced light refraction through the diamond material.\"\n      }\n    }\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1184,
+        80
+      ],
+      "id": "a377383d-9992-44f2-9261-fe33cfe68c11",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        240,
+        576
+      ],
+      "id": "8c39cfe8-346a-48f7-8cfa-7b672b637259",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "content": "## Drive Setup",
+        "height": 464,
+        "width": 608,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        352,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "93cfd10d-7c1d-4a3d-a6d4-46891515f676",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Scenes Generator",
+        "height": 464,
+        "width": 512,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        976,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "86f03df2-8996-4250-aa80-9d27b179966e",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Content",
+        "height": 656,
+        "width": 960,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        496
+      ],
+      "typeVersion": 1,
+      "id": "f52d8bc3-7169-4ad4-b6a2-9e6e60a71548",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $('Config').item.json.folder_name }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Config').item.json.ideas_hub_folder_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        400,
+        80
+      ],
+      "id": "49305958-8a5c-42dd-9f61-c86602edb660",
+      "name": "Create idea folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "3KBOJ1La4MtGkVbB",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=images",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create idea folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        608,
+        80
+      ],
+      "id": "98eec796-0b11-4d6e-a185-f01576750dd0",
+      "name": "Create images folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "3KBOJ1La4MtGkVbB",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=videos",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create idea folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        400,
+        288
+      ],
+      "id": "9e5ef3d3-c0e0-4ae2-b47e-4a7cbb95fea0",
+      "name": "Create videos folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "3KBOJ1La4MtGkVbB",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "TZIpfSX5xWwpXRNX",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/TZIpfSX5xWwpXRNX",
+          "cachedResultName": "YT  - FFmpeg - Combine Videos Simple"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "input_folder_id": "={{ $('Create narrated videos folder').item.json.id }}",
+            "output_folder_id": "={{ $('Create merged video folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "input_folder_id",
+              "displayName": "input_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        432,
+        576
+      ],
+      "id": "b5954832-30e5-4cd7-b7a1-5f0c52b62319",
+      "name": "Call 'YT  - FFmpeg - Combine Videos Simple'",
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $('AI Agent').first().json;\n\n// Mapeamos el arco narrativo para que n8n cree 4 ejecuciones independientes\nreturn input.output.narrative_arc.map((scene, index) => {\n  const step = index + 1;\n\n  return {\n    json: {\n      image_id: `image_step${step}`,\n      // Enviamos el objeto image_prompt completo convertido a String JSON\n      image_prompt: JSON.stringify(scene.image_prompt),\n      \n      audio_id: `audio_step${step}`,\n      // El prompt de audio suele ser el texto del Voice Over\n      audio_prompt: scene.voice_over, \n      \n      video_id: `video_step${step}`,\n      // Enviamos el objeto video_prompt completo convertido a String JSON\n      video_prompt: JSON.stringify(scene.video_prompt),\n    }\n  };\n});\n\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1344,
+        288
+      ],
+      "id": "b16faf23-e32d-48b5-90a9-d0af22a518aa",
+      "name": "Separate scenes"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        48,
+        592
+      ],
+      "id": "ade6ab2b-f0c1-4006-b7a0-275a9759bae0",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "meN2HXwaG5UMWmWx",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/meN2HXwaG5UMWmWx",
+          "cachedResultName": "YT - Image Style Reference"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "image_prompt": "={{ $('Loop Over Items').item.json.image_prompt }}",
+            "folder_reference_id": "={{ $('Config').item.json.reference_folder_id }}",
+            "filename_output": "={{ $('Loop Over Items').item.json.image_id }}",
+            "folder_output_id": "={{ $('Create images folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "image_prompt",
+              "displayName": "image_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "folder_reference_id",
+              "displayName": "folder_reference_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "filename_output",
+              "displayName": "filename_output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "folder_output_id",
+              "displayName": "folder_output_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        240,
+        800
+      ],
+      "id": "8d42fa12-31f9-4d2c-a7e1-1c2159eb1ac6",
+      "name": "Call 'YT - Image Style Reference'",
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "ekuV59NIfkjYTEP4",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/ekuV59NIfkjYTEP4",
+          "cachedResultName": "YT - Text to Voice"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "text": "={{ $('Loop Over Items').item.json.audio_prompt }}",
+            "file_name": "={{ $('Loop Over Items').item.json.audio_id }}",
+            "output_folder_id": "={{ $('Create audios folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "file_name",
+              "displayName": "file_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        432,
+        800
+      ],
+      "id": "7d96d6fd-eab5-4424-b07c-25eea37c59a6",
+      "name": "Call 'YT - Text to Voice'",
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=audios",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create idea folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        816,
+        80
+      ],
+      "id": "090b5d32-a207-4f0a-b11b-1b8152f0e0d9",
+      "name": "Create audios folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "3KBOJ1La4MtGkVbB",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=merged_video",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create idea folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        816,
+        288
+      ],
+      "id": "d765e6d2-5099-42d0-8429-7361641e4766",
+      "name": "Create merged video folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "3KBOJ1La4MtGkVbB",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "ZG72S67igS5henmg",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/ZG72S67igS5henmg",
+          "cachedResultName": "YT - Combine Video With Voice"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "video_id": "={{ $('Call \\'YT - FFmpeg - Image and Audio to Video\\'').item.json.id }}",
+            "voice_id": "={{ $('Call \\'YT - Text to Voice\\'').item.json.id }}",
+            "output_folder_id": "={{ $('Create narrated videos folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "video_id",
+              "displayName": "video_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "voice_id",
+              "displayName": "voice_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        816,
+        800
+      ],
+      "id": "6555f6db-a6ee-4be5-81a6-9c58831051e4",
+      "name": "Call 'YT - Combine Video With Voice'",
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=narrated_video",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create idea folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        608,
+        288
+      ],
+      "id": "40fb51d0-8159-49ce-8691-a836f0c4d9f0",
+      "name": "Create narrated videos folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "3KBOJ1La4MtGkVbB",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Config",
+        "height": 464,
+        "width": 336,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "00c11777-850b-4344-a6df-ca3bb260b2c3",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## 🦴 YT - Skeleton Video - Base\n\nWorkflow técnico principal que transforma una idea manual en un video cinematográfico de 4 escenas optimizado para YouTube Shorts.\n\n### ⚙️ Configuración rápida\n1. Importa el archivo `.json` y los workflows de soporte.\n2. Nodo **Config**:\n* `idea` → El tema central del video (ej. Qué pasaría si corres sin parar por 100 días?).\n* `ideas_hub_folder_id` → Carpeta donde se crearán los recursos en Drive.\n* `folder_name` → nombre de la carpeta donde se guardara.\n* `reference_folder_id` → ID de la carpeta que contiene la imagen base para el estilo del esqueleto.\n\n👉 Asegúrate de tener conectadas las credenciales de Gemini, Drive y ElevenLabs.\n\n### 🧠 Qué hace el flujo\n* **Agente Maestro AI**: Utiliza Gemini para desglosar la idea en un arco narrativo de 4 pasos (Hook, Escalación, Caos y Final Inesperado).\n* **Consistencia Visual**: Genera prompts técnicos detallados que bloquean la identidad del esqueleto para que sea el mismo en todas las escenas.\n* **Producción Técnica**: Dispara sub-workflows para generar voz, imágenes y animaciones de video de forma coordinada.\n* **Renderización**: Combina los elementos multimedia y entrega un archivo final listo para distribución.\n\n### 📺 Guía en video\n👉 [https://youtu.be/TbN-A0eXN8U](https://youtu.be/TbN-A0eXN8U)\n\n### 🔔 Más automatizaciones\n👉 [Hans Acha](https://www.youtube.com/@Hans-Acha)\n",
+        "height": 976,
+        "width": 416
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -496,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "e8e342c0-db42-4aac-8f42-c4f68f489557",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "ThOe83bae2jvLI4f",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/ThOe83bae2jvLI4f",
+          "cachedResultName": "YT - Image to Video"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "prompt": "={{ $('Loop Over Items').item.json.video_prompt }}",
+            "image_id": "={{ $('Call \\'YT - Image Style Reference\\'').item.json.output.id }}",
+            "filename_output": "={{ $('Loop Over Items').item.json.video_id }}",
+            "folder_output_id": "={{ $('Create videos folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "image_id",
+              "displayName": "image_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "filename_output",
+              "displayName": "filename_output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "folder_output_id",
+              "displayName": "folder_output_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        624,
+        1008
+      ],
+      "id": "3712a9ca-dccc-4b74-a164-6bdb4a70ef59",
+      "name": "Call 'YT - Image to Video'1",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "rAd1Lm9M0x0CphLd",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/rAd1Lm9M0x0CphLd",
+          "cachedResultName": "YT - FFmpeg - Image and Audio to Video"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "input_audio_id": "={{ $('Call \\'YT - Text to Voice\\'').item.json.id }}",
+            "input_image_id": "={{ $('Call \\'YT - Image Style Reference\\'').item.json.output.id }}",
+            "output_folder_id": "={{ $('Create videos folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "input_audio_id",
+              "displayName": "input_audio_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "input_image_id",
+              "displayName": "input_image_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        624,
+        800
+      ],
+      "id": "7ad90fd5-f8c3-4bdb-93f5-127bf890f27b",
+      "name": "Call 'YT - FFmpeg - Image and Audio to Video'",
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "ZudS9djxJb9CqLUj",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/ZudS9djxJb9CqLUj",
+          "cachedResultName": "YT - Add Subtitles to video"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "video_id": "={{ $('Call \\'YT  - FFmpeg - Combine Videos Simple\\'').item.json.output.id }}",
+            "output_folder_id": "={{ $('Create merged video folder').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "video_id",
+              "displayName": "video_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "output_folder_id",
+              "displayName": "output_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        624,
+        576
+      ],
+      "id": "16c07388-c459-4179-9342-299eba8cbf78",
+      "name": "Call 'YT - Add Subtitles to video'"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Create idea folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Separate scenes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT  - FFmpeg - Combine Videos Simple'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create idea folder": {
+      "main": [
+        [
+          {
+            "node": "Create images folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create images folder": {
+      "main": [
+        [
+          {
+            "node": "Create audios folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create videos folder": {
+      "main": [
+        [
+          {
+            "node": "Create narrated videos folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separate scenes": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call 'YT - Image Style Reference'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT - Image Style Reference'": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT - Text to Voice'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create audios folder": {
+      "main": [
+        [
+          {
+            "node": "Create videos folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create merged video folder": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT - Text to Voice'": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT - FFmpeg - Image and Audio to Video'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create narrated videos folder": {
+      "main": [
+        [
+          {
+            "node": "Create merged video folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT - Combine Video With Voice'": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT  - FFmpeg - Combine Videos Simple'": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT - Add Subtitles to video'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'YT - FFmpeg - Image and Audio to Video'": {
+      "main": [
+        [
+          {
+            "node": "Call 'YT - Combine Video With Voice'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "261ccd7b-f0b9-4cea-9bdd-79dd6ee44cd0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
+  },
+  "id": "P208gFkEU6RbjwXY",
+  "tags": []
+}
