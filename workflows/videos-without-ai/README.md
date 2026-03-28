@@ -18,26 +18,29 @@ Sistema avanzado de flujos n8n para generar videos dinámicos de alta calidad a 
 ## 📦 Flujos Detallados
 
 ### 🖼️ 1. YT - FFmpeg - Image to Video
-Este flujo transforma una imagen estática en un clip de video (`mp4`), ofreciendo una versión **Simple** (sin movimiento) y una **Advanced** (con efectos de cámara).
+Este flujo permite transformar una imagen estática en un clip de video (`mp4`), ofreciendo una versión **Basic** (estática) y una **Advanced** (con efectos de cámara dinámicos).
 
 #### 🛠️ Configuración (Nodos Config)
 
 | Parámetro | Descripción | Valor Sugerido |
 | :--- | :--- | :--- |
-| `path` | Carpeta local donde se descargan y procesan los archivos. | `./.n8n-files/temp/image-to-video` |
-| `filename_prefix` | Prefijo para el archivo de video generado. | `video_` |
-| `video_extension` | Formato del video (ej. `mp4`, `mkv`). | `mp4` |
+| `input_image_id` | ID del archivo de imagen en Google Drive. | `17gSNcr...` |
+| `path` | Carpeta local para el procesamiento (debe existir). | `./.n8n-files/ffmpeg-temp/image-to-video` |
+| `filename_prefix` | Prefijo para los archivos generados. | `image_to_video_` |
+| `video_extension` | Extensión del video de salida (ej. `mp4`). | `mp4` |
 | `fps` | Cuadros por segundo (fluidez). | `30` |
 | `seconds` | Duración total del video en segundos. | `5` |
-| `zoom_in` | (Solo Advanced) % del tiempo inicial para zoom-in (0 a 1.0). | `0.2` |
-| `zoom_out` | (Solo Advanced) % del tiempo final para zoom-out (0 a 1.0). | `0.2` |
-| `rotation_deg` | (Solo Advanced) Grados máximos de oscilación. | `1` |
-| `rotation_speed`| (Solo Advanced) Segundos por cada ciclo de rotación. | `3` |
+| `zoom_in` | (Advanced) % del tiempo inicial para zoom-in (0.0 - 1.0). | `0.2` |
+| `zoom_out` | (Advanced) % del tiempo final para zoom-out (0.0 - 1.0). | `0.2` |
+| `rotation_deg` | (Advanced) Grados máximos de inclinación. | `1` |
+| `rotation_speed`| (Advanced) Segundos por cada ciclo de rotación. | `3` |
 
 #### 🧠 Funcionamiento
-1. **Descarga**: Obtiene la imagen desde Google Drive usando el `input_image_id`.
-2. **Renderizado**: Ejecuta FFmpeg aplicando filtros de `zoompan` y `rotate` para simular movimiento de cámara realista.
-3. **Entrega**: El clip se guarda en el disco local listo para ser usado por otros subflujos.
+1. **Limpieza**: El flujo limpia la carpeta temporal configurada en `path` para evitar conflictos.
+2. **Descarga**: Obtiene la imagen desde Google Drive utilizando el `input_image_id`.
+3. **Renderizado (Basic)**: Crea un video estático repitiendo el frame de la imagen durante los segundos definidos.
+4. **Renderizado (Advanced)**: Aplica filtros de `zoompan` (movimiento Ken Burns) y `rotate` (oscilación sinusoidal) para un acabado profesional.
+5. **Entrega**: El archivo resultante queda alojado en el sistema local para ser consumido por otros procesos.
 
 ---
 

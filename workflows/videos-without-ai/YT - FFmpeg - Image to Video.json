@@ -3,144 +3,14 @@
   "nodes": [
     {
       "parameters": {
-        "workflowInputs": {
-          "values": [
-            {
-              "name": "input_image_id"
-            },
-            {
-              "name": "output_folder_id"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
-      "typeVersion": 1.1,
-      "position": [
-        256,
-        -368
-      ],
-      "id": "92815be2-ac68-4c8a-963e-0a1bd3efa37e",
-      "name": "Start"
-    },
-    {
-      "parameters": {
         "assignments": {
           "assignments": [
             {
-              "id": "51e6ccac-6a9f-459f-8ba6-4b70438648f9",
-              "name": "path",
-              "value": "./.n8n-files/ffmpeg-temp/image-to-video-simple",
+              "id": "7145a950-0973-4ba2-ace6-3c2bbeefef2b",
+              "name": "input_image_id",
+              "value": "17gSNcr25Bt-HRmw-FE4-Vi12xcQGh6pS",
               "type": "string"
             },
-            {
-              "id": "f65100ae-e591-4487-b6d2-5663192e1b35",
-              "name": "filename_prefix",
-              "value": "image_to_video_",
-              "type": "string"
-            },
-            {
-              "id": "b6193555-9535-4d89-9992-c39b6117f160",
-              "name": "video_extension",
-              "value": "mp4",
-              "type": "string"
-            },
-            {
-              "id": "2a97e60e-e687-40a1-91ac-0db81f08543d",
-              "name": "fps",
-              "value": "30",
-              "type": "string"
-            },
-            {
-              "id": "abd41f48-77be-469e-a46d-c3a1ced23a2d",
-              "name": "seconds",
-              "value": "5",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        528,
-        -368
-      ],
-      "id": "ac9ccdd9-1fd3-423d-ad69-d3f3f4995cbf",
-      "name": "Simple - Config"
-    },
-    {
-      "parameters": {
-        "command": "=rm -rf {{ $('Simple - Config').item.json.path }}/* \nmkdir -p {{ $('Simple - Config').item.json.path }}"
-      },
-      "id": "a2587794-36b0-4f87-97fd-61d8d17001cd",
-      "name": "Simple - Temporary workspace",
-      "type": "n8n-nodes-base.executeCommand",
-      "typeVersion": 1,
-      "position": [
-        752,
-        -368
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "={{ $('Start').item.json.input_image_id }}",
-          "mode": "id"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        544,
-        -96
-      ],
-      "id": "1148f024-96d7-4303-a904-2e1e2180a808",
-      "name": "Simple - Download Image",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "3KBOJ1La4MtGkVbB",
-          "name": "Google Drive account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "write",
-        "fileName": "={{ $('Simple - Config').item.json.path }}/{{ $('Simple - Download Image').item.binary.data.fileName }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.readWriteFile",
-      "typeVersion": 1,
-      "position": [
-        752,
-        -96
-      ],
-      "id": "e413260b-babc-4af4-b19b-032a72ecc1ee",
-      "name": "Simple - Save Image Locally"
-    },
-    {
-      "parameters": {
-        "fileSelector": "={{ $('Simple - Config').item.json.path }}/{{ $('Simple - Config').item.json.filename_prefix }}{{ $('Simple - Download Image').item.binary.data.fileName }}.{{ $('Simple - Config').item.json.video_extension }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.readWriteFile",
-      "typeVersion": 1,
-      "position": [
-        1232,
-        -368
-      ],
-      "id": "c7cd6fb9-2530-4e5d-a617-26cac8911188",
-      "name": "Simple - Get final video"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
             {
               "id": "51e6ccac-6a9f-459f-8ba6-4b70438648f9",
               "name": "path",
@@ -150,7 +20,7 @@
             {
               "id": "f65100ae-e591-4487-b6d2-5663192e1b35",
               "name": "filename_prefix",
-              "value": "image_to_video_",
+              "value": "advanced_image_to_video_",
               "type": "string"
             },
             {
@@ -160,7 +30,7 @@
               "type": "string"
             },
             {
-              "id": "2a97e60e-e687-40a1-91ac-0db81f08543d",
+              "id": "37ce9f39-a710-43a0-aacd-2525325734d9",
               "name": "fps",
               "value": "30",
               "type": "string"
@@ -203,7 +73,7 @@
       "typeVersion": 3.4,
       "position": [
         528,
-        368
+        208
       ],
       "id": "3fff8151-7bfd-4447-a41c-5f2cd04f8dff",
       "name": "Advanced - Config"
@@ -218,7 +88,7 @@
       "typeVersion": 1,
       "position": [
         768,
-        368
+        208
       ]
     },
     {
@@ -226,7 +96,7 @@
         "operation": "download",
         "fileId": {
           "__rl": true,
-          "value": "={{ $('Start').item.json.input_image_id }}",
+          "value": "={{ $('Advanced - Config').item.json.input_image_id }}",
           "mode": "id"
         },
         "options": {}
@@ -235,7 +105,7 @@
       "typeVersion": 3,
       "position": [
         528,
-        624
+        464
       ],
       "id": "47590255-42f5-4152-9641-165e17c97251",
       "name": "Advanced - Download Image",
@@ -256,7 +126,7 @@
       "typeVersion": 1,
       "position": [
         768,
-        624
+        464
       ],
       "id": "cceb604f-6ba5-4536-93c1-6ee7c9219134",
       "name": "Advanced - Save Image Locally"
@@ -270,7 +140,7 @@
       "typeVersion": 1,
       "position": [
         1232,
-        368
+        208
       ],
       "id": "25a0b3e6-78fa-49c5-a40f-2489b170619f",
       "name": "Advanced - Get final video"
@@ -333,7 +203,7 @@
       "type": "n8n-nodes-base.stickyNote",
       "position": [
         464,
-        288
+        128
       ],
       "typeVersion": 1,
       "id": "d62de911-ba86-452d-bab7-ff3a2eca8596",
@@ -349,7 +219,7 @@
       "type": "n8n-nodes-base.stickyNote",
       "position": [
         464,
-        560
+        400
       ],
       "typeVersion": 1,
       "id": "cd7a8150-5cd3-4dc1-9575-e86a070dbbcc",
@@ -365,24 +235,11 @@
       "type": "n8n-nodes-base.stickyNote",
       "position": [
         960,
-        288
+        128
       ],
       "typeVersion": 1,
       "id": "4c212b41-8f17-4ec7-b7e4-e4bf65bb8fdb",
       "name": "Sticky Note5"
-    },
-    {
-      "parameters": {
-        "command": "=cd {{ $('Simple - Config').item.json.path }} &&\n\nIMAGE=\"{{ $('Simple - Download Image').item.binary.data.fileName }}\"\nOUTPUT=\"{{ $('Simple - Config').item.json.filename_prefix }}${IMAGE}.{{ $('Simple - Config').item.json.video_extension }}\"\n\nDURATION={{ $('Simple - Config').item.json.seconds }}\nFPS={{ $('Simple - Config').item.json.fps }}\n\nffmpeg -y -loop 1 \\\n-i \"$IMAGE\" \\\n-t $DURATION \\\n-r $FPS \\\n-c:v libx264 \\\n-pix_fmt yuv420p \\\n\"$OUTPUT\""
-      },
-      "type": "n8n-nodes-base.executeCommand",
-      "typeVersion": 1,
-      "position": [
-        1008,
-        -368
-      ],
-      "id": "bb9212a7-e09b-4e29-95a5-03dcf85c2ff0",
-      "name": "Simple - FFmpeg Generate Video"
     },
     {
       "parameters": {
@@ -392,98 +249,173 @@
       "typeVersion": 1,
       "position": [
         1008,
-        368
+        208
       ],
       "id": "8c673609-3f5d-427e-911e-3e9fbad3966b",
       "name": "Advanced - FFmpeg Generate Video"
     },
     {
       "parameters": {
-        "content": "## 🖼️ Image to Video\n\nEste flujo permite transformar una imagen estática en un clip de video (mp4), ofreciendo una versión simple (estática) y una avanzada con efectos de movimiento.\n\n### ⚙️ Configuración rápida\n1. Importa el archivo JSON en n8n.\n2. Nodo **Simple - Config**:\n* `path` → Carpeta local para procesar el video.\n* `filename_prefix` → Prefijo del archivo de salida.\n* `video_extension` → Extensión del video (ej. `mp4`).\n* `fps` → Frames por segundo (recomendado: 30).\n* `seconds` → Duración del video en segundos.\n3. Nodo **Advanced - Config** (además de los anteriores):\n* `zoom_in` → Porcentaje inicial del tiempo para zoom in.\n* `zoom_out` → Porcentaje final del tiempo para zoom out.\n* `rotation_deg` → Grados de rotación máxima.\n* `rotation_speed` → Velocidad del movimiento de rotación.\n👉 Asegúrate de que n8n tenga permisos de escritura en la carpeta definida en `path`.\n\n### 🧠 Qué hace el flujo\n* **Descarga**: Obtiene la imagen original desde una carpeta de Google Drive.\n* **Procesamiento Simple**: Genera un video de duración fija repitiendo el frame de la imagen.\n* **Procesamiento Avanzado**: Aplica un filtro de `zoompan` y una ligera rotación matemática para dar dinamismo a la imagen.\n* **Resultado**: Genera el archivo final en el sistema de archivos local listo para ser usado por otros flujos.\n\n### 📺 Guía en video\n👉 [youtu.be/xxxxxx](https://youtu.be/xxxxxx)\n\n### 🔔 Más automatizaciones\n👉 [Hans Acha](https://www.youtube.com/@Hans-Acha)\n",
+        "content": "## 🖼️ Image to Video\n\nEste flujo permite transformar una imagen estática en un clip de video (mp4), ofreciendo una versión Basic (estática) y una avanzada con efectos de movimiento.\n\n### ⚙️ Configuración rápida\n1. Importa el archivo JSON en n8n.\n2. Nodo **Basic - Config**:\n* `path` → Carpeta local para procesar el video.\n* `filename_prefix` → Prefijo del archivo de salida.\n* `video_extension` → Extensión del video (ej. `mp4`).\n* `fps` → Frames por segundo (recomendado: 30).\n* `seconds` → Duración del video en segundos.\n3. Nodo **Advanced - Config** (además de los anteriores):\n* `zoom_in` → Porcentaje inicial del tiempo para zoom in.\n* `zoom_out` → Porcentaje final del tiempo para zoom out.\n* `rotation_deg` → Grados de rotación máxima.\n* `rotation_speed` → Velocidad del movimiento de rotación.\n👉 Asegúrate de que n8n tenga permisos de escritura en la carpeta definida en `path`.\n\n### 🧠 Qué hace el flujo\n* **Descarga**: Obtiene la imagen original desde una carpeta de Google Drive.\n* **Procesamiento**: Genera un video de duración fija repitiendo el frame de la imagen.\n* **Procesamiento Avanzado**: Aplica un filtro de `zoompan` y una ligera rotación matemática para dar dinamismo a la imagen.\n* **Resultado**: Genera el archivo final en el sistema de archivos local listo para ser usado por otros flujos.\n\n### 📺 Guía en video\n👉 [youtu.be/xxxxxx](https://youtu.be/xxxxxx)\n\n### 🔔 Más automatizaciones\n👉 [Hans Acha](https://www.youtube.com/@Hans-Acha)\n",
         "height": 1040,
         "width": 576
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -480,
-        -304
+        -464,
+        -416
       ],
       "typeVersion": 1,
       "id": "ccc68886-7c90-40de-96ad-4bb4ef3ec8c6",
       "name": "Sticky Note6"
-    }
-  ],
-  "pinData": {
-    "Start": [
-      {
-        "json": {
-          "input_image_id": "17gSNcr25Bt-HRmw-FE4-Vi12xcQGh6pS",
-          "output_folder_id": "1mmRDhx6R6NEbIyY3cPf_nIWklvqjzB6I"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fb507400-d372-4514-b519-74ff80e77441",
+              "name": "input_image_id",
+              "value": "17gSNcr25Bt-HRmw-FE4-Vi12xcQGh6pS",
+              "type": "string"
+            },
+            {
+              "id": "51e6ccac-6a9f-459f-8ba6-4b70438648f9",
+              "name": "path",
+              "value": "./.n8n-files/ffmpeg-temp/image-to-video-simple",
+              "type": "string"
+            },
+            {
+              "id": "f65100ae-e591-4487-b6d2-5663192e1b35",
+              "name": "filename_prefix",
+              "value": "basic_image_to_video_",
+              "type": "string"
+            },
+            {
+              "id": "b6193555-9535-4d89-9992-c39b6117f160",
+              "name": "video_extension",
+              "value": "mp4",
+              "type": "string"
+            },
+            {
+              "id": "2a97e60e-e687-40a1-91ac-0db81f08543d",
+              "name": "fps",
+              "value": "30",
+              "type": "string"
+            },
+            {
+              "id": "abd41f48-77be-469e-a46d-c3a1ced23a2d",
+              "name": "seconds",
+              "value": "5",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        528,
+        -368
+      ],
+      "id": "ac9ccdd9-1fd3-423d-ad69-d3f3f4995cbf",
+      "name": "Basic - Config"
+    },
+    {
+      "parameters": {
+        "command": "=rm -rf {{ $('Basic - Config').item.json.path }}/* \nmkdir -p {{ $('Basic - Config').item.json.path }}"
+      },
+      "id": "a2587794-36b0-4f87-97fd-61d8d17001cd",
+      "name": "Basic - Temporary workspace",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        752,
+        -368
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Basic - Config').item.json.input_image_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        544,
+        -96
+      ],
+      "id": "1148f024-96d7-4303-a904-2e1e2180a808",
+      "name": "Basic - Download Image",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "3KBOJ1La4MtGkVbB",
+          "name": "Google Drive account"
         }
       }
-    ]
-  },
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ $('Basic - Config').item.json.path }}/{{ $('Basic - Download Image').item.binary.data.fileName }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        752,
+        -96
+      ],
+      "id": "e413260b-babc-4af4-b19b-032a72ecc1ee",
+      "name": "Basic - Save Image Locally"
+    },
+    {
+      "parameters": {
+        "command": "=cd {{ $('Basic - Config').item.json.path }} &&\n\nIMAGE=\"{{ $('Basic - Download Image').item.binary.data.fileName }}\"\nOUTPUT=\"{{ $('Basic - Config').item.json.filename_prefix }}${IMAGE}.{{ $('Basic - Config').item.json.video_extension }}\"\n\nDURATION={{ $('Basic - Config').item.json.seconds }}\nFPS={{ $('Basic - Config').item.json.fps }}\n\nffmpeg -y -loop 1 \\\n-i \"$IMAGE\" \\\n-t $DURATION \\\n-r $FPS \\\n-c:v libx264 \\\n-pix_fmt yuv420p \\\n\"$OUTPUT\""
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1008,
+        -368
+      ],
+      "id": "bb9212a7-e09b-4e29-95a5-03dcf85c2ff0",
+      "name": "Basic - FFmpeg Generate Video"
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $('Basic - Config').item.json.path }}/{{ $('Basic - Config').item.json.filename_prefix }}{{ $('Basic - Download Image').item.binary.data.fileName }}.{{ $('Basic - Config').item.json.video_extension }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1232,
+        -368
+      ],
+      "id": "c7cd6fb9-2530-4e5d-a617-26cac8911188",
+      "name": "Basic - Get final video"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        208,
+        -16
+      ],
+      "id": "ca6afefb-2ddc-46b7-9b31-b7946015bf1a",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {},
   "connections": {
-    "Start": {
-      "main": [
-        [
-          {
-            "node": "Simple - Config",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple - Config": {
-      "main": [
-        [
-          {
-            "node": "Simple - Temporary workspace",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple - Temporary workspace": {
-      "main": [
-        [
-          {
-            "node": "Simple - Download Image",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple - Download Image": {
-      "main": [
-        [
-          {
-            "node": "Simple - Save Image Locally",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple - Save Image Locally": {
-      "main": [
-        [
-          {
-            "node": "Simple - FFmpeg Generate Video",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple - Get final video": {
-      "main": [
-        []
-      ]
-    },
     "Advanced - Config": {
       "main": [
         [
@@ -528,22 +460,87 @@
         ]
       ]
     },
-    "Simple - FFmpeg Generate Video": {
+    "Advanced - FFmpeg Generate Video": {
       "main": [
         [
           {
-            "node": "Simple - Get final video",
+            "node": "Advanced - Get final video",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Advanced - FFmpeg Generate Video": {
+    "Basic - Config": {
       "main": [
         [
           {
-            "node": "Advanced - Get final video",
+            "node": "Basic - Temporary workspace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic - Temporary workspace": {
+      "main": [
+        [
+          {
+            "node": "Basic - Download Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic - Download Image": {
+      "main": [
+        [
+          {
+            "node": "Basic - Save Image Locally",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic - Save Image Locally": {
+      "main": [
+        [
+          {
+            "node": "Basic - FFmpeg Generate Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic - FFmpeg Generate Video": {
+      "main": [
+        [
+          {
+            "node": "Basic - Get final video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic - Get final video": {
+      "main": [
+        []
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Basic - Config",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Advanced - Config",
             "type": "main",
             "index": 0
           }
@@ -556,7 +553,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "b5c7b771-9873-4152-a4cb-a243984015bc",
+  "versionId": "1896a982-90e2-4738-9aac-fe8d7bcbefb7",
   "meta": {
     "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
   },
