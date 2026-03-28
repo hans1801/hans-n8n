@@ -319,7 +319,7 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -832,
+        -880,
         -160
       ],
       "typeVersion": 1,
@@ -444,7 +444,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "4d7d7f5e-4e1e-412a-8db3-5b38041a5589",
+  "versionId": "2fd24979-d47c-4ad8-8904-c978e58b71b4",
   "meta": {
     "instanceId": "b8b926503e69b4d6452ef4997e517f018d779566da930bb3e134ea773821cffd"
   },
